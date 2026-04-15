@@ -35,5 +35,5 @@ jobs:
             -t $IMAGE:${GITHUB_SHA} \
             -t $IMAGE:latest \
             -f frontend/Dockerfile \
-            frontend
+            .
         
