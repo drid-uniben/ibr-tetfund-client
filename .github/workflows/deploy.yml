@@ -2,7 +2,7 @@ name: Deploy Container
 
 on:
   push:
-    branches: ["main"]
+    branches: ["staging"]
 
 permissions:
   contents: read
@@ -11,10 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      DEPLOY_HOST: "example.org"
-      DEPLOY_USER: "deploy-user"
 
     steps:
       - name: Checkout code
@@ -30,20 +26,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push backend image
-        run: |
-          IMAGE="ghcr.io/drid-uniben/journals-backend"
-
-          docker buildx build \
-            --push \
-            -t $IMAGE:${GITHUB_SHA} \
-            -t $IMAGE:latest \
-            -f backend/Dockerfile \
-            backend
-
       - name: Build and push frontend image
         run: |
-          IMAGE="ghcr.io/drid-uniben/journals-frontend"
+          IMAGE="ghcr.io/drid-uniben/ibr-tetfund-client"
 
           docker buildx build \
             --push \
@@ -51,14 +36,4 @@ jobs:
             -t $IMAGE:latest \
             -f frontend/Dockerfile \
             frontend
-                  
-      - name: Deploy via SSH
-        # if: 1==2 # Temporarily disable deployment for testing
-        uses: appleboy/ssh-action@v0.1.9
-        with:
-          host: ${{ env.DEPLOY_HOST }}
-          username: ${{ env.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd "journals"
-            ./deploy.sh
+        
