@@ -4,8 +4,7 @@ Thanks for contributing to IBR Tetfund Client.
 
 ## Project structure
 
-- `frontend/`: Web client application
-- `backend/`: API service
+- `ibr-tetfund-client/`: Web client application
 
 ## Code of conduct
 
@@ -17,25 +16,21 @@ Prerequisites:
 
 - Node.js 20+
 - pnpm 10.23.0+
-- mongoDB 8+
 
 Install dependencies:
 
 ```bash
-cd backend && pnpm install
-cd ../frontend && pnpm install
+cd ibr-tetfund-client && pnpm install
 ```
 
 Environment files:
 
-- `backend/.env` (database + auth/email/service settings)
-- `frontend/.env.local` (set `NEXT_PUBLIC_API_URL`)
+- `ibr-tetfund-client/.env.local` (set `NEXT_PUBLIC_API_URL`)
 
 Run locally:
 
 ```bash
-cd backend && pnpm dev
-cd ../frontend && pnpm dev
+cd ibr-tetfund-client && pnpm dev
 ```
 
 ## Branches and PRs
@@ -117,19 +112,18 @@ Enable once per clone:
 
 ## CI expectations
 
-CI runs lint + build for both `frontend/` and `backend/`.
+CI runs lint + build `ibr-tetfund-client/`.
 
 Run before opening a PR:
 
 ```bash
-cd backend && pnpm lint && pnpm build
-cd ../frontend && pnpm lint && pnpm build
+cd ibr-tetfund-client && pnpm lint && pnpm build
 ```
 
 ## Pull request checklist
 
-- [ ] Lint passes in `backend/` and `frontend/`
-- [ ] Build passes in `backend/` and `frontend/`
+- [ ] Lint passes in `ibr-tetfund-client/`
+- [ ] Build passes in `ibr-tetfund-client/`
 - [ ] Docs updated when behavior/config changed
 - [ ] New env vars documented
 
