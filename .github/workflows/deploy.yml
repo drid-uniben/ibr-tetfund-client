@@ -34,6 +34,6 @@ jobs:
             --push \
             -t $IMAGE:${GITHUB_SHA} \
             -t $IMAGE:latest \
-            -f frontend/Dockerfile \
+            -f Dockerfile \
             .
         
