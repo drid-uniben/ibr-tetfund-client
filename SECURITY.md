@@ -4,7 +4,7 @@
 
 Please do not open public issues for security vulnerabilities.
 
-Report privately to maintainers@example.org with:
+Report privately to emmanuel.osazuwa@physci.uniben.edu or raymondomoyakhi@gmail.com with:
 
 - A description of the issue
 - Steps to reproduce
