@@ -28,15 +28,15 @@ export default function LandingPage() {
                   TETFund IBR Grant
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  The deadline for applying for the TETFund Institution Based Research (IBR) grant funding opportunity has been met.
+                  Apply for the TETFund Institution Based Research (IBR) grant funding opportunity at the University of Benin.
                 </p>
-                <span
-                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-400 cursor-not-allowed opacity-60"
-                  aria-disabled="true"
+                <Link
+                  href="/tet-fund"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-800 hover:bg-purple-900 transition-colors duration-200"
                 >
-                  TETFund IBR Application Closed
+                  Apply for TETFund IBR Grant
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </span>
+                </Link>
               </div>
             </div>
 
