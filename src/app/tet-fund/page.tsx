@@ -406,7 +406,7 @@ export default function TETFundForm() {
       }
       
       // Submit the form
-      const result = await submitStaffProposal(apiFormData);
+      await submitStaffProposal(apiFormData);
       
       setSubmitSuccess(true);
       localStorage.removeItem("v2SavedInputs");
