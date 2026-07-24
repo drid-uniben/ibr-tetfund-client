@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,6 +10,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="w-full min-h-screen overflow-x-hidden">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full min-h-screen bg-white`}
+        className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} antialiased w-full min-h-screen bg-white`}
       >
         {children}
       </body>

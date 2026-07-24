@@ -10,6 +10,10 @@ import {
   type AcademicDepartment,
 } from '@/services/api';
 
+// Displayed submission deadline. Single place to edit until the backend-driven
+// submission windows (admin-controlled) land — see the deadline design notes.
+const SUBMISSION_DEADLINE = 'To be announced';
+
 // Define TypeScript interfaces
 interface FormData {
   fullName: string;
@@ -450,12 +454,17 @@ export default function TETFundForm() {
 
       {/* Main Form */}
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
+        <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
           <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-7 py-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#e9c96b]">
-              TETFund IBR · Concept Note
-            </p>
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight">
+            <div className="flex items-start justify-between gap-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#e9c96b]">
+                TETFund IBR · Concept Note
+              </p>
+              <span className="shrink-0 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#f3e7d0] ring-1 ring-white/20">
+                Deadline: {SUBMISSION_DEADLINE}
+              </span>
+            </div>
+            <h1 className="mt-3 font-serif text-2xl sm:text-3xl font-semibold tracking-tight">
               Let&apos;s set up your submission
             </h1>
             <p className="text-[#e7d3e4] text-sm mt-2 leading-relaxed">
