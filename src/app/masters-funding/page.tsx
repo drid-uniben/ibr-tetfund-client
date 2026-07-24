@@ -362,13 +362,8 @@ export default function MastersFundingPage() {
 
                 <h3 className="text-lg font-semibold mt-8 text-[#6d035c]">Important Submission Details:</h3>
                 <ul className="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                  <li>Concept note must not exceed 5 pages (excluding appendix).</li>
-                  <li>
-                    Submission Email:{" "}
-                    <a href="mailto:drid@uniben.edu" className="text-[#6d035c] underline">
-                      drid@uniben.edu
-                    </a>
-                  </li>
+                  <li>The concept note file must not exceed 5 pages (excluding the budget appendix).</li>
+                  <li>Submit using the upload form on this page — no email submission required.</li>
                   <li>Deadline: {SUBMISSION_DEADLINE}</li>
                   <li>
                     For inquiries, contact the DRID Office or email{" "}
