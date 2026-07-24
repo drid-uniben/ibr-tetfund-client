@@ -17,16 +17,8 @@ interface Submitter {
   phoneNumber?: string;
   userType: 'staff' | 'master_student';
   academicTitle?: string;
-  department?: {
-    _id: string;
-    title: string;
-    code: string;
-  };
-  faculty?: {
-    _id: string;
-    title: string;
-    code: string;
-  };
+  department?: string;
+  faculty?: string;
 }
 
 interface CoInvestigator {
@@ -238,14 +230,14 @@ export default function ProposalDetailPage() {
                       {proposal.submitter.faculty && (
                         <div className="flex items-center">
                           <Building className="h-5 w-5 text-gray-400 mr-2" />
-                          <p className="text-sm">{proposal.submitter.faculty.title}</p>
+                          <p className="text-sm">{proposal.submitter.faculty}</p>
                         </div>
                       )}
-                      
+
                       {proposal.submitter.department && (
                         <div className="flex items-center">
                           <BookOpen className="h-5 w-5 text-gray-400 mr-2" />
-                          <p className="text-sm">{proposal.submitter.department.title}</p>
+                          <p className="text-sm">{proposal.submitter.department}</p>
                         </div>
                       )}
                     </div>

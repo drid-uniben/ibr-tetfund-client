@@ -15,9 +15,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 
 
 interface Faculty {
-  _id: string;
-  code: string;
+  code: string | null;
   title: string;
+  type?: string | null;
 }
 
 interface Proposal {
@@ -479,7 +479,7 @@ const handleReassignSubmit = async () => {
           >
             <option value="">All Faculties</option>
             {faculties.map((faculty) => (
-              <option key={faculty._id} value={faculty._id}>
+              <option key={faculty.title} value={faculty.title}>
                 {faculty.title}
               </option>
             ))}

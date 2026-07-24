@@ -28,18 +28,6 @@ interface Award {
   approvedAt: string;
 }
 
-interface Department {
-  _id: string;
-  title: string;
-  code: string;
-}
-
-interface Faculty {
-  _id: string;
-  title: string;
-  code: string;
-}
-
 interface Submitter {
   _id: string;
   name: string;
@@ -48,8 +36,8 @@ interface Submitter {
   phoneNumber?: string;
   userType: 'staff' | 'master_student';
   academicTitle?: string;
-  department?: Department;
-  faculty?: Faculty;
+  department?: string;
+  faculty?: string;
 }
 
 interface Proposal {
@@ -353,18 +341,16 @@ export default function FullProposalDetailPage() {
                         <div className="flex items-center">
                           <Building className="h-5 w-5 text-gray-400 mr-3" />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.faculty.title}</p>
-                            <p className="text-xs text-gray-500">{fullProposal.submitter.faculty.code}</p>
+                            <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.faculty}</p>
                           </div>
                         </div>
                       )}
-                      
+
                       {fullProposal.submitter.department && (
                         <div className="flex items-center">
                           <BookOpen className="h-5 w-5 text-gray-400 mr-3" />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.department.title}</p>
-                            <p className="text-xs text-gray-500">{fullProposal.submitter.department.code}</p>
+                            <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.department}</p>
                           </div>
                         </div>
                       )}

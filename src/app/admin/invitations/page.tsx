@@ -2,6 +2,7 @@
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import * as api from "@/services/api";
+import type { AcademicUnit } from "@/services/api";
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,24 +33,11 @@ interface Invitation {
 interface ReviewerFormState {
   name: string;
   email: string;
-  facultyId: string; 
-  departmentId: string;
+  faculty: string;
+  department: string;
   phoneNumber: string;
   academicTitle?: string;
   alternativeEmail?: string;
-}
-
-interface Faculty {
-  _id: string;
-  code: string;
-  title: string;
-}
-
-interface Department {
-  _id: string;
-  code: string;
-  title: string;
-  faculty: string;
 }
 
 interface ErrorType {
@@ -63,9 +51,7 @@ interface ErrorType {
 function AdminInvitationsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [invitations, setInvitations] = useState<Invitation[]>([]);
-  const [faculties, setFaculties] = useState<Faculty[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const [selectedFacultyCode, setSelectedFacultyCode] = useState<string>("");
+  const [faculties, setFaculties] = useState<AcademicUnit[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showInviteDialog, setShowInviteDialog] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -77,8 +63,8 @@ function AdminInvitationsPage() {
   const [reviewerForm, setReviewerForm] = useState<ReviewerFormState>({
     name: "",
     email: "",
-    facultyId: "",
-    departmentId: "",
+    faculty: "",
+    department: "",
     phoneNumber: "",
     academicTitle: "",
     alternativeEmail: "",
@@ -111,33 +97,18 @@ function AdminInvitationsPage() {
   useEffect(() => {
     const fetchFaculties = async () => {
       try {
-        const response = await api.getFaculties();
+        const response = await api.getFacultyData();
         setFaculties(response);
       } catch (error) {
         console.error("Error fetching faculties:", error);
       }
     };
-  
+
     fetchFaculties();
   }, []);
 
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      if (selectedFacultyCode) {
-        try {
-          const response = await api.getDepartmentsByFaculty(selectedFacultyCode);
-          setDepartments(response);
-        } catch (error) {
-          console.error("Error fetching departments:", error);
-          setDepartments([]);
-        }
-      } else {
-        setDepartments([]);
-      }
-    };
-  
-    fetchDepartments();
-  }, [selectedFacultyCode]);
+  const departments =
+    faculties.find((f) => f.title === reviewerForm.faculty)?.departments ?? [];
 
   const validateUnibenEmail = (email: string): boolean => {
     const unibenEmailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*uniben\.edu$/;
@@ -218,8 +189,8 @@ function AdminInvitationsPage() {
       setReviewerForm({
         name: "",
         email: "",
-        facultyId: "",
-        departmentId: "",
+        faculty: "",
+        department: "",
         phoneNumber: "",
         academicTitle: "",
         alternativeEmail: "",
@@ -236,17 +207,13 @@ function AdminInvitationsPage() {
   // handleFileChange and handleInputChange are updated to handle new state structure
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
-    if (name === 'facultyId') {
-      // Find the selected faculty to get its code
-      const selectedFaculty = faculties.find(f => f._id === value);
-      setSelectedFacultyCode(selectedFaculty?.code || "");
-      
+
+    if (name === 'faculty') {
       // Reset department when faculty changes
       setReviewerForm({
         ...reviewerForm,
         [name]: value,
-        departmentId: "",
+        department: "",
       });
     } else {
       setReviewerForm({
@@ -427,39 +394,39 @@ function AdminInvitationsPage() {
   </div>
 
   <div className="space-y-2">
-    <Label htmlFor="reviewer-facultyId">Faculty</Label>
+    <Label htmlFor="reviewer-faculty">Faculty</Label>
     <select
-      id="reviewer-facultyId"
-      name="facultyId"
-      value={reviewerForm.facultyId}
+      id="reviewer-faculty"
+      name="faculty"
+      value={reviewerForm.faculty}
       onChange={handleInputChange}
       required
       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <option value="">Select Faculty</option>
-      {faculties.map((faculty) => (
-        <option key={faculty._id} value={faculty._id}>
-          {faculty.title} ({faculty.code})
+      {faculties.map((unit) => (
+        <option key={unit.code} value={unit.title}>
+          {unit.title} ({unit.code})
         </option>
       ))}
     </select>
   </div>
 
   <div className="space-y-2">
-    <Label htmlFor="reviewer-departmentId">Department</Label>
+    <Label htmlFor="reviewer-department">Department</Label>
     <select
-      id="reviewer-departmentId"
-      name="departmentId"
-      value={reviewerForm.departmentId}
+      id="reviewer-department"
+      name="department"
+      value={reviewerForm.department}
       onChange={handleInputChange}
       required
-      disabled={!selectedFacultyCode}
+      disabled={!reviewerForm.faculty}
       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <option value="">Select Department</option>
-      {departments.map((department) => (
-        <option key={department._id} value={department._id}>
-          {department.title} ({department.code})
+      {departments.map((dept) => (
+        <option key={dept.code} value={dept.title}>
+          {dept.title} ({dept.code})
         </option>
       ))}
     </select>

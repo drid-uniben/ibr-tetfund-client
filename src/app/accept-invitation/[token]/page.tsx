@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { completeReviewerProfile, getFaculties, getDepartmentsByFaculty } from '@/services/api';
+import { completeReviewerProfile, getFacultyData, AcademicUnit } from '@/services/api';
 import {
   Card,
   CardContent,
@@ -22,8 +22,8 @@ import axios from "axios";
 // Validation schema
 const reviewerProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  facultyId: z.string().min(1, "Faculty selection is required"),
-  departmentId: z.string().min(1, "Department selection is required"),
+  faculty: z.string().min(1, "Faculty selection is required"),
+  department: z.string().min(1, "Department selection is required"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   academicTitle: z.string().optional(),
   alternativeEmail: z.string().email("Invalid email format").optional().or(z.literal("")),
@@ -35,19 +35,6 @@ const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-interface Faculty {
-  _id: string;
-  code: string;
-  title: string;
-}
-
-interface Department {
-  _id: string;
-  code: string;
-  title: string;
-  faculty: string;
-}
-
 interface ReviewerRegisterPageProps {
   params: Promise<{
     token: string;
@@ -57,16 +44,17 @@ interface ReviewerRegisterPageProps {
 export default function ReviewerRegisterPage({ params }: ReviewerRegisterPageProps) {
   const { token } = use(params);
   const [name, setName] = useState("");
-  const [facultyId, setFacultyId] = useState("");
-  const [departmentId, setDepartmentId] = useState("");
+  const [faculty, setFaculty] = useState("");
+  const [department, setDepartment] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [academicTitle, setAcademicTitle] = useState("");
   const [alternativeEmail, setAlternativeEmail] = useState("");
-  
-  const [faculties, setFaculties] = useState<Faculty[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
+
+  const [faculties, setFaculties] = useState<AcademicUnit[]>([]);
   const [loadingDepartments, setLoadingDepartments] = useState(false);
-  
+
+  const departments = faculties.find((f) => f.title === faculty)?.departments ?? [];
+
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
@@ -76,42 +64,24 @@ export default function ReviewerRegisterPage({ params }: ReviewerRegisterPagePro
   // Load faculties on component mount
   useEffect(() => {
     const loadFaculties = async () => {
+      setLoadingDepartments(true);
       try {
-        const facultiesData = await getFaculties();
+        const facultiesData = await getFacultyData();
         setFaculties(facultiesData);
       } catch (error) {
         console.error("Failed to load faculties:", error);
         setError("Failed to load faculties");
+      } finally {
+        setLoadingDepartments(false);
       }
     };
     loadFaculties();
   }, []);
 
-  // Load departments when faculty changes
+  // Reset department when faculty changes
   useEffect(() => {
-    const loadDepartments = async () => {
-      if (!facultyId) {
-        setDepartments([]);
-        setDepartmentId("");
-        return;
-      }
-
-      setLoadingDepartments(true);
-      try {
-        const selectedFaculty = faculties.find(f => f._id === facultyId);
-        if (selectedFaculty) {
-          const departmentsData = await getDepartmentsByFaculty(selectedFaculty.code);
-          setDepartments(departmentsData);
-        }
-      } catch (error) {
-        console.error("Failed to load departments:", error);
-        setError("Failed to load departments");
-      } finally {
-        setLoadingDepartments(false);
-      }
-    };
-    loadDepartments();
-  }, [facultyId, faculties]);
+    setDepartment("");
+  }, [faculty]);
 
   const validateForm = (): boolean => {
     try {
@@ -121,13 +91,13 @@ export default function ReviewerRegisterPage({ params }: ReviewerRegisterPagePro
         return false;
       }
 
-      reviewerProfileSchema.parse({ 
-        name, 
-        facultyId, 
-        departmentId, 
-        phoneNumber, 
-        academicTitle, 
-        alternativeEmail 
+      reviewerProfileSchema.parse({
+        name,
+        faculty,
+        department,
+        phoneNumber,
+        academicTitle,
+        alternativeEmail
       });
       setValidationErrors({});
       return true;
@@ -158,8 +128,8 @@ export default function ReviewerRegisterPage({ params }: ReviewerRegisterPagePro
     try {
       const profileData = {
         name,
-        facultyId,
-        departmentId,
+        faculty,
+        department,
         phoneNumber,
         academicTitle: academicTitle || undefined,
         alternativeEmail: alternativeEmail || undefined,
@@ -248,20 +218,20 @@ export default function ReviewerRegisterPage({ params }: ReviewerRegisterPagePro
   <label htmlFor="faculty" className="text-sm font-medium">
     Faculty *
   </label>
-  <Select value={facultyId} onValueChange={setFacultyId}>
-    <SelectTrigger className={validationErrors.facultyId ? "border-red-500" : ""}>
+  <Select value={faculty} onValueChange={setFaculty}>
+    <SelectTrigger className={validationErrors.faculty ? "border-red-500" : ""}>
       <SelectValue placeholder="Select Faculty" />
     </SelectTrigger>
     <SelectContent className="max-h-60 overflow-y-auto">
-      {faculties.map((faculty) => (
-        <SelectItem key={faculty._id} value={faculty._id}>
-          {faculty.title} ({faculty.code})
+      {faculties.map((unit) => (
+        <SelectItem key={unit.code} value={unit.title}>
+          {unit.title} ({unit.code})
         </SelectItem>
       ))}
     </SelectContent>
   </Select>
-  {validationErrors.facultyId && (
-    <p className="text-sm text-red-500">{validationErrors.facultyId}</p>
+  {validationErrors.faculty && (
+    <p className="text-sm text-red-500">{validationErrors.faculty}</p>
   )}
 </div>
 
@@ -269,26 +239,26 @@ export default function ReviewerRegisterPage({ params }: ReviewerRegisterPagePro
   <label htmlFor="department" className="text-sm font-medium">
     Department *
   </label>
-  <Select 
-    value={departmentId} 
-    onValueChange={setDepartmentId}
-    disabled={!facultyId || loadingDepartments}
+  <Select
+    value={department}
+    onValueChange={setDepartment}
+    disabled={!faculty || loadingDepartments}
   >
-    <SelectTrigger className={validationErrors.departmentId ? "border-red-500" : ""}>
+    <SelectTrigger className={validationErrors.department ? "border-red-500" : ""}>
       <SelectValue placeholder={
-        loadingDepartments ? "Loading departments..." : "Select Department"
+        loadingDepartments ? "Loading faculties..." : "Select Department"
       } />
     </SelectTrigger>
     <SelectContent className="max-h-60 overflow-y-auto">
-      {departments.map((department) => (
-        <SelectItem key={department._id} value={department._id}>
-          {department.title} ({department.code})
+      {departments.map((dept) => (
+        <SelectItem key={dept.code} value={dept.title}>
+          {dept.title} ({dept.code})
         </SelectItem>
       ))}
     </SelectContent>
   </Select>
-  {validationErrors.departmentId && (
-    <p className="text-sm text-red-500">{validationErrors.departmentId}</p>
+  {validationErrors.department && (
+    <p className="text-sm text-red-500">{validationErrors.department}</p>
   )}
 </div>
 
