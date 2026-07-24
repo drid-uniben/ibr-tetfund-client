@@ -14,22 +14,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getReviewerDashboard } from '@/services/api';
 import { useRouter } from 'next/navigation';
 
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface Faculty {
-  id: number;
-  name: string;
-}
-
 // Types based on your API response structure
 interface ReviewerInfo {
   name: string;
   email: string;
-  department: Department;
-  faculty: Faculty;
+  department: string;
+  faculty: string;
   academicTitle: string;
 }
 
@@ -187,7 +177,7 @@ const ReviewersDashboard: React.FC = () => {
                 </h1>
                 <p className="text-gray-600 flex items-center">
                   <Award className="w-4 h-4 mr-2" />
-                  {reviewer.academicTitle} • {reviewer.department?.name || 'Department'}
+                  {reviewer.academicTitle} • {reviewer.department || 'Department'}
                 </p>
               </div>
               <button

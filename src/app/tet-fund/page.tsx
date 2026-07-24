@@ -3,22 +3,18 @@ import { useState, useRef, useEffect, useCallback  } from 'react';
 import { Upload, AlertCircle, Loader2 } from 'lucide-react';
 import Header from '@/components/header';
 import Link from 'next/link';
-import { getFaculties, getDepartmentsByFaculty, submitStaffProposal } from '@/services/api';
+import {
+  getFacultyData,
+  submitStaffProposal,
+  type AcademicUnit,
+  type AcademicDepartment,
+} from '@/services/api';
+
+// Displayed submission deadline. Single place to edit until the backend-driven
+// submission windows (admin-controlled) land — see the deadline design notes.
+const SUBMISSION_DEADLINE = 'To be announced';
 
 // Define TypeScript interfaces
-interface Faculty {
-  _id: string;
-  code: string;
-  title: string;
-}
-
-interface Department {
-  _id: string;
-  code: string;
-  title: string;
-  faculty: string;
-}
-
 interface FormData {
   fullName: string;
   academicRank: string;
@@ -65,8 +61,8 @@ export default function TETFundForm() {
     cvFile: null
   });
 
-  const [faculties, setFaculties] = useState<Faculty[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const [units, setUnits] = useState<AcademicUnit[]>([]);
+  const [departments, setDepartments] = useState<AcademicDepartment[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -86,8 +82,8 @@ export default function TETFundForm() {
     const loadFaculties = async () => {
       try {
         setLoading(true);
-        const facultyData = await getFaculties();
-        setFaculties(facultyData);
+        const data = await getFacultyData();
+        setUnits(data);
         setLoading(false);
       } catch (error) {
         console.error('Failed to load faculties:', error);
@@ -98,31 +94,19 @@ export default function TETFundForm() {
     loadFaculties();
   }, []);
 
-  // Load departments based on selected faculty
-  const loadDepartments = useCallback(async (facultyValue: string) => {
-    if (!facultyValue) return;
-    
-    try {
-      setLoading(true);
-      
-      // First, find the faculty by its ID to get the code
-      const selectedFaculty = faculties.find(f => f._id === facultyValue);
-      
-      if (!selectedFaculty) {
-        console.error('Selected faculty not found');
-        setLoading(false);
+  // Departments come from the selected unit in the nested dataset (Option A:
+  // faculty/department are title strings, no extra request needed).
+  const loadDepartments = useCallback(
+    (facultyTitle: string) => {
+      if (!facultyTitle) {
+        setDepartments([]);
         return;
       }
-      
-      // Use the faculty code to fetch departments
-      const departmentData = await getDepartmentsByFaculty(selectedFaculty.code);
-      setDepartments(departmentData);
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to load departments:', error);
-      setLoading(false);
-    }
-  }, [faculties]);
+      const unit = units.find((u) => u.title === facultyTitle);
+      setDepartments(unit ? unit.departments : []);
+    },
+    [units]
+  );
 
   // Load saved form data from localStorage
   useEffect(() => {
@@ -464,16 +448,29 @@ export default function TETFundForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#faf7fc] text-[#2b1229]">
       {/* Header */}
       <Header />
 
       {/* Main Form */}
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="bg-purple-800 text-white px-6 py-4">
-            <h1 className="text-xl font-semibold">TETFund IBR Concept Note Submission Form</h1>
-            <p className="text-purple-200 text-sm mt-1">Complete all required fields below</p>
+        <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
+          <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-7 py-7">
+            <div className="flex items-start justify-between gap-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#e9c96b]">
+                TETFund IBR · Concept Note
+              </p>
+              <span className="shrink-0 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#f3e7d0] ring-1 ring-white/20">
+                Deadline: {SUBMISSION_DEADLINE}
+              </span>
+            </div>
+            <h1 className="mt-3 font-serif text-2xl sm:text-3xl font-semibold tracking-tight">
+              Let&apos;s set up your submission
+            </h1>
+            <p className="text-[#e7d3e4] text-sm mt-2 leading-relaxed">
+              A few details about you and your project. Take your time — your
+              answers are saved on this device as you go.
+            </p>
           </div>
 
           {submitError && (
@@ -487,12 +484,12 @@ export default function TETFundForm() {
 
           {submitSuccess ? (
             <div className="p-8 text-center">
-              <div className="bg-green-50 border border-green-200 rounded-md p-6">
-                <h2 className="text-xl font-semibold text-green-800 mb-2">Proposal Submitted Successfully!</h2>
-                <p className="text-green-700 mb-4">Your IBR concept note has been submitted and is now under review.</p>
+              <div className="rounded-xl border border-[#cfe6d4] bg-[#f2faf3] p-8">
+                <h2 className="text-2xl font-semibold tracking-tight text-[#1f5b34] mb-2">Thank you — your proposal is in.</h2>
+                <p className="text-[#3d6b4c] mb-5 leading-relaxed">Your IBR concept note has been submitted and is now with the review team. Keep an eye on your UNIBEN email.</p>
                 <button
                   onClick={() => setSubmitSuccess(false)}
-                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  className="inline-flex justify-center rounded-full px-6 py-2.5 text-sm font-semibold text-white bg-[#1f5b34] hover:bg-[#184727] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1f5b34]/40"
                 >
                   Submit Another Proposal
                 </button>
@@ -502,7 +499,7 @@ export default function TETFundForm() {
             <form onSubmit={handleSubmit} className="p-6">
               {/* Basic Information Section */}
               <div className="mb-8">
-                <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Basic Information</h2>
+                <h2 className="text-base font-semibold tracking-tight text-[#4a0340] mb-4 pb-2 border-b border-[#ecdfec]">Basic Information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -514,7 +511,7 @@ export default function TETFundForm() {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
 
@@ -527,7 +524,7 @@ export default function TETFundForm() {
                       value={formData.academicRank}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     >
                       <option value="">Select an option</option>
                       <option value="Assistant Lecturer">Assistant Lecturer</option>
@@ -548,13 +545,13 @@ export default function TETFundForm() {
                       value={formData.faculty}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                       disabled={loading}
                     >
                       <option value="">Select a Faculty</option>
-                      {faculties.map((faculty) => (
-                        <option key={faculty._id} value={faculty._id}>
-                          {faculty.title}
+                      {units.map((unit) => (
+                        <option key={unit.code} value={unit.title}>
+                          {unit.title}
                         </option>
                       ))}
                     </select>
@@ -575,12 +572,12 @@ export default function TETFundForm() {
                       value={formData.department}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                       disabled={!formData.faculty || loading}
                     >
                       <option value="">Select a Department</option>
                       {departments.map((department) => (
-                        <option key={department._id} value={department._id}>
+                        <option key={department.code} value={department.title}>
                           {department.title}
                         </option>
                       ))}
@@ -644,7 +641,7 @@ export default function TETFundForm() {
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
                 </div>
@@ -652,7 +649,7 @@ export default function TETFundForm() {
 
               {/* Research Team Section */}
               <div className="mb-8">
-                <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Research Team</h2>
+                <h2 className="text-base font-semibold tracking-tight text-[#4a0340] mb-4 pb-2 border-b border-[#ecdfec]">Research Team</h2>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -663,7 +660,7 @@ export default function TETFundForm() {
                       value={formData.coInvestigators}
                       onChange={handleInputChange}
                       rows={2}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                       placeholder="Enter names separated by commas"
                     />
                   </div>
@@ -677,7 +674,7 @@ export default function TETFundForm() {
                       value={formData.coInvestigatorsDept}
                       onChange={handleInputChange}
                       rows={2}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                       placeholder="Format: Name - Department, Faculty"
                     />
                   </div>
@@ -687,7 +684,7 @@ export default function TETFundForm() {
               {/* Rest of the form sections remain the same */}
               {/* Project Information Section */}
               <div className="mb-8">
-                <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Project Information</h2>
+                <h2 className="text-base font-semibold tracking-tight text-[#4a0340] mb-4 pb-2 border-b border-[#ecdfec]">Project Information</h2>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -699,7 +696,7 @@ export default function TETFundForm() {
                       value={formData.projectTitle}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
 
@@ -713,7 +710,7 @@ export default function TETFundForm() {
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                     <p className="mt-1 text-xs text-gray-500">
                       {formData.problemStatement.split(' ').filter(Boolean).length}/200 words
@@ -730,7 +727,7 @@ export default function TETFundForm() {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
 
@@ -744,7 +741,7 @@ export default function TETFundForm() {
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                     <p className="mt-1 text-xs text-gray-500">
                       {formData.methodology.split(' ').filter(Boolean).length}/250 words
@@ -761,7 +758,7 @@ export default function TETFundForm() {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
 
@@ -775,7 +772,7 @@ export default function TETFundForm() {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
 
@@ -803,7 +800,7 @@ export default function TETFundForm() {
 
               {/* Upload Section */}
 <div className="mb-8">
-  <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Upload Section</h2>
+  <h2 className="text-base font-semibold tracking-tight text-[#4a0340] mb-4 pb-2 border-b border-[#ecdfec]">Upload Section</h2>
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-3">
       Upload Short CV of Lead Researcher (Max 2 pages; PDF or DOC format) *
@@ -865,7 +862,7 @@ export default function TETFundForm() {
     <button
       type="submit"
       disabled={submitting}
-      className="inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-800 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+      className="inline-flex items-center justify-center rounded-full bg-[#6d035c] px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#4a0340] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/30 focus:ring-offset-2 disabled:opacity-60"
     >
       {submitting ? (
         <>

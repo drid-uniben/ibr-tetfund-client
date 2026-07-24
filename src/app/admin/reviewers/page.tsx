@@ -75,16 +75,8 @@ interface Reviewer {
   alternativeEmail?: string;
   phoneNumber: string;
   academicTitle?: string;
-  faculty: {
-    _id: string;
-    title: string;
-    code: string;
-  };
-  department: {
-    _id: string;
-    title: string;
-    code: string;
-  };
+  faculty: string;
+  department: string;
   isActive: boolean;
   invitationStatus: 'pending' | 'accepted' | 'added' | 'expired';
   assignedProposals: AssignedReviewItem[]; // Updated to use new interface
@@ -111,16 +103,8 @@ interface ReviewerDetails {
   alternativeEmail?: string;
   phoneNumber: string;
   academicTitle?: string;
-  faculty: {
-    _id: string;
-    title: string;
-    code: string;
-  };
-  department: {
-    _id: string;
-    title: string;
-    code: string;
-  };
+  faculty: string;
+  department: string;
   isActive: boolean;
   invitationStatus: 'pending' | 'accepted' | 'added' | 'expired';
   assignedProposals: AssignedReviewItem[]; // Updated to use new interface
@@ -290,8 +274,8 @@ const handleCheckOverdueReviews = async () => {
 
   const filteredReviewers = reviewers.filter(reviewer => {
     // Safely access nested properties, providing empty strings if undefined
-    const facultyTitle = reviewer.faculty?.title || '';
-    const departmentTitle = reviewer.department?.title || '';
+    const facultyTitle = reviewer.faculty || '';
+    const departmentTitle = reviewer.department || '';
 
     const matchesSearch = (reviewer.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (reviewer.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -488,7 +472,7 @@ const handleCheckOverdueReviews = async () => {
                               </div>
                               <div className="flex items-center">
                                 <Building className="h-4 w-4 mr-1" />
-                                {reviewer.faculty?.title} - {reviewer.department?.title}
+                                {reviewer.faculty} - {reviewer.department}
                               </div>
                             </div>
                             <div className="mt-2 flex items-center space-x-6 text-sm">
@@ -598,12 +582,12 @@ const handleCheckOverdueReviews = async () => {
                           <div className="flex items-center text-gray-600 mb-2">
                             <Building className="h-4 w-4 mr-2" />
                             <span className="font-medium">Faculty:</span>
-                            <span className="ml-2">{selectedReviewer.faculty.title}</span>
+                            <span className="ml-2">{selectedReviewer.faculty}</span>
                           </div>
                           <div className="flex items-center text-gray-600 mb-2">
                             <Building className="h-4 w-4 mr-2" />
                             <span className="font-medium">Department:</span>
-                            <span className="ml-2">{selectedReviewer.department.title}</span>
+                            <span className="ml-2">{selectedReviewer.department}</span>
                           </div>
                           <div className="flex items-center text-gray-600">
                             <Calendar className="h-4 w-4 mr-2" />

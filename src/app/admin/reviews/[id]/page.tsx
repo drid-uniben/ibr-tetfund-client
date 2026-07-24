@@ -54,8 +54,8 @@ interface Review {
     name: string;
     email: string;
     academicTitle?: string;
-    faculty?: { title: string; code: string };
-    department?: { title: string; code: string };
+    faculty?: string;
+    department?: string;
   };
 }
 
@@ -92,8 +92,8 @@ interface ProposalReviewDetails {
       name: string;
       email: string;
       academicTitle?: string;
-      faculty?: { title: string; code: string };
-      department?: { title: string; code: string };
+      faculty?: string;
+      department?: string;
     };
   };
   reviewSummary: {
@@ -392,7 +392,7 @@ export default function ProposalReviewDetailsPage() {
                       {review.reviewer.faculty && (
                         <span className="flex items-center gap-1">
                           <Building size={12} />
-                          {review.reviewer.faculty.title}
+                          {review.reviewer.faculty}
                         </span>
                       )}
                     </div>
@@ -587,10 +587,10 @@ export default function ProposalReviewDetailsPage() {
                     {details.proposal.submitter.faculty && (
                       <div className="flex items-center gap-2">
                         <Building size={14} className="text-gray-500" />
-                        <span>{details.proposal.submitter.faculty.title}</span>
+                        <span>{details.proposal.submitter.faculty}</span>
                         {details.proposal.submitter.department && (
                           <span className="text-gray-500">
-                            • {details.proposal.submitter.department.title}
+                            • {details.proposal.submitter.department}
                           </span>
                         )}
                       </div>

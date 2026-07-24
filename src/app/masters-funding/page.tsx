@@ -6,6 +6,10 @@ import { submitMasterProposal } from '@/services/api';
 import Header from "@/components/header";
 import Link from 'next/link';
 
+// Displayed submission deadline. Single place to edit until the backend-driven
+// submission windows (admin-controlled) land.
+const SUBMISSION_DEADLINE = 'Tuesday, 3rd June 2025';
+
 export default function MastersFundingPage() {
   // Agreement state
   const [agreementChecked, setAgreementChecked] = useState(false);
@@ -228,11 +232,11 @@ export default function MastersFundingPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#faf7fc] text-[#2b1229]">
         <Header />
         <main className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-purple-800 text-white px-6 py-4">
+          <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
+            <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-6 py-5">
               <h1 className="text-xl font-semibold">Master&apos;s Funding Concept Note Submission</h1>
             </div>
             <div className="p-8 text-center">
@@ -243,7 +247,7 @@ export default function MastersFundingPage() {
               </p>
               <button
                 onClick={resetForm}
-                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-800 hover:bg-purple-900"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#6d035c] hover:bg-[#4a0340]"
               >
                 Submit Another Document
               </button>
@@ -265,20 +269,20 @@ export default function MastersFundingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#faf7fc] text-[#2b1229]">
       {/* Header */}
       <Header />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Guidelines Section */}
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden mb-6">
-          <div className="bg-purple-800 text-white px-6 py-4">
+        <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] mb-6">
+          <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-6 py-5">
             <h1 className="text-2xl font-bold">Submission Guidelines</h1>
           </div>
           
           <div className="p-6 text-gray-800">
-            <h2 className="text-xl font-semibold mb-4 text-purple-800">
+            <h2 className="text-xl font-semibold mb-4 text-[#6d035c]">
               Pilot Seed Funding for Research-Driven Innovation
             </h2>
             <p className="mb-4 text-gray-700">
@@ -296,11 +300,11 @@ export default function MastersFundingPage() {
 
                 <ol className="list-decimal list-inside space-y-6 text-gray-800">
                   <li>
-                    <strong className="text-purple-800">Project Title:</strong> 
+                    <strong className="text-[#6d035c]">Project Title:</strong> 
                     <span className="block mt-1 text-gray-700">Provide a clear and descriptive title for your project.</span>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Lead Researcher Information:</strong>
+                    <strong className="text-[#6d035c]">Lead Researcher Information:</strong>
                     <ul className="list-disc list-inside ml-6 mt-2 text-gray-700">
                       <li>Full Name</li>
                       <li>Matriculation Number</li>
@@ -311,64 +315,64 @@ export default function MastersFundingPage() {
                     </ul>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Problem Statement and Justification:</strong>
+                    <strong className="text-[#6d035c]">Problem Statement and Justification:</strong>
                     <span className="block mt-1 text-gray-700">
                       Briefly describe the problem your project addresses and explain why it is important.
                     </span>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Objectives and Anticipated Outcomes:</strong>
+                    <strong className="text-[#6d035c]">Objectives and Anticipated Outcomes:</strong>
                     <span className="block mt-1 text-gray-700">
                       What are you aiming to achieve? What changes, benefits, or results do you expect from your project?
                     </span>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Research-Informed Approach and Methodology:</strong>
+                    <strong className="text-[#6d035c]">Research-Informed Approach and Methodology:</strong>
                     <span className="block mt-1 text-gray-700">
                       Explain how you will carry out your research, the methods you will use, and how it is informed by academic knowledge.
                     </span>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Innovation and Impact:</strong>
+                    <strong className="text-[#6d035c]">Innovation and Impact:</strong>
                     <ul className="list-disc list-inside ml-6 mt-2 text-gray-700">
                       <li>What is novel about your project?</li>
                       <li>How could your project contribute to society, culture, policy, or national development?</li>
                     </ul>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Interdisciplinary Relevance:</strong>
+                    <strong className="text-[#6d035c]">Interdisciplinary Relevance:</strong>
                     <span className="block mt-1 text-gray-700">
                       Show how your project draws from or benefits multiple fields of study, if applicable.
                     </span>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Implementation Plan and Timeline:</strong>
+                    <strong className="text-[#6d035c]">Implementation Plan and Timeline:</strong>
                     <ul className="list-disc list-inside ml-6 mt-2 text-gray-700">
                       <li>Outline the main activities and stages of the project.</li>
                       <li>Provide a realistic timeline covering completion within one academic session.</li>
                     </ul>
                   </li>
                   <li>
-                    <strong className="text-purple-800">Preliminary Budget Estimate (Separate Appendix):</strong>
+                    <strong className="text-[#6d035c]">Preliminary Budget Estimate (Separate Appendix):</strong>
                     <span className="block mt-1 text-gray-700">
                       Break down how you propose to use the seed funding if awarded, with estimated costs.
                     </span>
                   </li>
                 </ol>
 
-                <h3 className="text-lg font-semibold mt-8 text-purple-800">Important Submission Details:</h3>
+                <h3 className="text-lg font-semibold mt-8 text-[#6d035c]">Important Submission Details:</h3>
                 <ul className="list-disc list-inside space-y-2 mt-4 text-gray-700">
                   <li>Concept note must not exceed 5 pages (excluding appendix).</li>
                   <li>
                     Submission Email:{" "}
-                    <a href="mailto:drid@uniben.edu" className="text-purple-800 underline">
+                    <a href="mailto:drid@uniben.edu" className="text-[#6d035c] underline">
                       drid@uniben.edu
                     </a>
                   </li>
-                  <li>Deadline: Tuesday, 3rd June 2025</li>
+                  <li>Deadline: {SUBMISSION_DEADLINE}</li>
                   <li>
                     For inquiries, contact the DRID Office or email{" "}
-                    <a href="mailto:drid@uniben.edu" className="text-purple-800 underline">
+                    <a href="mailto:drid@uniben.edu" className="text-[#6d035c] underline">
                       drid@uniben.edu
                     </a>.
                   </li>
@@ -376,7 +380,7 @@ export default function MastersFundingPage() {
 
                 <button 
                   onClick={() => setShowFullGuidelines(false)}
-                  className="mt-6 text-purple-600 hover:text-purple-800 underline"
+                  className="mt-6 text-[#6d035c] hover:text-[#4a0340] underline"
                 >
                   Hide full guidelines
                 </button>
@@ -391,7 +395,7 @@ export default function MastersFundingPage() {
                 </p>
                 <button 
                   onClick={() => setShowFullGuidelines(true)}
-                  className="text-purple-600 hover:text-purple-800 underline"
+                  className="text-[#6d035c] hover:text-[#4a0340] underline"
                 >
                   Read full guidelines
                 </button>
@@ -404,7 +408,7 @@ export default function MastersFundingPage() {
                   type="checkbox"
                   checked={agreementChecked}
                   onChange={() => setAgreementChecked(!agreementChecked)}
-                  className="h-5 w-5 text-purple-600 rounded focus:ring-purple-500"
+                  className="h-5 w-5 text-[#6d035c] rounded focus:ring-[#6d035c]"
                 />
                 <span className="text-gray-800">
                   I confirm that I have read and understood the submission guidelines
@@ -416,8 +420,8 @@ export default function MastersFundingPage() {
 
         {/* Form and Upload Section - Only visible after agreement */}
         {agreementChecked && (
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-purple-800 text-white px-6 py-4">
+          <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
+            <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-6 py-5">
               <h1 className="text-xl font-semibold">Master&apos;s Funding Concept Note Submission</h1>
             </div>
             
@@ -445,7 +449,7 @@ export default function MastersFundingPage() {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
                   
@@ -460,7 +464,7 @@ export default function MastersFundingPage() {
                       onChange={handleInputChange}
                       onBlur={handleEmailBlur}
                       required
-                      className={`mt-1 block w-full rounded-md shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border ${formErrors.email ? 'border-red-500' : 'border-gray-300'}`}
+                      className={`mt-1 block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20 border ${formErrors.email ? 'border-red-500' : 'border-[#e0d3e0]'}`}
                       placeholder="username@uniben.edu"
                     />
                     {formErrors.email && (
@@ -481,7 +485,7 @@ export default function MastersFundingPage() {
                       value={formData.alternativeEmail}
                       onChange={handleInputChange}
                       onBlur={handleEmailBlur}
-                      className={`mt-1 block w-full rounded-md shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border ${formErrors.alternativeEmail ? 'border-red-500' : 'border-gray-300'}`}
+                      className={`mt-1 block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20 border ${formErrors.alternativeEmail ? 'border-red-500' : 'border-[#e0d3e0]'}`}
                     />
                     {formErrors.alternativeEmail && (
                       <p className="mt-1 text-sm text-red-600 flex items-center">
@@ -501,7 +505,7 @@ export default function MastersFundingPage() {
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+                      className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
                   </div>
                 </div>
@@ -517,7 +521,7 @@ export default function MastersFundingPage() {
                 
                 <div 
                   className={`mt-1 flex justify-center px-6 pt-8 pb-8 border-2 ${
-                    isDragging ? 'border-purple-500 bg-purple-50' : 'border-gray-300'
+                    isDragging ? 'border-[#6d035c] bg-[#f3e8f2]' : 'border-gray-300'
                   } ${fileError ? 'border-red-300' : ''} border-dashed rounded-md`}
                   onDragEnter={handleDragEnter}
                   onDragOver={handleDragOver}
@@ -527,7 +531,7 @@ export default function MastersFundingPage() {
                   <div className="space-y-3 text-center">
                     <Upload className={`mx-auto h-12 w-12 ${fileError ? 'text-red-400' : 'text-gray-400'}`} />
                     <div className="flex text-sm text-gray-600">
-                      <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500">
+                      <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-[#6d035c] hover:text-[#4a0340]">
                         <span>Upload a file</span>
                         <input 
                           id="file-upload" 
@@ -566,8 +570,8 @@ export default function MastersFundingPage() {
                   type="submit"
                   disabled={!document || isSubmitting}
                   className={`inline-flex items-center justify-center py-2 px-6 border border-transparent text-base font-medium rounded-md text-white ${
-                    !document || isSubmitting ? 'bg-purple-400 cursor-not-allowed' : 'bg-purple-800 hover:bg-purple-900'
-                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200`}
+                    !document || isSubmitting ? 'bg-[#b98fb2] cursor-not-allowed' : 'bg-[#6d035c] hover:bg-[#4a0340]'
+                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6d035c]/30 transition-colors duration-200`}
                 >
                   {isSubmitting ? (
                     <>

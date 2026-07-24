@@ -13,9 +13,9 @@ import { toast, Toaster } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
 interface Faculty {
-  _id: string;
-  code: string;
+  code: string | null;
   title: string;
+  type?: string | null;
 }
 
 interface Proposal {
@@ -369,7 +369,7 @@ export default function AdminArchivedProposalsPage() {
                   >
                     <option value="">All Faculties</option>
                     {faculties.map((faculty) => (
-                      <option key={faculty._id} value={faculty._id}>
+                      <option key={faculty.title} value={faculty.title}>
                         {faculty.title}
                       </option>
                     ))}
