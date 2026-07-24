@@ -43,13 +43,13 @@ export default function MastersFundingPage() {
   // Validate UNIBEN email (must end with .uniben.edu, allowing subdomains)
   const validateUnibenEmail = (email: string): boolean => {
     const unibenEmailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*uniben\.edu$/;
-    return unibenEmailRegex.test(email);
+    return unibenEmailRegex.test(email.trim().toLowerCase());
   };
 
   // Validate regular email format
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email.trim().toLowerCase());
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,9 +95,9 @@ export default function MastersFundingPage() {
       return false;
     }
     
-    // Check file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      setFileError('File size should not exceed 5MB');
+    // Check file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      setFileError('File size should not exceed 10MB');
       return false;
     }
     
@@ -189,9 +189,9 @@ export default function MastersFundingPage() {
       // Create FormData for API submission
       const apiFormData = new FormData();
       apiFormData.append('fullName', formData.fullName);
-      apiFormData.append('email', formData.email);
+      apiFormData.append('email', formData.email.trim().toLowerCase());
       if (formData.alternativeEmail) {
-        apiFormData.append('alternativeEmail', formData.alternativeEmail);
+        apiFormData.append('alternativeEmail', formData.alternativeEmail.trim().toLowerCase());
       }
       apiFormData.append('phoneNumber', formData.phoneNumber);
       
@@ -313,6 +313,11 @@ export default function MastersFundingPage() {
                       <li>Email Address</li>
                       <li>Phone Number</li>
                     </ul>
+                    <p className="mt-2 text-sm italic text-[#6b5567]">
+                      Include these details inside your uploaded concept-note
+                      document — the form on this page only collects your name,
+                      email, and phone number.
+                    </p>
                   </li>
                   <li>
                     <strong className="text-[#6d035c]">Problem Statement and Justification:</strong>
@@ -542,7 +547,7 @@ export default function MastersFundingPage() {
                       <p className="pl-1">or drag and drop</p>
                     </div>
                     <p className="text-xs text-gray-500">
-                      PDF or DOC/DOCX up to 5MB (max 5 pages excluding appendix)
+                      PDF or DOC/DOCX up to 10MB (max 5 pages excluding appendix)
                     </p>
                     {document && (
                       <div className="mt-4 text-sm text-green-600 flex items-center justify-center">

@@ -185,13 +185,13 @@ export default function TETFundForm() {
   // Validate UNIBEN email (must end with .uniben.edu, allowing subdomains)
   const validateUnibenEmail = (email: string): boolean => {
     const unibenEmailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*uniben\.edu$/;
-    return unibenEmailRegex.test(email);
+    return unibenEmailRegex.test(email.trim().toLowerCase());
   };
 
   // Validate regular email format
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email.trim().toLowerCase());
   };
 
   // Email validation on blur
@@ -226,9 +226,9 @@ export default function TETFundForm() {
       return false;
     }
     
-    // Check file size (2MB max)
-    if (file.size > 3 * 1024 * 1024) {
-      setFileError('File size should not exceed 3MB');
+    // Check file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      setFileError('File size should not exceed 10MB');
       return false;
     }
     
@@ -336,7 +336,7 @@ export default function TETFundForm() {
     if (formData.faculty) {
       apiFormData.append('faculty', formData.faculty);
     }
-    apiFormData.append('email', formData.unibenEmail);
+    apiFormData.append('email', formData.unibenEmail.trim().toLowerCase());
     apiFormData.append('phoneNumber', formData.phoneNumber);
     apiFormData.append('projectTitle', formData.projectTitle);
     apiFormData.append('backgroundProblem', formData.problemStatement);
@@ -351,7 +351,7 @@ export default function TETFundForm() {
     
     // Optional fields
     if (formData.alternativeEmail) {
-      apiFormData.append('alternativeEmail', formData.alternativeEmail);
+      apiFormData.append('alternativeEmail', formData.alternativeEmail.trim().toLowerCase());
     }
     
     // Handle co-investigators
@@ -401,7 +401,7 @@ export default function TETFundForm() {
         if (errorResponse.status === 400) {
           setSubmitError(`Validation error: ${errorResponse.data.message || 'Please check all required fields'}`);
         } else if (errorResponse.status === 413) {
-          setSubmitError('The file you uploaded is too large. Please ensure it is under 2MB.');
+          setSubmitError('The file you uploaded is too large. Please ensure it is under 10MB.');
         } else {
           setSubmitError(`Failed to submit your proposal (Error ${errorResponse.status}). Please try again later.`);
         }
@@ -831,7 +831,7 @@ export default function TETFundForm() {
           <p className="pl-1">or drag and drop</p>
         </div>
         <p className="text-xs text-gray-500">
-          PDF or DOC up to 2MB (max 2 pages)
+          PDF or DOC up to 10MB (max 2 pages)
         </p>
         {formData.cvFile && (
           <p className="text-sm text-green-600 mt-2">
