@@ -1,76 +1,102 @@
-"use client"
-import Link from 'next/link';
-import Header from '@/components/header';
-import { ArrowRight } from 'lucide-react';
+import Link from "next/link";
+import Header from "@/components/header";
+import { ArrowRight, GraduationCap, FlaskConical } from "lucide-react";
+
+export const metadata = {
+  title: "Research Funding — DRID, University of Benin",
+  description:
+    "Apply for research funding opportunities at the University of Benin, administered by the Directorate of Research, Innovation and Development.",
+};
+
+const opportunities = [
+  {
+    href: "/tet-fund",
+    eyebrow: "TETFund Intervention",
+    title: "Institution-Based Research Grant",
+    body: "For academic staff. Submit a concept note for the TETFund IBR grant — the University's flagship internal research fund.",
+    cta: "Start a staff application",
+    Icon: FlaskConical,
+  },
+  {
+    href: "/masters-funding",
+    eyebrow: "Postgraduate Support",
+    title: "Master's Research Grant",
+    body: "For master's candidates. Apply for funding support toward your research project and its completion.",
+    cta: "Start a master's application",
+    Icon: GraduationCap,
+  },
+];
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+    <div className="min-h-screen bg-[#faf7fc] text-[#2b1229] flex flex-col">
       <Header />
 
-      {/* Hero Section */}
-      <main className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">
-            Research Funding Opportunities
-          </h1>
-          <p className="text-xl text-gray-600 mb-12">
-            Select from available funding opportunities at the University of Benin
-          </p>
-
-          {/* CTAs */}
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* TETFund Card */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="p-8">
-                <h2 className="text-2xl font-semibold text-purple-800 mb-4">
-                  TETFund IBR Grant
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Apply for the TETFund Institution Based Research (IBR) grant funding opportunity at the University of Benin.
-                </p>
-                <Link
-                  href="/tet-fund"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-800 hover:bg-purple-900 transition-colors duration-200"
-                >
-                  Apply for TETFund IBR Grant
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Masters Funding Card */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="p-8">
-                <h2 className="text-2xl font-semibold text-purple-800 mb-4">
-                  Masters Research Grant
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Apply for funding support for your masters research project at the University of Benin.
-                </p>
-                <Link 
-                  href="/masters-funding"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-800 hover:bg-purple-900 transition-colors duration-200"
-                >
-                  Apply for Masters Grant
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
-            </div>
+      <main className="flex-1">
+        <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
+          {/* Intro */}
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9a6f00]">
+              University of Benin · DRID
+            </p>
+            <h1 className="mt-4 text-4xl sm:text-5xl font-semibold leading-[1.05] tracking-tight text-[#4a0340]">
+              Let&apos;s fund your research.
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-[#5b4557]">
+              Two open opportunities, one short form each. Choose the track that
+              fits you and we&apos;ll walk you through it — no account needed.
+            </p>
           </div>
+
+          {/* Opportunities */}
+          <div className="mt-14 grid gap-5 sm:grid-cols-2">
+            {opportunities.map(({ href, eyebrow, title, body, cta, Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group relative flex flex-col rounded-2xl border border-[#e6d9e6] bg-white/70 p-7 transition-all hover:border-[#6d035c] hover:bg-white hover:shadow-[0_12px_40px_-24px_rgba(109,3,92,0.55)]"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f3e8f2] text-[#6d035c] transition-colors group-hover:bg-[#6d035c] group-hover:text-white">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <p className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-[#9a6f00]">
+                  {eyebrow}
+                </p>
+                <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#4a0340]">
+                  {title}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[#5b4557]">
+                  {body}
+                </p>
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6d035c]">
+                  {cta}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Reassurance strip */}
+          <p className="mt-12 max-w-2xl text-sm leading-relaxed text-[#6b5567]">
+            Your progress is saved on this device as you type, so you can step
+            away and return. Applications are reviewed by the Directorate of
+            Research, Innovation and Development.
+          </p>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-100 mt-12">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-sm text-gray-600">
-            © {new Date().getFullYear()} DRID UNIBEN. All rights reserved.
+      <footer className="border-t border-[#ecdfec]">
+        <div className="mx-auto max-w-5xl px-6 py-8">
+          <p className="text-sm text-[#6b5567]">
+            © {new Date().getFullYear()} DRID, University of Benin.
           </p>
-          <p className="text-center text-xs text-gray-500 mt-1">
-            For technical support, please contact:{' '}
-            <Link href="mailto:drid@uniben.edu" className="text-blue-500" title="send email">
+          <p className="mt-1 text-xs text-[#8a7285]">
+            Need help? Email{" "}
+            <Link
+              href="mailto:drid@uniben.edu"
+              className="font-medium text-[#6d035c] underline decoration-[#d9b8d3] underline-offset-2 hover:decoration-[#6d035c]"
+              title="send email"
+            >
               drid@uniben.edu
             </Link>
           </p>

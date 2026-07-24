@@ -168,6 +168,29 @@ export const getDepartmentsByFaculty = async (facultyCode: string) => {
   }
 };
 
+// Full nested faculty -> departments structure (Option A: names are the
+// canonical identity, no ObjectIds). One request powers the whole form.
+export interface AcademicDepartment {
+  code: string;
+  title: string;
+}
+export interface AcademicUnit {
+  code: string;
+  title: string;
+  type: "faculty" | "school" | "college" | "centre" | "institute" | "other";
+  departments: AcademicDepartment[];
+}
+
+export const getFacultyData = async (): Promise<AcademicUnit[]> => {
+  try {
+    const response = await api.get("/faculties/data");
+    return response.data.data as AcademicUnit[];
+  } catch (error) {
+    console.error("Error fetching faculty data:", error);
+    throw error;
+  }
+};
+
 // Submission endpoints
 export const submitStaffProposal = async (formData: FormData) => {
   try {
@@ -467,8 +490,8 @@ export const completeReviewerProfile = async (
   token: string,
   profileData: {
     name: string;
-    facultyId: string;
-    departmentId: string;
+    faculty: string;
+    department?: string;
     phoneNumber: string;
     academicTitle?: string;
     alternativeEmail?: string;
@@ -489,8 +512,8 @@ export const completeReviewerProfile = async (
 export const addReviewerProfile = async (reviewerData: {
   email: string;
   name: string;
-  facultyId: string;
-  departmentId: string;
+  faculty: string;
+  department?: string;
   phoneNumber: string;
   academicTitle?: string;
   alternativeEmail?: string;

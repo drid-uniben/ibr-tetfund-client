@@ -228,11 +228,11 @@ export default function MastersFundingPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#faf7fc] text-[#2b1229]">
         <Header />
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-purple-800 text-white px-6 py-4">
+            <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-6 py-5">
               <h1 className="text-xl font-semibold">Master&apos;s Funding Concept Note Submission</h1>
             </div>
             <div className="p-8 text-center">
@@ -243,7 +243,7 @@ export default function MastersFundingPage() {
               </p>
               <button
                 onClick={resetForm}
-                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-800 hover:bg-purple-900"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#6d035c] hover:bg-[#4a0340]"
               >
                 Submit Another Document
               </button>
@@ -265,7 +265,7 @@ export default function MastersFundingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#faf7fc] text-[#2b1229]">
       {/* Header */}
       <Header />
 
@@ -417,7 +417,7 @@ export default function MastersFundingPage() {
         {/* Form and Upload Section - Only visible after agreement */}
         {agreementChecked && (
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-purple-800 text-white px-6 py-4">
+            <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-6 py-5">
               <h1 className="text-xl font-semibold">Master&apos;s Funding Concept Note Submission</h1>
             </div>
             
@@ -566,7 +566,7 @@ export default function MastersFundingPage() {
                   type="submit"
                   disabled={!document || isSubmitting}
                   className={`inline-flex items-center justify-center py-2 px-6 border border-transparent text-base font-medium rounded-md text-white ${
-                    !document || isSubmitting ? 'bg-purple-400 cursor-not-allowed' : 'bg-purple-800 hover:bg-purple-900'
+                    !document || isSubmitting ? 'bg-purple-400 cursor-not-allowed' : 'bg-[#6d035c] hover:bg-[#4a0340]'
                   } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200`}
                 >
                   {isSubmitting ? (
