@@ -357,10 +357,10 @@ const ProposalReviewForm: React.FC = () => {
   // Handle loading states
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#faf7fc] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading review...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#6d035c] border-t-transparent mx-auto mb-4"></div>
+          <p className="text-[#6b5566]">Loading review...</p>
         </div>
       </div>
     );
@@ -369,14 +369,14 @@ const ProposalReviewForm: React.FC = () => {
   if (error) {
     return (
       <ReviewerLayout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md w-full text-center">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
-            <p className="text-red-600 mb-4">{error}</p>
+        <div className="min-h-screen bg-[#faf7fc] flex items-center justify-center p-6">
+          <div className="bg-[#fef2f2] border border-red-200 rounded-2xl p-6 max-w-md w-full text-center">
+            <AlertCircle className="w-12 h-12 text-[#b91c1c] mx-auto mb-4" />
+            <h2 className="font-serif text-xl font-semibold text-[#b91c1c] mb-2">Error</h2>
+            <p className="text-[#b91c1c] mb-4">{error}</p>
             <button
               onClick={() => router.push('/reviewers/assignments')}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              className="bg-[#b91c1c] text-white px-4 py-2 rounded-full hover:bg-[#991616] transition-colors"
             >
               Go Back
             </button>
@@ -389,10 +389,10 @@ const ProposalReviewForm: React.FC = () => {
   if (!reviewData) {
     return (
       <ReviewerLayout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="min-h-screen bg-[#faf7fc] flex items-center justify-center p-6">
           <div className="text-center">
-            <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">Review not found</p>
+            <FileText className="w-12 h-12 text-[#a48fa0] mx-auto mb-4" />
+            <p className="text-[#6b5566]">Review not found</p>
           </div>
         </div>
       </ReviewerLayout>
@@ -404,40 +404,40 @@ const ProposalReviewForm: React.FC = () => {
 
   return (
     <ReviewerLayout>
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-[#faf7fc] p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+                <h1 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight text-[#2b1229]">
                   {isCompleted ? 'Review Details' : 'Review Proposal'}
                 </h1>
-                <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                <div className="flex items-center gap-4 mt-2 text-sm text-[#6b5566]">
                   <span className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
                     Due: {formatDate(reviewData.dueDate)}
                   </span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    reviewData.status === 'completed' 
-                      ? 'bg-green-100 text-green-800'
+                    reviewData.status === 'completed'
+                      ? 'bg-[#f2faf3] text-[#1f5b34]'
                       : reviewData.status === 'overdue'
-                      ? 'bg-red-100 text-red-800' 
-                      : 'bg-yellow-100 text-yellow-800'
+                      ? 'bg-[#fef2f2] text-[#b91c1c]'
+                      : 'bg-[#f3e7d0] text-[#4a0340]'
                   }`}>
                     {reviewData.status.replace('_', ' ').toUpperCase()}
                   </span>
                   {isReconciliation && (
-                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
+                    <span className="px-2 py-1 bg-[#f3e7d0] text-[#4a0340] rounded-full text-xs font-medium">
                       RECONCILIATION REVIEW
                     </span>
                   )}
                 </div>
               </div>
-              <Link 
-                href="/reviewers/review-guideline" 
-                target="_blank" 
-                className="bg-gray-100 px-4 py-2 rounded-lg text-purple-600 hover:text-purple-800 text-sm font-medium hover:bg-gray-200 transition-colors flex items-center gap-2"
+              <Link
+                href="/reviewers/review-guideline"
+                target="_blank"
+                className="bg-[#f4eef3] px-4 py-2 rounded-full text-[#6d035c] hover:text-[#4a0340] text-sm font-medium hover:bg-[#f3e7d0] transition-colors flex items-center gap-2"
               >
                 <Eye className="w-4 h-4" />
                 Review Guidelines
@@ -455,62 +455,62 @@ const ProposalReviewForm: React.FC = () => {
           {isReconciliation && discrepancyInfo && (
   <>
     {/* Reconciliation Guidance Card */}
-    <div className="bg-blue-50 border border-blue-200 rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-xl font-bold text-blue-800 mb-4">Reconciliation Review Guidance</h2>
+    <div className="bg-[#f3e7d0] border border-[#e6d9e6] rounded-2xl shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6 mb-6">
+      <h2 className="font-serif text-xl font-semibold text-[#4a0340] mb-4">Reconciliation Review Guidance</h2>
       <div className="space-y-3">
         <div>
-          <h3 className="font-semibold text-blue-700">Purpose:</h3>
-          <p className="text-blue-600">{discrepancyInfo.reconciliationGuidance.purpose}</p>
+          <h3 className="font-semibold text-[#4a0340]">Purpose:</h3>
+          <p className="text-[#6b5566]">{discrepancyInfo.reconciliationGuidance.purpose}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-blue-700">Instructions:</h3>
-          <p className="text-blue-600">{discrepancyInfo.reconciliationGuidance.instruction}</p>
+          <h3 className="font-semibold text-[#4a0340]">Instructions:</h3>
+          <p className="text-[#6b5566]">{discrepancyInfo.reconciliationGuidance.instruction}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-blue-700">Scoring Weight:</h3>
-          <p className="text-blue-600">{discrepancyInfo.reconciliationGuidance.weightage}</p>
+          <h3 className="font-semibold text-[#4a0340]">Scoring Weight:</h3>
+          <p className="text-[#6b5566]">{discrepancyInfo.reconciliationGuidance.weightage}</p>
         </div>
       </div>
     </div>
 
     {/* Discrepancy Analysis */}
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Discrepancy Analysis</h2>
-      
+    <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6 mb-6">
+      <h2 className="font-serif text-xl font-semibold text-[#2b1229] mb-4">Discrepancy Analysis</h2>
+
       {/* Overall Score Range */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-        <h3 className="font-semibold text-yellow-800 mb-2">Overall Score Range</h3>
+      <div className="bg-[#f3e7d0] border border-[#e6d9e6] rounded-lg p-4 mb-4">
+        <h3 className="font-semibold text-[#4a0340] mb-2">Overall Score Range</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div className="text-center">
-            <div className="font-bold text-lg text-green-600">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.highest}</div>
-            <div className="text-gray-600">Highest</div>
+            <div className="font-bold text-lg text-[#1f5b34]">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.highest}</div>
+            <div className="text-[#6b5566]">Highest</div>
           </div>
           <div className="text-center">
-            <div className="font-bold text-lg text-red-600">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.lowest}</div>
-            <div className="text-gray-600">Lowest</div>
+            <div className="font-bold text-lg text-[#b91c1c]">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.lowest}</div>
+            <div className="text-[#6b5566]">Lowest</div>
           </div>
           <div className="text-center">
-            <div className="font-bold text-lg text-blue-600">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.average}</div>
-            <div className="text-gray-600">Average</div>
+            <div className="font-bold text-lg text-[#6d035c]">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.average}</div>
+            <div className="text-[#6b5566]">Average</div>
           </div>
           <div className="text-center">
-            <div className="font-bold text-lg text-orange-600">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.percentageDifference}%</div>
-            <div className="text-gray-600">Difference</div>
+            <div className="font-bold text-lg text-[#b8860b]">{discrepancyInfo.discrepancyAnalysis.overallScoreRange.percentageDifference}%</div>
+            <div className="text-[#6b5566]">Difference</div>
           </div>
         </div>
       </div>
 
       {/* Top Discrepancy Criteria */}
       <div>
-        <h3 className="font-semibold text-gray-700 mb-3">Criteria with Highest Discrepancies</h3>
+        <h3 className="font-semibold text-[#2b1229] mb-3">Criteria with Highest Discrepancies</h3>
         <div className="space-y-3">
           {discrepancyInfo.discrepancyAnalysis.criteriaWithHighestDiscrepancy.map((criteria, index) => (
-            <div key={index} className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <div key={index} className="bg-[#fef2f2] border border-red-200 rounded-lg p-3">
               <div className="flex justify-between items-center mb-2">
-                <h4 className="font-medium text-red-800">{criteria.criterion}</h4>
-                <span className="text-red-600 font-bold">{criteria.percentageDifference}% difference</span>
+                <h4 className="font-medium text-[#b91c1c]">{criteria.criterion}</h4>
+                <span className="text-[#b91c1c] font-bold">{criteria.percentageDifference}% difference</span>
               </div>
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-4 text-sm text-[#2b1229]">
                 <div>Scores: {criteria.scores.join(', ')}</div>
                 <div>Average: {criteria.averageScore}</div>
               </div>
@@ -521,58 +521,58 @@ const ProposalReviewForm: React.FC = () => {
     </div>
 
     {/* Previous Review Scores with Real Data */}
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Previous Review Scores</h2>
+    <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6 mb-6">
+      <h2 className="font-serif text-xl font-semibold text-[#2b1229] mb-4">Previous Review Scores</h2>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b">
-              <th className="text-left py-3 font-semibold">Criteria</th>
+            <tr className="border-b border-[#ecdfec]">
+              <th className="text-left py-3 font-semibold text-[#2b1229]">Criteria</th>
               {discrepancyInfo.conflictingReviews.map((review, index) => (
-                <th key={index} className="text-left py-3 font-semibold">{review.reviewId}</th>
+                <th key={index} className="text-left py-3 font-semibold text-[#2b1229]">{review.reviewId}</th>
               ))}
-              <th className="text-left py-3 font-semibold">Score Range</th>
+              <th className="text-left py-3 font-semibold text-[#2b1229]">Score Range</th>
             </tr>
           </thead>
           <tbody>
             {reviewCriteria.map((criteria) => {
-              const scores = discrepancyInfo.conflictingReviews.map(review => 
+              const scores = discrepancyInfo.conflictingReviews.map(review =>
                 review.scores[criteria.id] || 0
               );
               const minScore = Math.min(...scores);
               const maxScore = Math.max(...scores);
               const difference = maxScore - minScore;
-              
+
               return (
-                <tr key={criteria.id} className="border-b">
+                <tr key={criteria.id} className="border-b border-[#ecdfec]">
                   <td className="py-3">
                     <div>
-                      <div className="font-medium">{criteria.name}</div>
-                      <div className="text-sm text-gray-500">Max: {criteria.maxScore}</div>
+                      <div className="font-medium text-[#2b1229]">{criteria.name}</div>
+                      <div className="text-sm text-[#6b5566]">Max: {criteria.maxScore}</div>
                     </div>
                   </td>
                   {scores.map((score, index) => (
                     <td key={index} className="py-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-20 bg-gray-200 rounded-full h-2">
-                          <div 
+                        <div className="w-20 bg-[#e6d9e6] rounded-full h-2">
+                          <div
                             className={`rounded-full h-2 ${
-                              index === 0 ? 'bg-blue-500' : 'bg-green-500'
+                              index === 0 ? 'bg-[#b8860b]' : 'bg-[#6d035c]'
                             }`}
                             style={{ width: `${(score / criteria.maxScore) * 100}%` }}
                           ></div>
                         </div>
-                        <span className="font-medium">{score}/{criteria.maxScore}</span>
+                        <span className="font-medium text-[#2b1229]">{score}/{criteria.maxScore}</span>
                       </div>
                     </td>
                   ))}
                   <td className="py-3">
                     <span className={`font-medium ${
-                      difference > criteria.maxScore * 0.3 
-                        ? 'text-red-600' 
-                        : difference > criteria.maxScore * 0.2 
-                        ? 'text-yellow-600' 
-                        : 'text-green-600'
+                      difference > criteria.maxScore * 0.3
+                        ? 'text-[#b91c1c]'
+                        : difference > criteria.maxScore * 0.2
+                        ? 'text-[#b8860b]'
+                        : 'text-[#1f5b34]'
                     }`}>
                       {minScore}-{maxScore} ({difference} diff)
                     </span>
@@ -588,38 +588,38 @@ const ProposalReviewForm: React.FC = () => {
 )}
 
           {/* Proposal Details */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-purple-700 mb-4 border-b pb-2">Proposal Details</h2>
-            
+          <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6 mb-6">
+            <h2 className="font-serif text-xl font-semibold text-[#4a0340] mb-4 border-b border-[#ecdfec] pb-2">Proposal Details</h2>
+
             {/* Project Title */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{reviewData.proposal.projectTitle}</h3>
+              <h3 className="text-lg font-semibold text-[#2b1229] mb-2">{reviewData.proposal.projectTitle}</h3>
             </div>
 
             {/* Submitter Information */}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
 
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-[#f4eef3] rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <FileText className="w-5 h-5 text-purple-600" />
-                  <h4 className="font-semibold text-gray-700">Proposal Information</h4>
+                  <FileText className="w-5 h-5 text-[#6d035c]" />
+                  <h4 className="font-semibold text-[#2b1229]">Proposal Information</h4>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Type:</span>
-                    <span className="text-sm font-medium capitalize">{reviewData.proposal.submitterType.replace('_', ' ')}</span>
+                    <span className="text-sm text-[#6b5566]">Type:</span>
+                    <span className="text-sm font-medium capitalize text-[#2b1229]">{reviewData.proposal.submitterType.replace('_', ' ')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Status:</span>
-                    <span className="text-sm font-medium capitalize">{reviewData.proposal.status.replace('_', ' ')}</span>
+                    <span className="text-sm text-[#6b5566]">Status:</span>
+                    <span className="text-sm font-medium capitalize text-[#2b1229]">{reviewData.proposal.status.replace('_', ' ')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Submitted:</span>
-                    <span className="text-sm font-medium">{formatDate(reviewData.proposal.createdAt)}</span>
+                    <span className="text-sm text-[#6b5566]">Submitted:</span>
+                    <span className="text-sm font-medium text-[#2b1229]">{formatDate(reviewData.proposal.createdAt)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Budget:</span>
-                    <span className="text-sm font-medium">{formatCurrency(reviewData.proposal.estimatedBudget)}</span>
+                    <span className="text-sm text-[#6b5566]">Budget:</span>
+                    <span className="text-sm font-medium text-[#2b1229]">{formatCurrency(reviewData.proposal.estimatedBudget)}</span>
                   </div>
                 </div>
               </div>
@@ -628,46 +628,46 @@ const ProposalReviewForm: React.FC = () => {
             {/* Proposal Content */}
             <div className="space-y-6">
               <div>
-                <h4 className="font-semibold text-gray-700 mb-2">Problem Statement</h4>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{reviewData.proposal.problemStatement}</p>
+                <h4 className="font-semibold text-[#2b1229] mb-2">Problem Statement</h4>
+                <p className="text-[#6b5566] leading-relaxed whitespace-pre-wrap">{reviewData.proposal.problemStatement}</p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-gray-700 mb-2">Research Objectives</h4>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{reviewData.proposal.objectives}</p>
+                <h4 className="font-semibold text-[#2b1229] mb-2">Research Objectives</h4>
+                <p className="text-[#6b5566] leading-relaxed whitespace-pre-wrap">{reviewData.proposal.objectives}</p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-gray-700 mb-2">Methodology</h4>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{reviewData.proposal.methodology}</p>
+                <h4 className="font-semibold text-[#2b1229] mb-2">Methodology</h4>
+                <p className="text-[#6b5566] leading-relaxed whitespace-pre-wrap">{reviewData.proposal.methodology}</p>
               </div>
 
               {reviewData.proposal.expectedOutcomes && (
                 <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">Expected Outcomes</h4>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{reviewData.proposal.expectedOutcomes}</p>
+                  <h4 className="font-semibold text-[#2b1229] mb-2">Expected Outcomes</h4>
+                  <p className="text-[#6b5566] leading-relaxed whitespace-pre-wrap">{reviewData.proposal.expectedOutcomes}</p>
                 </div>
               )}
 
               {reviewData.proposal.workPlan && (
                 <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">Work Plan</h4>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{reviewData.proposal.workPlan}</p>
+                  <h4 className="font-semibold text-[#2b1229] mb-2">Work Plan</h4>
+                  <p className="text-[#6b5566] leading-relaxed whitespace-pre-wrap">{reviewData.proposal.workPlan}</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Review Scoring Section */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-purple-700">
+              <h2 className="font-serif text-xl font-semibold text-[#4a0340]">
                 {isCompleted ? 'Your Review Scores' : 'Proposal Scoring'}
               </h2>
               {isCompleted && (
                 <div className="text-right">
-                  <div className="text-sm text-gray-600">Total Score</div>
-                  <div className="text-2xl font-bold text-purple-700">
+                  <div className="text-sm text-[#6b5566]">Total Score</div>
+                  <div className="text-2xl font-bold text-[#4a0340]">
                     {reviewData.totalScore}/{calculateMaxTotalScore()}
                   </div>
                 </div>
@@ -677,34 +677,34 @@ const ProposalReviewForm: React.FC = () => {
             {/* Scoring Criteria */}
             <div className="space-y-4 mb-6">
               {reviewCriteria.map((criteria) => (
-                <div key={criteria.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                <div key={criteria.id} className="border border-[#e6d9e6] rounded-lg p-4 hover:shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] transition-shadow">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800 mb-1">
+                      <h3 className="font-semibold text-[#2b1229] mb-1">
                         {criteria.name}
                       </h3>
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p className="text-sm text-[#6b5566] mb-2">
                         {criteria.description}
                       </p>
-                      <span className="text-xs text-gray-500">Max Score: {criteria.maxScore}</span>
+                      <span className="text-xs text-[#6b5566]">Max Score: {criteria.maxScore}</span>
                     </div>
                     <div className="flex items-center ml-4">
                       {isCompleted ? (
                         <div className="text-right">
-                          <div className="text-lg font-bold text-purple-700">
+                          <div className="text-lg font-bold text-[#4a0340]">
                             {reviewData.scores[criteria.id]}/{criteria.maxScore}
                           </div>
-                          <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
-                            <div 
-                              className="bg-purple-600 rounded-full h-2" 
-                              style={{ 
-                                width: `${(reviewData.scores[criteria.id] / criteria.maxScore) * 100}%` 
+                          <div className="w-24 bg-[#e6d9e6] rounded-full h-2 mt-1">
+                            <div
+                              className="bg-[#6d035c] rounded-full h-2"
+                              style={{
+                                width: `${(reviewData.scores[criteria.id] / criteria.maxScore) * 100}%`
                               }}
                             ></div>
                           </div>
                         </div>
                       ) : (
-                        <input 
+                        <input
                           type="number"
                           min="0"
                           max={criteria.maxScore}
@@ -712,25 +712,25 @@ const ProposalReviewForm: React.FC = () => {
                           onChange={(e) => {
                             const score = parseInt(e.target.value);
                             handleScoreChange(
-                              criteria.id, 
+                              criteria.id,
                               isNaN(score) ? 0 : Math.min(score, criteria.maxScore)
                             );
                           }}
-                          className="w-20 p-2 border rounded text-center focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          className="w-20 p-2 border border-[#e0d3e0] rounded-lg text-center text-[#2b1229] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20 focus:border-[#6d035c]"
                           placeholder={`0-${criteria.maxScore}`}
                         />
                       )}
                     </div>
                   </div>
-                  
+
                   {!isCompleted && (
-                    <div className="bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-purple-600 rounded-full h-2 transition-all duration-300" 
-                        style={{ 
-                          width: `${criteria.scoreGiven 
-                            ? (criteria.scoreGiven / criteria.maxScore) * 100 
-                            : 0}%` 
+                    <div className="bg-[#e6d9e6] rounded-full h-2">
+                      <div
+                        className="bg-[#6d035c] rounded-full h-2 transition-all duration-300"
+                        style={{
+                          width: `${criteria.scoreGiven
+                            ? (criteria.scoreGiven / criteria.maxScore) * 100
+                            : 0}%`
                         }}
                       ></div>
                     </div>
@@ -741,9 +741,9 @@ const ProposalReviewForm: React.FC = () => {
 
             {/* Total Score */}
             {!isCompleted && (
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 mb-6 flex justify-between items-center">
-                <span className="font-bold text-lg text-gray-800">Total Score</span>
-                <span className="text-2xl font-bold text-purple-700">
+              <div className="bg-gradient-to-r from-[#4a0340] to-[#6d035c] rounded-lg p-4 mb-6 flex justify-between items-center">
+                <span className="font-bold text-lg text-white">Total Score</span>
+                <span className="text-2xl font-bold text-[#e9c96b]">
                   {calculateTotalScore()}/{calculateMaxTotalScore()}
                 </span>
               </div>
@@ -751,24 +751,24 @@ const ProposalReviewForm: React.FC = () => {
 
             {/* Review Comments */}
             <div className="mb-6">
-              <label 
-                htmlFor="review-comments" 
-                className="block text-lg font-semibold text-gray-700 mb-2"
+              <label
+                htmlFor="review-comments"
+                className="block text-lg font-semibold text-[#2b1229] mb-2"
               >
                 Review Comments
               </label>
               {isCompleted ? (
-                <div className="bg-gray-50 rounded-lg p-4 min-h-[120px]">
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                <div className="bg-[#f4eef3] rounded-lg p-4 min-h-[120px]">
+                  <p className="text-[#2b1229] whitespace-pre-wrap">
                     {reviewData.comments || 'No comments provided.'}
                   </p>
                 </div>
               ) : (
-                <textarea 
+                <textarea
                   id="review-comments"
                   value={reviewComments}
                   onChange={(e) => setReviewComments(e.target.value)}
-                  className="w-full h-32 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-vertical"
+                  className="w-full h-32 p-3 border border-[#e0d3e0] rounded-lg text-[#2b1229] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20 focus:border-[#6d035c] resize-vertical"
                   placeholder="Provide detailed review comments for the proposal..."
                 />
               )}
@@ -777,14 +777,14 @@ const ProposalReviewForm: React.FC = () => {
             {/* Action Buttons */}
             {!isCompleted && (
               <div className="flex flex-col sm:flex-row gap-3">
-                <button 
+                <button
                   onClick={handleSaveProgress}
                   disabled={saving}
-                  className="flex-1 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-white border border-[#e0d3e0] text-[#4a0340] py-3 px-4 rounded-full hover:bg-[#f4eef3] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {saving ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#4a0340] border-t-transparent"></div>
                       Saving...
                     </>
                   ) : (
@@ -794,10 +794,10 @@ const ProposalReviewForm: React.FC = () => {
                     </>
                   )}
                 </button>
-                <button 
+                <button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="flex-1 bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-[#6d035c] text-white py-3 px-4 rounded-full hover:bg-[#4a0340] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {submitting ? (
                     <>
@@ -811,9 +811,9 @@ const ProposalReviewForm: React.FC = () => {
                     </>
                   )}
                 </button>
-                <button 
+                <button
                   onClick={handleReset}
-                  className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="flex-1 bg-[#f4eef3] text-[#4a0340] py-3 px-4 rounded-full hover:bg-[#f3e7d0] transition-colors"
                 >
                   Reset
                 </button>
@@ -822,9 +822,9 @@ const ProposalReviewForm: React.FC = () => {
 
             {/* Completion Message */}
             {isCompleted && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="flex items-center gap-2 text-green-800">
-                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="bg-[#f2faf3] border border-[#cfe6d4] rounded-lg p-4">
+                <div className="flex items-center gap-2 text-[#1f5b34]">
+                  <div className="w-5 h-5 bg-[#1f5b34] rounded-full flex items-center justify-center">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                   <span className="font-medium">
