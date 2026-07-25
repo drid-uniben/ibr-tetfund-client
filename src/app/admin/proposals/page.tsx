@@ -338,7 +338,7 @@ const handleReassignSubmit = async () => {
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'submitted':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[#6d035c]/10 text-primary';
       case 'under_review':
         return 'bg-yellow-100 text-yellow-800';
       case 'approved':
@@ -348,7 +348,7 @@ const handleReassignSubmit = async () => {
       case 'revision_requested':
         return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
   
@@ -375,8 +375,8 @@ const handleReassignSubmit = async () => {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -386,12 +386,12 @@ const handleReassignSubmit = async () => {
       <div className="py-6">
         <div className="mx-auto px-4 sm:px-6 md:px-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Unarchived Proposals</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Unarchived Proposals</h1>
             <div className="flex space-x-4">
               <Link href="/admin/proposals/archived" passHref>
                 <Button
                   variant="outline"
-                  className="flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="flex items-center px-3 py-2 border border-border shadow-sm text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
                 >
                   <FolderOpen className="h-4 w-4 mr-2" />
                   Archived Proposals
@@ -399,7 +399,7 @@ const handleReassignSubmit = async () => {
               </Link>
               <button 
                 onClick={refreshData}
-                className="flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                className="flex items-center px-3 py-2 border border-border shadow-sm text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
@@ -417,8 +417,8 @@ const handleReassignSubmit = async () => {
           <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
   <div className="flex flex-col md:flex-row items-start gap-4">
     <div className="flex items-center">
-      <Filter className="text-gray-400 mr-2 h-5 w-5" />
-      <span className="text-sm font-medium text-gray-500">Filters:</span>
+      <Filter className="text-muted-foreground mr-2 h-5 w-5" />
+      <span className="text-sm font-medium text-muted-foreground">Filters:</span>
     </div>
     
     <div className="flex flex-col gap-4 flex-grow">
@@ -428,7 +428,7 @@ const handleReassignSubmit = async () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Status Filter */}
         <div>
-          <label htmlFor="status" className="block text-xs font-medium text-gray-500 mb-1">
+          <label htmlFor="status" className="block text-xs font-medium text-muted-foreground mb-1">
             Status
           </label>
           <select
@@ -436,7 +436,7 @@ const handleReassignSubmit = async () => {
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+            className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
           >
             <option value="">All Statuses</option>
             <option value="submitted">Submitted</option>
@@ -449,7 +449,7 @@ const handleReassignSubmit = async () => {
         
         {/* Submitter Type Filter */}
         <div>
-          <label htmlFor="submitterType" className="block text-xs font-medium text-gray-500 mb-1">
+          <label htmlFor="submitterType" className="block text-xs font-medium text-muted-foreground mb-1">
             Submitter Type
           </label>
           <select
@@ -457,7 +457,7 @@ const handleReassignSubmit = async () => {
             name="submitterType"
             value={filters.submitterType}
             onChange={handleFilterChange}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+            className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
           >
             <option value="">All Types</option>
             <option value="staff">Staff</option>
@@ -467,7 +467,7 @@ const handleReassignSubmit = async () => {
         
         {/* Faculty Filter */}
         <div>
-          <label htmlFor="faculty" className="block text-xs font-medium text-gray-500 mb-1">
+          <label htmlFor="faculty" className="block text-xs font-medium text-muted-foreground mb-1">
             Faculty
           </label>
           <select
@@ -475,7 +475,7 @@ const handleReassignSubmit = async () => {
             name="faculty"
             value={filters.faculty}
             onChange={handleFilterChange}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+            className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
           >
             <option value="">All Faculties</option>
             {faculties.map((faculty) => (
@@ -488,7 +488,7 @@ const handleReassignSubmit = async () => {
         
         {/* Updated Sort Order - Add duplicates option */}
         <div>
-          <label htmlFor="sort" className="block text-xs font-medium text-gray-500 mb-1">
+          <label htmlFor="sort" className="block text-xs font-medium text-muted-foreground mb-1">
             Sort By
           </label>
           <select
@@ -496,7 +496,7 @@ const handleReassignSubmit = async () => {
             name="sort"
             value={filters.sort}
             onChange={handleFilterChange}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+            className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
           >
             <option value="createdAt">Submission Date</option>
             <option value="projectTitle">Project Title</option>
@@ -513,24 +513,24 @@ const handleReassignSubmit = async () => {
           <div className="bg-white shadow overflow-hidden rounded-lg">
             {isLoading ? (
               <div className="flex justify-center items-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : proposals.length === 0 ? (
               <div className="text-center py-16">
-                <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No proposals found</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-2 text-sm font-medium text-foreground">No proposals found</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   No proposals match your current filters.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-muted">
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                         onClick={() => toggleSortOrder('projectTitle')}
                       >
                         <div className="flex items-center">
@@ -542,19 +542,19 @@ const handleReassignSubmit = async () => {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                       >
                         Submitter
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                       >
                         Type
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                         onClick={() => toggleSortOrder('status')}
                       >
                         <div className="flex items-center">
@@ -566,7 +566,7 @@ const handleReassignSubmit = async () => {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                         onClick={() => toggleSortOrder('createdAt')}
                       >
                         <div className="flex items-center">
@@ -578,25 +578,25 @@ const handleReassignSubmit = async () => {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider"
                       >
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-border">
                     {proposals.map((proposal) => (
-                      <tr key={proposal._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <tr key={proposal._id} className="hover:bg-muted">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                           {proposal.projectTitle}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           <div className="flex flex-col">
                             <span className="font-medium">{proposal.submitter.name}</span>
-                            <span className="text-xs text-gray-400">{proposal.submitter.email}</span>
+                            <span className="text-xs text-muted-foreground">{proposal.submitter.email}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           {proposal.submitterType === 'staff' ? 'Staff' : "Master's Student"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -604,7 +604,7 @@ const handleReassignSubmit = async () => {
                             {getStatusLabel(proposal.status)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           {formatDate(proposal.createdAt)}
                         </td>
 
@@ -657,9 +657,9 @@ const handleReassignSubmit = async () => {
             
             {/* Pagination */}
             {!isLoading && proposals.length > 0 && (
-              <nav className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+              <nav className="bg-white px-4 py-3 flex items-center justify-between border-t border-border sm:px-6">
                 <div className="hidden sm:block">
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium">{((pagination.currentPage - 1) * 10) + 1}</span> to{' '}
                     <span className="font-medium">
                       {Math.min(pagination.currentPage * 10, pagination.count)}
@@ -671,14 +671,14 @@ const handleReassignSubmit = async () => {
                   <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                    className="relative inline-flex items-center px-4 py-2 border border-border text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-border text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -741,7 +741,7 @@ const handleReassignSubmit = async () => {
     <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
-          <RefreshCw className="h-5 w-5 text-purple-600" />
+          <RefreshCw className="h-5 w-5 text-primary" />
           {reassignData?.isReconciliation ? 'Reassign Reconciliation Review' : 'Reassign Review'}
         </DialogTitle>
         <DialogDescription>
@@ -753,21 +753,21 @@ const handleReassignSubmit = async () => {
         {reassignSuccess ? (
           <div className="text-center py-8">
             <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <p className="text-lg font-medium text-gray-900">Review reassigned successfully!</p>
+            <p className="text-lg font-medium text-foreground">Review reassigned successfully!</p>
           </div>
         ) : !reassignMode ? (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div 
                 onClick={() => setReassignMode('auto')}
-                className="group p-6 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all cursor-pointer"
+                className="group p-6 border-2 border-border rounded-xl hover:border-primary hover:bg-secondary transition-all cursor-pointer"
               >
                 <div className="flex flex-col items-center text-center">
-                  <div className="h-12 w-12 rounded-full bg-purple-100 group-hover:bg-purple-200 flex items-center justify-center mb-4 transition-colors">
-                    <RefreshCw className="h-6 w-6 text-purple-600" />
+                  <div className="h-12 w-12 rounded-full bg-secondary group-hover:bg-[#e9c96b]/40 flex items-center justify-center mb-4 transition-colors">
+                    <RefreshCw className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Automatic Assignment</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Automatic Assignment</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     System will automatically select the best available reviewer based on workload, expertise, and availability.
                   </p>
                 </div>
@@ -778,14 +778,14 @@ const handleReassignSubmit = async () => {
                   setReassignMode('manual');
                   loadEligibleReviewers();
                 }}
-                className="group p-6 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all cursor-pointer"
+                className="group p-6 border-2 border-border rounded-xl hover:border-primary hover:bg-secondary transition-all cursor-pointer"
               >
                 <div className="flex flex-col items-center text-center">
-                  <div className="h-12 w-12 rounded-full bg-purple-100 group-hover:bg-purple-200 flex items-center justify-center mb-4 transition-colors">
-                    <Users className="h-6 w-6 text-purple-600" />
+                  <div className="h-12 w-12 rounded-full bg-secondary group-hover:bg-[#e9c96b]/40 flex items-center justify-center mb-4 transition-colors">
+                    <Users className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Manual Selection</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Manual Selection</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     Browse and select from a list of eligible reviewers to manually assign the review.
                   </p>
                 </div>
@@ -795,42 +795,42 @@ const handleReassignSubmit = async () => {
         ) : reassignMode === 'manual' ? (
           <div className="space-y-6">
             {proposalInfo && (
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-200">
-                <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+              <div className="bg-gradient-to-r from-[#f3e7d0] to-[#faf7fc] rounded-lg p-4 border border-[#e9c96b]">
+                <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
                   <FileText className="h-4 w-4" />
                   Proposal Information
                 </h4>
                 <div className="space-y-1">
-                  <p className="text-sm text-purple-800"><span className="font-medium">Title:</span> {proposalInfo.title}</p>
-                  <p className="text-sm text-purple-800"><span className="font-medium">Faculty:</span> {proposalInfo.submitterFaculty}</p>
+                  <p className="text-sm text-primary"><span className="font-medium">Title:</span> {proposalInfo.title}</p>
+                  <p className="text-sm text-primary"><span className="font-medium">Faculty:</span> {proposalInfo.submitterFaculty}</p>
                 </div>
               </div>
             )}
 
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search reviewers by name, email, or title..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="border border-border rounded-lg overflow-hidden">
               {reassignLoading ? (
                 <div className="flex justify-center items-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-                  <span className="ml-2 text-gray-600">Loading eligible reviewers...</span>
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <span className="ml-2 text-muted-foreground">Loading eligible reviewers...</span>
                 </div>
               ) : eligibleReviewers.filter(reviewer =>
                 reviewer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 reviewer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 reviewer.facultyTitle.toLowerCase().includes(searchTerm.toLowerCase())
               ).length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <Users className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <div className="text-center py-12 text-muted-foreground">
+                  <Users className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                   <p>No eligible reviewers found</p>
                 </div>
               ) : (
@@ -844,8 +844,8 @@ const handleReassignSubmit = async () => {
                     .map((reviewer) => (
                       <div
                         key={reviewer._id}
-                        className={`p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${
-                          selectedReviewer === reviewer._id ? 'bg-purple-50 border-l-4 border-l-purple-500' : ''
+                        className={`p-4 hover:bg-muted cursor-pointer border-b border-border last:border-b-0 transition-colors ${
+                          selectedReviewer === reviewer._id ? 'bg-secondary ring-1 ring-inset ring-primary/40' : ''
                         }`}
                         onClick={() => setSelectedReviewer(reviewer._id)}
                       >
@@ -853,23 +853,23 @@ const handleReassignSubmit = async () => {
                           <div className="flex items-center space-x-4">
                             <div className="flex-shrink-0">
                               <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                                selectedReviewer === reviewer._id ? 'bg-purple-100' : 'bg-gray-100'
+                                selectedReviewer === reviewer._id ? 'bg-secondary' : 'bg-muted'
                               }`}>
                                 <User className={`h-5 w-5 ${
-                                  selectedReviewer === reviewer._id ? 'text-purple-600' : 'text-gray-600'
+                                  selectedReviewer === reviewer._id ? 'text-primary' : 'text-muted-foreground'
                                 }`} />
                               </div>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900">{reviewer.name}</p>
-                              <p className="text-sm text-gray-500">{reviewer.facultyTitle}</p>
-                              <p className="text-xs text-gray-400">{reviewer.email}</p>
+                              <p className="text-sm font-medium text-foreground">{reviewer.name}</p>
+                              <p className="text-sm text-muted-foreground">{reviewer.facultyTitle}</p>
+                              <p className="text-xs text-muted-foreground">{reviewer.email}</p>
                             </div>
                           </div>
                           <div className="text-right text-sm space-y-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-gray-600">{reviewer.totalReviewsCount}</span>
-                              <span className="text-xs text-gray-500">reviews</span>
+                              <span className="text-muted-foreground">{reviewer.totalReviewsCount}</span>
+                              <span className="text-xs text-muted-foreground">reviews</span>
                             </div>
                             <div className={`text-xs font-medium ${
                               reviewer.completionRate >= 80 ? 'text-green-600' : 
@@ -887,11 +887,11 @@ const handleReassignSubmit = async () => {
           </div>
         ) : (
           <div className="text-center py-8">
-            <div className="h-16 w-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-4">
-              <RefreshCw className="h-8 w-8 text-purple-600" />
+            <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+              <RefreshCw className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Ready for Automatic Assignment</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-lg font-medium text-foreground mb-2">Ready for Automatic Assignment</h3>
+            <p className="text-muted-foreground mb-6">
               The system will automatically select the most suitable reviewer for this {reassignData?.isReconciliation ? 'reconciliation ' : ''}review.
             </p>
           </div>
@@ -910,7 +910,7 @@ const handleReassignSubmit = async () => {
           <Button
             onClick={handleReassignSubmit}
             disabled={reassignLoading || (reassignMode === 'manual' && !selectedReviewer)}
-            className="bg-purple-600 hover:bg-purple-700 text-white"
+            className="bg-primary hover:bg-primary/90 text-white"
           >
             {reassignLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             {reassignMode === 'auto' ? 'Auto Reassign' : 'Reassign to Selected'}

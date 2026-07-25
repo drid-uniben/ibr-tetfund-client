@@ -178,13 +178,13 @@ export default function ProposalReviewDetailsPage() {
   const getReviewTypeIcon = (type: string) => {
     switch (type) {
       case 'ai':
-        return <Bot size={16} className="text-purple-600" />;
+        return <Bot size={16} className="text-primary" />;
       case 'human':
-        return <User size={16} className="text-blue-600" />;
+        return <User size={16} className="text-primary" />;
       case 'reconciliation':
         return <RefreshCw size={16} className="text-orange-600" />;
       default:
-        return <FileText size={16} className="text-gray-600" />;
+        return <FileText size={16} className="text-muted-foreground" />;
     }
   };
 
@@ -204,13 +204,13 @@ export default function ProposalReviewDetailsPage() {
   const getReviewTypeBadgeColor = (type: string) => {
     switch (type) {
       case 'ai':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-secondary text-secondary-foreground border-[#e9c96b]';
       case 'human':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20';
       case 'reconciliation':
         return 'bg-orange-100 text-orange-800 border-orange-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -225,7 +225,7 @@ export default function ProposalReviewDetailsPage() {
         );
       case 'in_progress':
         return (
-          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+          <Badge className="bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20">
             <Clock size={12} className="mr-1" />
             In Progress
           </Badge>
@@ -239,7 +239,7 @@ export default function ProposalReviewDetailsPage() {
         );
       default:
         return (
-          <Badge className="bg-gray-100 text-gray-800 border-gray-200">
+          <Badge className="bg-muted text-muted-foreground border-border">
             {status}
           </Badge>
         );
@@ -256,10 +256,10 @@ export default function ProposalReviewDetailsPage() {
           return (
             <div key={criterion}>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-muted-foreground">
                   {criteriaLabels[criterion] || criterion}
                 </span>
-                <span className="text-sm font-bold text-gray-900">
+                <span className="text-sm font-bold text-foreground">
                   {score}/{maxScore}
                 </span>
               </div>
@@ -269,8 +269,8 @@ export default function ProposalReviewDetailsPage() {
         })}
         <div className="pt-2 border-t">
           <div className="flex justify-between items-center">
-            <span className="text-base font-semibold text-gray-900">Total Score</span>
-            <span className="text-lg font-bold text-purple-600">
+            <span className="text-base font-semibold text-foreground">Total Score</span>
+            <span className="text-lg font-bold text-primary">
               {review.totalScore}/100
             </span>
           </div>
@@ -295,36 +295,36 @@ export default function ProposalReviewDetailsPage() {
         <CardContent className="space-y-6">
           {/* Overall Score Discrepancy */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Overall Score Variance</h4>
+            <h4 className="font-semibold text-foreground mb-3">Overall Score Variance</h4>
             <div className="bg-white rounded-lg p-4 border border-orange-200">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-red-600">
                     {discrepancyInfo.overallScores.max}
                   </div>
-                  <div className="text-xs text-gray-600">Highest</div>
+                  <div className="text-xs text-muted-foreground">Highest</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-primary">
                     {discrepancyInfo.overallScores.avg}
                   </div>
-                  <div className="text-xs text-gray-600">Average</div>
+                  <div className="text-xs text-muted-foreground">Average</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
                     {discrepancyInfo.overallScores.min}
                   </div>
-                  <div className="text-xs text-gray-600">Lowest</div>
+                  <div className="text-xs text-muted-foreground">Lowest</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600">
                     {discrepancyInfo.overallScores.percentDifference}%
                   </div>
-                  <div className="text-xs text-gray-600">Variance</div>
+                  <div className="text-xs text-muted-foreground">Variance</div>
                 </div>
               </div>
               
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 Individual scores: {discrepancyInfo.overallScores.scores.join(', ')}
               </div>
             </div>
@@ -332,19 +332,19 @@ export default function ProposalReviewDetailsPage() {
 
           {/* Criteria-level Discrepancies */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-3">Top Criteria Discrepancies</h4>
+            <h4 className="font-semibold text-foreground mb-3">Top Criteria Discrepancies</h4>
             <div className="space-y-3">
               {discrepancyInfo.criteriaDiscrepancies.map((item) => (
                 <div key={item.criterion} className="bg-white rounded-lg p-4 border border-orange-200">
                   <div className="flex justify-between items-start mb-2">
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-foreground">
                       {criteriaLabels[item.criterion] || item.criterion}
                     </div>
                     <Badge className="bg-orange-100 text-orange-800 border-orange-200">
                       {item.percentDifference}% variance
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span>Scores: {item.scores.join(', ')}</span>
                     <span>Avg: {item.avg}</span>
                     <span>Range: {item.min}-{item.max}</span>
@@ -371,7 +371,7 @@ export default function ProposalReviewDetailsPage() {
                   {review.reviewType === 'human' && ` #${index + 1}`}
                 </CardTitle>
                 {review.reviewer && (
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-muted-foreground mt-1">
                     <div className="flex items-center gap-4">
                       <span className="flex items-center gap-1">
                         <User size={12} />
@@ -413,7 +413,7 @@ export default function ProposalReviewDetailsPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Score Breakdown */}
             <div>
-              <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                 <BarChart3 size={16} />
                 Score Breakdown
               </h4>
@@ -423,17 +423,17 @@ export default function ProposalReviewDetailsPage() {
             {/* Comments and Details */}
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
                   <MessageSquare size={16} />
                   Comments & Feedback
                 </h4>
-                <div className="bg-gray-50 rounded-lg p-4 min-h-[120px]">
+                <div className="bg-muted rounded-lg p-4 min-h-[120px]">
                   {review.comments ? (
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                       {review.comments}
                     </p>
                   ) : (
-                    <p className="text-sm text-gray-500 italic">
+                    <p className="text-sm text-muted-foreground italic">
                       No comments provided
                     </p>
                   )}
@@ -442,7 +442,7 @@ export default function ProposalReviewDetailsPage() {
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <div className="flex items-center gap-1 text-gray-600 mb-1">
+                  <div className="flex items-center gap-1 text-muted-foreground mb-1">
                     <Calendar size={12} />
                     Due Date
                   </div>
@@ -452,7 +452,7 @@ export default function ProposalReviewDetailsPage() {
                 </div>
                 {review.completedAt && (
                   <div>
-                    <div className="flex items-center gap-1 text-gray-600 mb-1">
+                    <div className="flex items-center gap-1 text-muted-foreground mb-1">
                       <CheckCircle size={12} />
                       Completed
                     </div>
@@ -471,8 +471,8 @@ export default function ProposalReviewDetailsPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -481,8 +481,8 @@ export default function ProposalReviewDetailsPage() {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-          <span className="ml-2 text-gray-600">Loading proposal details...</span>
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="ml-2 text-muted-foreground">Loading proposal details...</span>
         </div>
       </AdminLayout>
     );
@@ -529,10 +529,10 @@ export default function ProposalReviewDetailsPage() {
               Back to Decisions
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-foreground">
                 Proposal Review Details
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-muted-foreground mt-1">
                 Comprehensive review analysis and scoring breakdown
               </p>
             </div>
@@ -555,24 +555,24 @@ export default function ProposalReviewDetailsPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg text-gray-900">
+                  <h3 className="font-semibold text-lg text-foreground">
                     {details.proposal.projectTitle || 'Untitled Proposal'}
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline">
                       {details.proposal.submitterType === 'staff' ? 'Staff' : 'Master Student'}
                     </Badge>
-                    <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                    <Badge className="bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20">
                       {details.proposal.status}
                     </Badge>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Submitter Information</h4>
+                  <h4 className="font-medium text-foreground mb-2">Submitter Information</h4>
                   <div className="space-y-1 text-sm">
                     <div className="flex items-center gap-2">
-                      <User size={14} className="text-gray-500" />
+                      <User size={14} className="text-muted-foreground" />
                       <span>{details.proposal.submitter.name}</span>
                       {details.proposal.submitter.academicTitle && (
                         <Badge variant="outline" className="text-xs">
@@ -581,15 +581,15 @@ export default function ProposalReviewDetailsPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Mail size={14} className="text-gray-500" />
+                      <Mail size={14} className="text-muted-foreground" />
                       <span>{details.proposal.submitter.email}</span>
                     </div>
                     {details.proposal.submitter.faculty && (
                       <div className="flex items-center gap-2">
-                        <Building size={14} className="text-gray-500" />
+                        <Building size={14} className="text-muted-foreground" />
                         <span>{details.proposal.submitter.faculty}</span>
                         {details.proposal.submitter.department && (
-                          <span className="text-gray-500">
+                          <span className="text-muted-foreground">
                             • {details.proposal.submitter.department}
                           </span>
                         )}
@@ -601,13 +601,13 @@ export default function ProposalReviewDetailsPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Review Summary</h4>
+                  <h4 className="font-medium text-foreground mb-3">Review Summary</h4>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-purple-50 rounded-lg p-3 border border-purple-200">
-                      <div className="text-2xl font-bold text-purple-600">
+                    <div className="bg-secondary rounded-lg p-3 border border-[#e9c96b]">
+                      <div className="text-2xl font-bold text-primary">
                         {details.reviewSummary.totalReviews}
                       </div>
-                      <div className="text-sm text-purple-700">Total Reviews</div>
+                      <div className="text-sm text-primary">Total Reviews</div>
                     </div>
                     <div className="bg-green-50 rounded-lg p-3 border border-green-200">
                       <div className="text-2xl font-bold text-green-600">
@@ -632,13 +632,13 @@ export default function ProposalReviewDetailsPage() {
 
                   <div className="flex gap-2 mt-4">
                     {details.reviewSummary.hasAI && (
-                      <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+                      <Badge className="bg-secondary text-secondary-foreground border-[#e9c96b]">
                         <Bot size={12} className="mr-1" />
                         AI Review
                       </Badge>
                     )}
                     {details.reviewSummary.hasHuman && (
-                      <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                      <Badge className="bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20">
                         <User size={12} className="mr-1" />
                         Human Review
                       </Badge>
@@ -652,7 +652,7 @@ export default function ProposalReviewDetailsPage() {
                   </div>
                 </div>
 
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   <div>Created: {new Date(details.proposal.createdAt).toLocaleString()}</div>
                   <div>Updated: {new Date(details.proposal.updatedAt).toLocaleString()}</div>
                 </div>
@@ -667,17 +667,17 @@ export default function ProposalReviewDetailsPage() {
         {/* Reviews Section */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-foreground">
               All Reviews ({allReviews.length})
             </h2>
             <div className="flex gap-2">
               {details.reviews.ai.length > 0 && (
-                <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+                <Badge className="bg-secondary text-secondary-foreground border-[#e9c96b]">
                   {details.reviews.ai.length} AI
                 </Badge>
               )}
               {details.reviews.human.length > 0 && (
-                <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                <Badge className="bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20">
                   {details.reviews.human.length} Human
                 </Badge>
               )}
@@ -692,8 +692,8 @@ export default function ProposalReviewDetailsPage() {
           {/* AI Reviews */}
           {details.reviews.ai.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                <Bot size={18} className="text-purple-600" />
+              <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2">
+                <Bot size={18} className="text-primary" />
                 AI Reviews
               </h3>
               {details.reviews.ai.map((review, index) => renderReviewCard(review, index))}
@@ -703,8 +703,8 @@ export default function ProposalReviewDetailsPage() {
           {/* Human Reviews */}
           {details.reviews.human.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                <User size={18} className="text-blue-600" />
+              <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2">
+                <User size={18} className="text-primary" />
                 Human Reviews
               </h3>
               {details.reviews.human.map((review, index) => renderReviewCard(review, index))}
@@ -714,7 +714,7 @@ export default function ProposalReviewDetailsPage() {
           {/* Reconciliation Reviews */}
           {details.reviews.reconciliation.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2">
                 <RefreshCw size={18} className="text-orange-600" />
                 Reconciliation Reviews
               </h3>
@@ -725,9 +725,9 @@ export default function ProposalReviewDetailsPage() {
           {allReviews.length === 0 && (
             <Card>
               <CardContent className="text-center py-12">
-                <FileText className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Reviews Available</h3>
-                <p className="text-gray-600">
+                <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium text-foreground mb-2">No Reviews Available</h3>
+                <p className="text-muted-foreground">
                   This proposal has not been reviewed yet.
                 </p>
               </CardContent>
@@ -737,4 +737,4 @@ export default function ProposalReviewDetailsPage() {
       </div>
     </AdminLayout>
   );
-}
+}

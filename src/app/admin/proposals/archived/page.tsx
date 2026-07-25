@@ -232,7 +232,7 @@ export default function AdminArchivedProposalsPage() {
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'submitted':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[#6d035c]/10 text-primary';
       case 'under_review':
         return 'bg-yellow-100 text-yellow-800';
       case 'approved':
@@ -242,7 +242,7 @@ export default function AdminArchivedProposalsPage() {
       case 'revision_requested':
         return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
   
@@ -269,8 +269,8 @@ export default function AdminArchivedProposalsPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -280,12 +280,12 @@ export default function AdminArchivedProposalsPage() {
       <div className="py-6">
         <div className="mx-auto px-4 sm:px-6 md:px-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Archived Proposals</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Archived Proposals</h1>
             <div className="flex space-x-4">
               <Link href="/admin/proposals" passHref>
                 <Button
                   variant="outline"
-                  className="flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="flex items-center px-3 py-2 border border-border shadow-sm text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
                 >
                   <FolderOpen className="h-4 w-4 mr-2" />
                   Unarchived Proposals
@@ -293,7 +293,7 @@ export default function AdminArchivedProposalsPage() {
               </Link>
               <button 
                 onClick={refreshData}
-                className="flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                className="flex items-center px-3 py-2 border border-border shadow-sm text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
@@ -311,14 +311,14 @@ export default function AdminArchivedProposalsPage() {
           <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
             <div className="flex flex-col md:flex-row items-center gap-4">
               <div className="flex items-center">
-                <Filter className="text-gray-400 mr-2 h-5 w-5" />
-                <span className="text-sm font-medium text-gray-500">Filters:</span>
+                <Filter className="text-muted-foreground mr-2 h-5 w-5" />
+                <span className="text-sm font-medium text-muted-foreground">Filters:</span>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-grow">
                 {/* Status Filter */}
                 <div>
-                  <label htmlFor="status" className="block text-xs font-medium text-gray-500 mb-1">
+                  <label htmlFor="status" className="block text-xs font-medium text-muted-foreground mb-1">
                     Status
                   </label>
                   <select
@@ -326,7 +326,7 @@ export default function AdminArchivedProposalsPage() {
                     name="status"
                     value={filters.status}
                     onChange={handleFilterChange}
-                    className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                    className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
                   >
                     <option value="">All Statuses</option>
                     <option value="submitted">Submitted</option>
@@ -339,7 +339,7 @@ export default function AdminArchivedProposalsPage() {
                 
                 {/* Submitter Type Filter */}
                 <div>
-                  <label htmlFor="submitterType" className="block text-xs font-medium text-gray-500 mb-1">
+                  <label htmlFor="submitterType" className="block text-xs font-medium text-muted-foreground mb-1">
                     Submitter Type
                   </label>
                   <select
@@ -347,7 +347,7 @@ export default function AdminArchivedProposalsPage() {
                     name="submitterType"
                     value={filters.submitterType}
                     onChange={handleFilterChange}
-                    className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                    className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
                   >
                     <option value="">All Types</option>
                     <option value="staff">Staff</option>
@@ -357,7 +357,7 @@ export default function AdminArchivedProposalsPage() {
                 
                 {/* Faculty Filter - NEW */}
                 <div>
-                  <label htmlFor="faculty" className="block text-xs font-medium text-gray-500 mb-1">
+                  <label htmlFor="faculty" className="block text-xs font-medium text-muted-foreground mb-1">
                     Faculty
                   </label>
                   <select
@@ -365,7 +365,7 @@ export default function AdminArchivedProposalsPage() {
                     name="faculty"
                     value={filters.faculty}
                     onChange={handleFilterChange}
-                    className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                    className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
                   >
                     <option value="">All Faculties</option>
                     {faculties.map((faculty) => (
@@ -378,7 +378,7 @@ export default function AdminArchivedProposalsPage() {
                 
                 {/* Sort Order */}
                 <div>
-                  <label htmlFor="sort" className="block text-xs font-medium text-gray-500 mb-1">
+                  <label htmlFor="sort" className="block text-xs font-medium text-muted-foreground mb-1">
                     Sort By
                   </label>
                   <select
@@ -386,7 +386,7 @@ export default function AdminArchivedProposalsPage() {
                     name="sort"
                     value={filters.sort}
                     onChange={handleFilterChange}
-                    className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                    className="w-full rounded-md border border-border py-2 px-3 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
                   >
                     <option value="createdAt">Submission Date</option>
                     <option value="projectTitle">Project Title</option>
@@ -401,24 +401,24 @@ export default function AdminArchivedProposalsPage() {
           <div className="bg-white shadow overflow-hidden rounded-lg">
             {isLoading ? (
               <div className="flex justify-center items-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : proposals.length === 0 ? (
               <div className="text-center py-16">
-                <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No archived proposals found</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-2 text-sm font-medium text-foreground">No archived proposals found</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   No archived proposals match your current filters.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-muted">
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                         onClick={() => toggleSortOrder('projectTitle')}
                       >
                         <div className="flex items-center">
@@ -430,19 +430,19 @@ export default function AdminArchivedProposalsPage() {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                       >
                         Submitter
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                       >
                         Type
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                         onClick={() => toggleSortOrder('status')}
                       >
                         <div className="flex items-center">
@@ -454,7 +454,7 @@ export default function AdminArchivedProposalsPage() {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
                         onClick={() => toggleSortOrder('createdAt')}
                       >
                         <div className="flex items-center">
@@ -466,25 +466,25 @@ export default function AdminArchivedProposalsPage() {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider"
                       >
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-border">
                     {proposals.map((proposal) => (
-                      <tr key={proposal._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <tr key={proposal._id} className="hover:bg-muted">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                           {proposal.projectTitle}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           <div className="flex flex-col">
                             <span className="font-medium">{proposal.submitter.name}</span>
-                            <span className="text-xs text-gray-400">{proposal.submitter.email}</span>
+                            <span className="text-xs text-muted-foreground">{proposal.submitter.email}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           {proposal.submitterType === 'staff' ? 'Staff' : "Master's Student"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -492,7 +492,7 @@ export default function AdminArchivedProposalsPage() {
                             {getStatusLabel(proposal.status)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           {formatDate(proposal.createdAt)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -522,9 +522,9 @@ export default function AdminArchivedProposalsPage() {
             
             {/* Pagination */}
             {!isLoading && proposals.length > 0 && (
-              <nav className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+              <nav className="bg-white px-4 py-3 flex items-center justify-between border-t border-border sm:px-6">
                 <div className="hidden sm:block">
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium">{((pagination.currentPage - 1) * 10) + 1}</span> to{' '}
                     <span className="font-medium">
                       {Math.min(pagination.currentPage * 10, pagination.count)}
@@ -536,14 +536,14 @@ export default function AdminArchivedProposalsPage() {
                   <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                    className="relative inline-flex items-center px-4 py-2 border border-border text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-border text-sm font-medium rounded-md text-muted-foreground bg-white hover:bg-muted disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
                   >
                     Next
                   </button>

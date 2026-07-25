@@ -89,7 +89,7 @@ function ResearcherDetailsPage() {
     return (
       <AdminLayout>
         <div className="flex justify-center items-center h-64">
-          <RefreshCw className="h-8 w-8 animate-spin text-blue-500" />
+          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
         </div>
       </AdminLayout>
     );
@@ -106,7 +106,7 @@ function ResearcherDetailsPage() {
   if (!researcherData) {
     return (
       <AdminLayout>
-        <div className="text-center text-gray-500">Researcher not found.</div>
+        <div className="text-center text-muted-foreground">Researcher not found.</div>
       </AdminLayout>
     );
   }
@@ -120,7 +120,7 @@ function ResearcherDetailsPage() {
           <div className="mb-6">
             <Link
               href="/admin/researchers" // Link back to the researchers list page
-              className="inline-flex items-center text-sm font-medium text-purple-600 hover:text-purple-800"
+              className="inline-flex items-center text-sm font-medium text-primary hover:text-primary"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Researchers
@@ -194,7 +194,7 @@ function ResearcherDetailsPage() {
                     <tr>
                       <td
                         colSpan={3} // Adjusted colspan back to 3
-                        className="px-4 py-8 text-center text-gray-500"
+                        className="px-4 py-8 text-center text-muted-foreground"
                       >
                         No associated proposals found.
                       </td>
@@ -203,7 +203,7 @@ function ResearcherDetailsPage() {
                     proposals.map((proposal) => (
                       <tr
                         key={proposal._id} // Use proposal _id as key
-                        className="border-b hover:bg-gray-50 cursor-pointer"
+                        className="border-b hover:bg-muted cursor-pointer"
                         // Add onClick for proposal details if needed
                       >
                         {/* Removed Proposal Title data cell */}

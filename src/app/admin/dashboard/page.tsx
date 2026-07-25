@@ -70,8 +70,8 @@ export default function AdminDashboard() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -80,7 +80,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <div className="py-6">
         <div className="mx-auto px-4 sm:px-6 md:px-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-6">Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-foreground mb-6">Dashboard</h1>
           
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
           
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : statistics ? (
             <>
@@ -100,14 +100,14 @@ export default function AdminDashboard() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="p-5">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0 bg-purple-100 rounded-md p-3">
-                        <FileText className="h-6 w-6 text-purple-800" />
+                      <div className="flex-shrink-0 bg-secondary rounded-md p-3">
+                        <FileText className="h-6 w-6 text-primary" />
                       </div>
                       <div className="ml-5 w-0 flex-1">
                         <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">Total Proposals</dt>
+                          <dt className="text-sm font-medium text-muted-foreground truncate">Total Proposals</dt>
                           <dd>
-                            <div className="text-lg font-medium text-gray-900">{statistics.total}</div>
+                            <div className="text-lg font-medium text-foreground">{statistics.total}</div>
                           </dd>
                         </dl>
                       </div>
@@ -119,14 +119,14 @@ export default function AdminDashboard() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="p-5">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0 bg-blue-100 rounded-md p-3">
-                        <UserCheck className="h-6 w-6 text-blue-800" />
+                      <div className="flex-shrink-0 bg-[#6d035c]/10 rounded-md p-3">
+                        <UserCheck className="h-6 w-6 text-primary" />
                       </div>
                       <div className="ml-5 w-0 flex-1">
                         <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">Staff Proposals</dt>
+                          <dt className="text-sm font-medium text-muted-foreground truncate">Staff Proposals</dt>
                           <dd>
-                            <div className="text-lg font-medium text-gray-900">{statistics.byType.staff}</div>
+                            <div className="text-lg font-medium text-foreground">{statistics.byType.staff}</div>
                           </dd>
                         </dl>
                       </div>
@@ -143,9 +143,9 @@ export default function AdminDashboard() {
                       </div>
                       <div className="ml-5 w-0 flex-1">
                         <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">Master Student Proposals</dt>
+                          <dt className="text-sm font-medium text-muted-foreground truncate">Master Student Proposals</dt>
                           <dd>
-                            <div className="text-lg font-medium text-gray-900">{statistics.byType.master_student}</div>
+                            <div className="text-lg font-medium text-foreground">{statistics.byType.master_student}</div>
                           </dd>
                         </dl>
                       </div>
@@ -162,9 +162,9 @@ export default function AdminDashboard() {
                       </div>
                       <div className="ml-5 w-0 flex-1">
                         <dl>
-                          <dt className="text-sm font-medium text-gray-500 truncate">Approved Proposals</dt>
+                          <dt className="text-sm font-medium text-muted-foreground truncate">Approved Proposals</dt>
                           <dd>
-                            <div className="text-lg font-medium text-gray-900">
+                            <div className="text-lg font-medium text-foreground">
                               {statistics.byStatus.approved || 0}
                             </div>
                           </dd>
@@ -177,7 +177,7 @@ export default function AdminDashboard() {
 
               {/* Status Chart */}
               <div className="bg-white shadow rounded-lg p-6 mb-8">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Proposals by Status</h2>
+                <h2 className="text-lg font-medium text-foreground mb-4">Proposals by Status</h2>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={getStatusChartData()} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -196,4 +196,4 @@ export default function AdminDashboard() {
       </div>
     </AdminLayout>
   );
-}
+}
