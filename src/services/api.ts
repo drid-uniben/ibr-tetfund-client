@@ -220,6 +220,83 @@ export const submitMasterProposal = async (formData: FormData) => {
   }
 };
 
+// Submission window (deadline) endpoints
+// Phases mirror the backend SUBMISSION_PHASES union.
+export type SubmissionPhase =
+  | "staff_concept"
+  | "masters_concept"
+  | "full_proposal"
+  | "final_submission";
+
+export interface SubmissionWindow {
+  phase: SubmissionPhase;
+  opensAt: string | null;
+  closesAt: string | null;
+  isOpen: boolean;
+  note: string | null;
+  isManuallyClosed?: boolean;
+  updatedAt?: string;
+}
+
+// Public: all four resolved windows (public-safe fields).
+export const getSubmissionWindows = async (): Promise<SubmissionWindow[]> => {
+  try {
+    const response = await api.get("/submission-windows");
+    return response.data.data as SubmissionWindow[];
+  } catch (error) {
+    console.error("Error fetching submission windows:", error);
+    throw error;
+  }
+};
+
+// Public: a single resolved window for a phase.
+export const getSubmissionWindow = async (
+  phase: SubmissionPhase
+): Promise<SubmissionWindow> => {
+  try {
+    const response = await api.get(`/submission-windows/${phase}`);
+    return response.data.data as SubmissionWindow;
+  } catch (error) {
+    console.error(`Error fetching submission window for ${phase}:`, error);
+    throw error;
+  }
+};
+
+// Admin: all four windows including admin-only fields (isManuallyClosed, updatedAt).
+export const adminGetSubmissionWindows = async (): Promise<
+  SubmissionWindow[]
+> => {
+  try {
+    const response = await api.get("/admin/submission-windows");
+    return response.data.data as SubmissionWindow[];
+  } catch (error) {
+    console.error("Error fetching admin submission windows:", error);
+    throw error;
+  }
+};
+
+// Admin: upsert a window for a phase. Any omitted field is left unchanged.
+export const adminUpdateSubmissionWindow = async (
+  phase: SubmissionPhase,
+  payload: {
+    opensAt?: string | null;
+    closesAt?: string | null;
+    isManuallyClosed?: boolean;
+    note?: string | null;
+  }
+): Promise<SubmissionWindow> => {
+  try {
+    const response = await api.put(
+      `/admin/submission-windows/${phase}`,
+      payload
+    );
+    return response.data.data as SubmissionWindow;
+  } catch (error) {
+    console.error(`Error updating submission window for ${phase}:`, error);
+    throw error;
+  }
+};
+
 // Authentication endpoints
 export const loginAdmin = async (credentials: {
   email: string;

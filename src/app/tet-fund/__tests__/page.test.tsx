@@ -11,9 +11,11 @@ vi.mock("next/navigation", () => ({
 
 const mockGetFacultyData = vi.fn();
 const mockSubmitStaffProposal = vi.fn();
+const mockGetSubmissionWindow = vi.fn();
 
 vi.mock("@/services/api", () => ({
   getFacultyData: (...args: unknown[]) => mockGetFacultyData(...args),
+  getSubmissionWindow: (...args: unknown[]) => mockGetSubmissionWindow(...args),
   submitStaffProposal: (...args: unknown[]) => mockSubmitStaffProposal(...args),
 }));
 
@@ -52,6 +54,14 @@ describe("TETFundForm faculty/department selection", () => {
     );
     localStorage.clear();
     mockGetFacultyData.mockResolvedValue(FACULTY_DATA);
+    // Default: window OPEN so the form renders for these tests.
+    mockGetSubmissionWindow.mockResolvedValue({
+      phase: "staff_concept",
+      opensAt: null,
+      closesAt: null,
+      isOpen: true,
+      note: null,
+    });
   });
 
   it("populates the department select with the selected faculty's nested departments, using department titles as option values", async () => {
