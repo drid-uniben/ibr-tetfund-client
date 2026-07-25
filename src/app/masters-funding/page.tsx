@@ -1,14 +1,24 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, AlertCircle, CheckCircle, Send, Loader2 } from 'lucide-react';
-import { submitMasterProposal } from '@/services/api';
+import { getSubmissionWindow, submitMasterProposal } from '@/services/api';
 import Header from "@/components/header";
 import Link from 'next/link';
 
-// Displayed submission deadline. Single place to edit until the backend-driven
-// submission windows (admin-controlled) land.
-const SUBMISSION_DEADLINE = 'Tuesday, 3rd June 2025';
+// Format an ISO closesAt into a friendly, human-readable deadline.
+// Falls back to "To be announced" when no date is set.
+const formatDeadline = (iso: string | null): string => {
+  if (!iso) return 'To be announced';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return 'To be announced';
+  return d.toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
 
 export default function MastersFundingPage() {
   // Agreement state
@@ -39,6 +49,34 @@ export default function MastersFundingPage() {
     email: '',
     alternativeEmail: ''
   });
+
+  // Submission window (admin-controlled). Default OPEN with an unknown
+  // deadline so a failed status call never blocks a legitimate submitter.
+  const [submissionWindow, setSubmissionWindow] = useState<{
+    isOpen: boolean;
+    deadline: string;
+    note: string | null;
+  }>({ isOpen: true, deadline: 'To be announced', note: null });
+
+  useEffect(() => {
+    let active = true;
+    getSubmissionWindow('masters_concept')
+      .then((w) => {
+        if (!active) return;
+        setSubmissionWindow({
+          isOpen: w.isOpen,
+          deadline: formatDeadline(w.closesAt),
+          note: w.note,
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to load submission window:', error);
+        // Keep the OPEN default — never block on a failed status call.
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Validate UNIBEN email (must end with .uniben.edu, allowing subdomains)
   const validateUnibenEmail = (email: string): boolean => {
@@ -260,7 +298,7 @@ export default function MastersFundingPage() {
               © {new Date().getFullYear()} DRID UNIBEN. All rights reserved.
             </p>
             <p className="text-center text-xs text-gray-500 mt-1">
-              For technical support, please contact: <Link href="mailto:drid@uniben.edu" className="text-blue-500" title="send email">drid@uniben.edu</Link>
+              For technical support, please contact: <Link href="mailto:drid@uniben.edu" className="text-[#6d035c] hover:text-[#4a0340]" title="send email">drid@uniben.edu</Link>
             </p>
           </div>
         </footer>
@@ -369,7 +407,7 @@ export default function MastersFundingPage() {
                 <ul className="list-disc list-inside space-y-2 mt-4 text-gray-700">
                   <li>The concept note file must not exceed 5 pages (excluding the budget appendix).</li>
                   <li>Submit using the upload form on this page — no email submission required.</li>
-                  <li>Deadline: {SUBMISSION_DEADLINE}</li>
+                  <li>Deadline: {submissionWindow.deadline}</li>
                   <li>
                     For inquiries, contact the DRID Office or email{" "}
                     <a href="mailto:drid@uniben.edu" className="text-[#6d035c] underline">
@@ -418,8 +456,38 @@ export default function MastersFundingPage() {
           </div>
         </div>
 
-        {/* Form and Upload Section - Only visible after agreement */}
-        {agreementChecked && (
+        {/* Submissions closed state */}
+        {!submissionWindow.isOpen && (
+          <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
+            <div className="p-8 text-center">
+              <div className="rounded-xl border border-[#e6d9e6] bg-[#faf7fc] p-8">
+                <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#4a0340] mb-2">
+                  Submissions are currently closed
+                </h2>
+                <p className="text-[#6b5566] leading-relaxed max-w-prose mx-auto">
+                  The submission window for Master&apos;s funding concept notes is
+                  not open right now. Please check back closer to the next call
+                  for proposals.
+                </p>
+                {submissionWindow.note && (
+                  <p className="mt-4 text-sm text-[#6b5566] leading-relaxed max-w-prose mx-auto">
+                    {submissionWindow.note}
+                  </p>
+                )}
+                <p className="mt-5 text-sm text-[#6b5566]">
+                  Questions? Email{' '}
+                  <Link href="mailto:drid@uniben.edu" className="font-medium text-[#6d035c] underline hover:text-[#4a0340]" title="send email">
+                    drid@uniben.edu
+                  </Link>
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Form and Upload Section - Only visible after agreement, while open */}
+        {agreementChecked && submissionWindow.isOpen && (
           <div className="max-w-4xl mx-auto rounded-2xl border border-[#e6d9e6] bg-white/80 overflow-hidden shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)]">
             <div className="bg-gradient-to-br from-[#4a0340] to-[#6d035c] text-white px-6 py-5">
               <h1 className="text-xl font-semibold">Master&apos;s Funding Concept Note Submission</h1>
@@ -598,7 +666,7 @@ export default function MastersFundingPage() {
             © {new Date().getFullYear()} DRID UNIBEN. All rights reserved.
           </p>
           <p className="text-center text-xs text-gray-500 mt-1">
-            For technical support, please contact: <Link href="mailto:drid@uniben.edu" className="text-blue-500" title="send email">drid@uniben.edu</Link>
+            For technical support, please contact: <Link href="mailto:drid@uniben.edu" className="text-[#6d035c] hover:text-[#4a0340]" title="send email">drid@uniben.edu</Link>
           </p>
         </div>
       </footer>

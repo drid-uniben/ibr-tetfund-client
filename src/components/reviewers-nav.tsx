@@ -31,13 +31,13 @@ const ProgressNavigator: React.FC<ProgressNavigatorProps> = ({ currentStep }) =>
         <div className="w-full py-4">
             <div className="max-w-xl mx-auto relative">
                 {/* Progress Line */}
-                <div className="absolute top-1/2 transform -translate-y-1/2 left-0 right-0 h-1 bg-gray-300 flex">
+                <div className="absolute top-1/2 transform -translate-y-1/2 left-0 right-0 h-1 bg-[#e6d9e6] flex">
                     <div 
-                        className={`h-full ${currentStep > 1 ? 'bg-purple-600' : 'bg-gray-300'}`} 
+                        className={`h-full ${currentStep > 1 ? 'bg-[#6d035c]' : 'bg-[#e6d9e6]'}`} 
                         style={{ width: '50%' }} 
                     />
                     <div 
-                        className={`h-full ${currentStep > 2 ? 'bg-purple-600' : 'bg-gray-300'}`} 
+                        className={`h-full ${currentStep > 2 ? 'bg-[#6d035c]' : 'bg-[#e6d9e6]'}`} 
                         style={{ width: '50%' }} 
                     />
                 </div>
@@ -57,10 +57,10 @@ const ProgressNavigator: React.FC<ProgressNavigatorProps> = ({ currentStep }) =>
                                 className={`
                                     w-8 h-8 rounded-full flex items-center justify-center 
                                     ${step.isActive 
-                                        ? 'bg-purple-600 text-white' 
+                                        ? 'bg-[#6d035c] text-white' 
                                         : index < currentStep - 1 
-                                            ? 'bg-purple-300 text-white' 
-                                            : 'bg-gray-300 text-gray-600'}
+                                            ? 'bg-[#a86b9f] text-white' 
+                                            : 'bg-[#e6d9e6] text-[#6b5566]'}
                                     transition-colors duration-300
                                 `}
                             >
@@ -70,10 +70,10 @@ const ProgressNavigator: React.FC<ProgressNavigatorProps> = ({ currentStep }) =>
                                 className={`
                                     text-sm font-medium 
                                     ${step.isActive 
-                                        ? 'text-purple-700' 
+                                        ? 'text-[#4a0340]' 
                                         : index < currentStep - 1 
-                                            ? 'text-purple-500' 
-                                            : 'text-gray-500'}
+                                            ? 'text-[#6d035c]' 
+                                            : 'text-[#6b5566]'}
                                     hidden md:block
                                 `}
                             >

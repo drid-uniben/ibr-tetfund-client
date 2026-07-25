@@ -5,14 +5,25 @@ import Header from '@/components/header';
 import Link from 'next/link';
 import {
   getFacultyData,
+  getSubmissionWindow,
   submitStaffProposal,
   type AcademicUnit,
   type AcademicDepartment,
 } from '@/services/api';
 
-// Displayed submission deadline. Single place to edit until the backend-driven
-// submission windows (admin-controlled) land — see the deadline design notes.
-const SUBMISSION_DEADLINE = 'To be announced';
+// Format an ISO closesAt into a friendly, human-readable deadline.
+// Falls back to "To be announced" when no date is set.
+const formatDeadline = (iso: string | null): string => {
+  if (!iso) return 'To be announced';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return 'To be announced';
+  return d.toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
 
 // Define TypeScript interfaces
 interface FormData {
@@ -76,6 +87,34 @@ export default function TETFundForm() {
   const [fileError, setFileError] = useState<string>('');
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Submission window (admin-controlled). Default OPEN with an unknown
+  // deadline so a failed status call never blocks a legitimate submitter.
+  const [submissionWindow, setSubmissionWindow] = useState<{
+    isOpen: boolean;
+    deadline: string;
+    note: string | null;
+  }>({ isOpen: true, deadline: 'To be announced', note: null });
+
+  useEffect(() => {
+    let active = true;
+    getSubmissionWindow('staff_concept')
+      .then((w) => {
+        if (!active) return;
+        setSubmissionWindow({
+          isOpen: w.isOpen,
+          deadline: formatDeadline(w.closesAt),
+          note: w.note,
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to load submission window:', error);
+        // Keep the OPEN default — never block on a failed status call.
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Load faculties on component mount
   useEffect(() => {
@@ -461,7 +500,7 @@ export default function TETFundForm() {
                 TETFund IBR · Concept Note
               </p>
               <span className="shrink-0 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#f3e7d0] ring-1 ring-white/20">
-                Deadline: {SUBMISSION_DEADLINE}
+                Deadline: {submissionWindow.deadline}
               </span>
             </div>
             <h1 className="mt-3 font-serif text-2xl sm:text-3xl font-semibold tracking-tight">
@@ -493,6 +532,31 @@ export default function TETFundForm() {
                 >
                   Submit Another Proposal
                 </button>
+              </div>
+            </div>
+          ) : !submissionWindow.isOpen ? (
+            <div className="p-8 text-center">
+              <div className="rounded-xl border border-[#e6d9e6] bg-[#faf7fc] p-8">
+                <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#4a0340] mb-2">
+                  Submissions are currently closed
+                </h2>
+                <p className="text-[#6b5566] leading-relaxed max-w-prose mx-auto">
+                  The submission window for TETFund IBR concept notes is not open
+                  right now. Please check back closer to the next call for
+                  proposals.
+                </p>
+                {submissionWindow.note && (
+                  <p className="mt-4 text-sm text-[#6b5566] leading-relaxed max-w-prose mx-auto">
+                    {submissionWindow.note}
+                  </p>
+                )}
+                <p className="mt-5 text-sm text-[#6b5566]">
+                  Questions? Email{' '}
+                  <Link href="mailto:drid@uniben.edu" className="font-medium text-[#6d035c] underline hover:text-[#4a0340]" title="send email">
+                    drid@uniben.edu
+                  </Link>
+                  .
+                </p>
               </div>
             </div>
           ) : (
@@ -600,7 +664,7 @@ export default function TETFundForm() {
                       onChange={handleInputChange}
                       onBlur={handleEmailBlur}
                       required
-                      className={`mt-1 block w-full rounded-md shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border ${formErrors.unibenEmail ? 'border-red-500' : 'border-gray-300'}`}
+                      className={`mt-1 block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20 border ${formErrors.unibenEmail ? 'border-red-500' : 'border-[#e0d3e0]'}`}
                       placeholder="username@uniben.edu"
                     />
                     {formErrors.unibenEmail && (
@@ -621,7 +685,7 @@ export default function TETFundForm() {
                       value={formData.alternativeEmail}
                       onChange={handleInputChange}
                       onBlur={handleEmailBlur}
-                      className={`mt-1 block w-full rounded-md shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border ${formErrors.alternativeEmail ? 'border-red-500' : 'border-gray-300'}`}
+                      className={`mt-1 block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20 border ${formErrors.alternativeEmail ? 'border-red-500' : 'border-[#e0d3e0]'}`}
                     />
                     {formErrors.alternativeEmail && (
                       <p className="mt-1 text-sm text-red-600 flex items-center">
@@ -781,7 +845,7 @@ export default function TETFundForm() {
                       Estimated Budget Summary (Indicative figure only) *
                     </label>
                     <div className="flex">
-                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                      <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#e0d3e0] bg-[#f4eef3] text-[#6b5566] sm:text-sm">
                         ₦
                       </span>
                       <input
@@ -790,7 +854,7 @@ export default function TETFundForm() {
                         value={formData.estimatedBudget}
                         onChange={handleInputChange}
                         required
-                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                        className="flex-1 min-w-0 block w-full rounded-none rounded-r-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                         placeholder="1,000,000.00"
                       />
                     </div>
@@ -806,7 +870,7 @@ export default function TETFundForm() {
       Upload Short CV of Lead Researcher (Max 2 pages; PDF or DOC format) *
     </label>
     <div 
-      className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 ${isDragging ? 'border-purple-500 bg-purple-50' : 'border-gray-300'} ${fileError ? 'border-red-300' : ''} border-dashed rounded-md`}
+      className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 ${isDragging ? 'border-[#6d035c] bg-[#f3e8f2]' : 'border-gray-300'} ${fileError ? 'border-red-300' : ''} border-dashed rounded-md`}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -815,7 +879,7 @@ export default function TETFundForm() {
       <div className="space-y-1 text-center">
         <Upload className={`mx-auto h-12 w-12 ${fileError ? 'text-red-400' : 'text-gray-400'}`} />
         <div className="flex text-sm text-gray-600">
-          <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500">
+          <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-[#6d035c] hover:text-[#4a0340]">
             <span>Upload a file</span>
             <input 
               id="file-upload" 
@@ -855,7 +919,7 @@ export default function TETFundForm() {
     <button
       type="button"
       onClick={clearForm}
-      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 mr-4"
+      className="mr-4 inline-flex justify-center rounded-full border border-[#e0d3e0] bg-white px-6 py-2.5 text-sm font-semibold text-[#4a0340] transition-colors hover:bg-[#f3e8f2] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6d035c]/30"
     >
       Clear form
     </button>
@@ -887,7 +951,7 @@ export default function TETFundForm() {
       © {new Date().getFullYear()} DRID UNIBEN. All rights reserved.
     </p>
     <p className="text-center text-xs text-gray-500 mt-1">
-      For technical support, please contact: <Link href="mailto:drid@uniben.edu" className="text-blue-500" title="send email">drid@uniben.edu</Link>
+      For technical support, please contact: <Link href="mailto:drid@uniben.edu" className="text-[#6d035c] hover:text-[#4a0340]" title="send email">drid@uniben.edu</Link>
     </p>
   </div>
 </footer>

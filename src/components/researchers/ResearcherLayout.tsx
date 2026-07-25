@@ -58,18 +58,18 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#faf7fc]">
       {/* Mobile sidebar */}
       <div 
         id="mobile-sidebar"
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-purple-900 transform transition-transform duration-300 ease-in-out lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#37012f] transform transition-transform duration-300 ease-in-out lg:hidden ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex items-center justify-between px-4 h-16">
           <div className="text-xl font-bold text-white">DRID Researcher</div>
           <button
-            className="p-1 text-white focus:outline-none focus:ring-2 focus:ring-purple-800 rounded-md"
+            className="p-1 text-white focus:outline-none focus:ring-2 focus:ring-[#6d035c] rounded-md"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close sidebar"
           >
@@ -87,8 +87,8 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
                   href={item.href}
                   className={`${
                     pathname === item.href
-                      ? 'bg-purple-800 text-white'
-                      : 'text-purple-100 hover:bg-purple-800'
+                      ? 'bg-[#6d035c] text-white'
+                      : 'text-[#e7d3e4] hover:bg-[#4a0340]'
                   } group flex items-center px-2 py-2 text-base font-medium rounded-md`}
                 >
                   <Icon className="mr-3 h-6 w-6" />
@@ -99,10 +99,10 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
           </nav>
         </div>
         
-        <div className="absolute bottom-0 w-full border-t border-purple-800 p-4">
+        <div className="absolute bottom-0 w-full border-t border-[#6d035c]/40 p-4">
           <button
             onClick={handleLogout}
-            className="flex items-center text-purple-100 hover:text-white w-full"
+            className="flex items-center text-[#e7d3e4] hover:text-white w-full"
           >
             <LogOut className="h-6 w-6 mr-3" />
             Sign Out
@@ -113,7 +113,7 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"
+          className="fixed inset-0 bg-[#2b1229]/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         ></div>
@@ -123,7 +123,7 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
       <div className="flex h-screen overflow-hidden">
         {/* Desktop sidebar - hidden on mobile */}
         <div className="hidden lg:flex lg:flex-shrink-0">
-          <div className="flex flex-col w-64 bg-purple-900">
+          <div className="flex flex-col w-64 bg-[#37012f]">
             {/* Sidebar Header */}
             <div className="flex h-16 flex-shrink-0 items-center px-4">
               <div className="text-xl font-bold text-white">DRID Researcher</div>
@@ -140,8 +140,8 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
                       href={item.href}
                       className={`${
                         pathname === item.href
-                          ? 'bg-purple-800 text-white'
-                          : 'text-purple-100 hover:bg-purple-800'
+                          ? 'bg-[#6d035c] text-white'
+                          : 'text-[#e7d3e4] hover:bg-[#4a0340]'
                       } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
                     >
                       <Icon className="mr-3 h-5 w-5" />
@@ -153,7 +153,7 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
             </div>
             
             {/* User Profile */}
-            <div className="flex flex-shrink-0 border-t border-purple-800 p-4">
+            <div className="flex flex-shrink-0 border-t border-[#6d035c]/40 p-4">
               <div className="group w-full flex flex-col">
                 <button 
                   className="w-full flex items-center justify-between text-left"
@@ -164,15 +164,15 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
                       <p className="text-sm font-medium text-white">
                         {user?.name || 'Researcher'}
                       </p>
-                      <p className="text-xs font-medium text-purple-200">
+                      <p className="text-xs font-medium text-[#c9aec4]">
                         {user?.email || 'researcher@uniben.edu'}
                       </p>
                     </div>
                   </div>
                   {submenuOpen ? (
-                    <ChevronUp className="h-5 w-5 text-purple-300" />
+                    <ChevronUp className="h-5 w-5 text-[#c9aec4]" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-purple-300" />
+                    <ChevronDown className="h-5 w-5 text-[#c9aec4]" />
                   )}
                 </button>
                 
@@ -180,7 +180,7 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
                   <div className="mt-3 space-y-1">
                     <button
                       onClick={handleLogout}
-                      className="flex w-full items-center rounded-md py-2 pl-9 pr-2 text-sm font-medium text-purple-100 hover:bg-purple-800 hover:text-white"
+                      className="flex w-full items-center rounded-md py-2 pl-9 pr-2 text-sm font-medium text-[#e7d3e4] hover:bg-[#4a0340] hover:text-white"
                     >
                       <LogOut className="h-5 w-5 mr-2" />
                       Sign Out
@@ -200,17 +200,17 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
               <button
                 id="sidebar-toggle"
                 type="button"
-                className="text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 p-2"
+                className="text-[#6b5566] focus:outline-none focus:ring-2 focus:ring-[#6d035c] p-2"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 aria-label="Open sidebar"
               >
                 <span className="sr-only">Open sidebar</span>
                 <Menu className="h-6 w-6" />
               </button>
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-lg font-semibold text-[#2b1229]">
                 DRID Researcher Portal
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-[#6b5566]">
                 {user?.name || 'Researcher'}
               </div>
             </div>
@@ -220,13 +220,13 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
           <div className="hidden lg:block bg-white shadow-sm">
             <div className="container mx-auto px-4 py-4 flex items-center justify-between">
               <div className="flex items-center">
-                <div className="h-10 w-10 bg-purple-800 rounded-full flex items-center justify-center text-white font-bold text-xl">D</div>
-                <span className="ml-2 font-semibold text-xl text-purple-800">DRID</span>
+                <div className="h-10 w-10 bg-[#6d035c] rounded-full flex items-center justify-center text-white font-bold text-xl">D</div>
+                <span className="ml-2 font-semibold text-xl text-[#6d035c]">DRID</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Welcome,</span>
-                <span className="font-medium text-purple-800">{user?.name || 'Researcher'}</span>
-                <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">
+                <span className="text-sm text-[#6b5566]">Welcome,</span>
+                <span className="font-medium text-[#6d035c]">{user?.name || 'Researcher'}</span>
+                <span className="text-xs px-2 py-1 bg-[#f3e7d0] text-[#6d035c] rounded-full">
                   Researcher
                 </span>
               </div>
@@ -234,7 +234,7 @@ export default function ResearcherLayout({ children }: ResearcherLayoutProps) {
           </div>
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto bg-gray-100">
+          <main className="flex-1 overflow-y-auto bg-[#faf7fc]">
             {children}
           </main>
         </div>
