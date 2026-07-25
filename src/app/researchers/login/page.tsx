@@ -29,7 +29,7 @@ export default function ResearcherLoginPage() {
     e.preventDefault();
     setFormError('');
     clearError(); // Clear any existing auth errors
-    
+
     // Basic validation
     if (!email || !password) {
       setFormError('Email and password are required');
@@ -40,7 +40,7 @@ export default function ResearcherLoginPage() {
       setFormError('Please enter a valid email address');
       return;
     }
-    
+
     try {
       await login(email, password);
       // Success handling is done in AuthContext
@@ -54,12 +54,12 @@ export default function ResearcherLoginPage() {
   const displayError = formError || error;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center">
+    <div className="min-h-screen bg-[#faf7fc] flex flex-col justify-center">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/">
           <div className="mx-auto text-center">
-            <h2 className="text-3xl font-bold text-purple-800 py-8">DRID UNIBEN</h2>
-            <p className="mt-1 text-gray-600">
+            <h2 className="font-serif text-3xl font-semibold tracking-tight text-[#6d035c] py-8">DRID UNIBEN</h2>
+            <p className="mt-1 text-[#6b5566]">
               Directorate of Research, Innovation and Development
             </p>
           </div>
@@ -67,23 +67,23 @@ export default function ResearcherLoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-md rounded-lg sm:px-10">
-          <h1 className="text-xl font-semibold text-center text-gray-900 mb-6">
+        <div className="bg-white/80 py-8 px-6 rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] sm:px-10">
+          <h1 className="font-serif text-xl font-semibold text-center text-[#2b1229] mb-6">
             Researcher Login
           </h1>
-          
+
           {displayError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+            <div className="mb-4 p-3 bg-[#fef2f2] border border-red-200 rounded-md">
               <div className="flex items-center">
-                <AlertCircle className="h-5 w-5 text-red-500 mr-2 flex-shrink-0" />
-                <p className="text-sm text-red-600">{displayError}</p>
+                <AlertCircle className="h-5 w-5 text-[#b91c1c] mr-2 flex-shrink-0" />
+                <p className="text-sm text-[#b91c1c]">{displayError}</p>
               </div>
             </div>
           )}
-          
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-[#2b1229]">
                 Email Address
               </label>
               <div className="mt-1">
@@ -95,7 +95,7 @@ export default function ResearcherLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2.5 border border-[#e0d3e0] rounded-lg shadow-sm placeholder:text-[#a48fa0] text-[#2b1229] focus:outline-none focus:border-[#6d035c] focus:ring-2 focus:ring-[#6d035c]/20 sm:text-sm"
                   placeholder="researcher@uniben.edu"
                   disabled={isLoading}
                 />
@@ -103,7 +103,7 @@ export default function ResearcherLoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-[#2b1229]">
                 Password
               </label>
               <div className="mt-1">
@@ -115,7 +115,7 @@ export default function ResearcherLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-2.5 border border-[#e0d3e0] rounded-lg shadow-sm placeholder:text-[#a48fa0] text-[#2b1229] focus:outline-none focus:border-[#6d035c] focus:ring-2 focus:ring-[#6d035c]/20 sm:text-sm"
                   disabled={isLoading}
                 />
               </div>
@@ -125,7 +125,7 @@ export default function ResearcherLoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-800 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:bg-purple-300 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-2.5 px-4 rounded-full shadow-sm text-sm font-semibold text-white bg-[#6d035c] hover:bg-[#4a0340] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6d035c]/30 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {isLoading ? (
                   <>
@@ -141,12 +141,12 @@ export default function ResearcherLoginPage() {
               </button>
             </div>
           </form>
-          
+
           <div className="mt-6">
             <div className="text-center">
-              <Link 
-                href="/" 
-                className="text-sm text-purple-600 hover:text-purple-500"
+              <Link
+                href="/"
+                className="text-sm text-[#6d035c] hover:text-[#4a0340]"
               >
                 Return to Homepage
               </Link>
@@ -154,10 +154,10 @@ export default function ResearcherLoginPage() {
           </div>
         </div>
       </div>
-      
-      <footer className="mt-auto bg-gray-100">
+
+      <footer className="mt-auto bg-[#f3e7d0]/40">
         <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-[#6b5566]">
             © {new Date().getFullYear()} DRID UNIBEN. All rights reserved.
           </p>
         </div>
