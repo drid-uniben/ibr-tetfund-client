@@ -226,15 +226,15 @@ function AdminInvitationsPage() {
   const getStatusBadgeClass = (status: Invitation['status']) => {
     switch (status) {
       case "pending":
-        return "bg-blue-100 text-blue-800";
+        return "bg-[#6d035c]/10 text-primary";
       case "accepted":
         return "bg-green-100 text-green-800";
       case "expired":
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-foreground";
       case "added":
         return "bg-green-100 text-green-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-foreground";
     }
   };
 
@@ -258,7 +258,7 @@ function AdminInvitationsPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <RefreshCw className="h-8 w-8 animate-spin text-blue-500" />
+        <RefreshCw className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -507,7 +507,7 @@ function AdminInvitationsPage() {
                   <tr>
                     <td
                       colSpan={5}
-                      className="px-4 py-8 text-center text-gray-500"
+                      className="px-4 py-8 text-center text-muted-foreground"
                     >
                       No invitations found.
                     </td>
@@ -516,7 +516,7 @@ function AdminInvitationsPage() {
                   invitations.map((invitation) => (
                     <tr
                       key={invitation?.id}
-                      className="border-b hover:bg-gray-50"
+                      className="border-b hover:bg-muted"
                     >
                       <td className="px-4 py-3 font-medium">
                         {invitation?.email}

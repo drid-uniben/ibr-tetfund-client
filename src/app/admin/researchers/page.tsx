@@ -108,7 +108,7 @@ function AdminResearchersPage() {
     return (
       <AdminLayout>
         <div className="flex justify-center items-center h-64">
-          <RefreshCw className="h-8 w-8 animate-spin text-blue-500" />
+          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
         </div>
       </AdminLayout>
     );
@@ -153,7 +153,7 @@ function AdminResearchersPage() {
                       <tr>
                         <td
                           colSpan={4}
-                          className="px-4 py-8 text-center text-gray-500"
+                          className="px-4 py-8 text-center text-muted-foreground"
                         >
                           No researchers found.
                         </td>
@@ -162,7 +162,7 @@ function AdminResearchersPage() {
                       researchers.map((researcher) => (
                         <tr
                           key={researcher._id} // Added unique key prop
-                          className="border-b hover:bg-gray-50" // Removed cursor-pointer
+                          className="border-b hover:bg-muted" // Removed cursor-pointer
                           // Removed onClick handler
                         >
                           {/* Content of the row */}

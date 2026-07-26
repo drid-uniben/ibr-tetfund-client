@@ -31,19 +31,19 @@ const FacultyCard = ({ faculty, stage, maxCount }: { faculty: FacultyData; stage
   
   const getStageColor = (stage: number) => {
     switch(stage) {
-      case 1: return 'bg-blue-500';
-      case 2: return 'bg-purple-500'; 
+      case 1: return 'bg-[#6d035c]/100';
+      case 2: return 'bg-secondary0'; 
       case 3: return 'bg-green-500';
-      default: return 'bg-gray-500';
+      default: return 'bg-muted0';
     }
   };
 
   const getStageColorLight = (stage: number) => {
     switch(stage) {
-      case 1: return 'bg-blue-50 border-blue-200';
-      case 2: return 'bg-purple-50 border-purple-200';
+      case 1: return 'bg-[#6d035c]/10 border-[#6d035c]/20';
+      case 2: return 'bg-secondary border-[#e9c96b]';
       case 3: return 'bg-green-50 border-green-200';
-      default: return 'bg-gray-50 border-gray-200';
+      default: return 'bg-muted border-border';
     }
   };
 
@@ -51,18 +51,18 @@ const FacultyCard = ({ faculty, stage, maxCount }: { faculty: FacultyData; stage
     <div className={`p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md ${getStageColorLight(stage)}`}>
       <div className="flex justify-between items-start mb-3">
         <div>
-          <h4 className="font-semibold text-gray-900">{faculty.facultyName}</h4>
-          <p className="text-sm text-gray-600">{faculty.facultyCode}</p>
+          <h4 className="font-semibold text-foreground">{faculty.facultyName}</h4>
+          <p className="text-sm text-muted-foreground">{faculty.facultyCode}</p>
         </div>
         <div className="text-right">
-          <span className="text-2xl font-bold text-gray-900">{faculty.count}</span>
+          <span className="text-2xl font-bold text-foreground">{faculty.count}</span>
           {faculty.percentage && (
-            <p className="text-xs text-gray-500">{faculty.percentage}%</p>
+            <p className="text-xs text-muted-foreground">{faculty.percentage}%</p>
           )}
         </div>
       </div>
       
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-muted rounded-full h-2">
         <div 
           className={`h-2 rounded-full transition-all duration-500 ${getStageColor(stage)}`}
           style={{ width: `${barWidth}%` }}
@@ -75,10 +75,10 @@ const FacultyCard = ({ faculty, stage, maxCount }: { faculty: FacultyData; stage
 const StageHeader = ({ stage, data, icon: Icon }: { stage: number; data: StageData; icon: React.ComponentType<{ className?: string }> }) => {
   const getStageColor = (stage: number) => {
     switch(stage) {
-      case 1: return 'text-blue-600 bg-blue-100';
-      case 2: return 'text-purple-600 bg-purple-100'; 
+      case 1: return 'text-primary bg-[#6d035c]/10';
+      case 2: return 'text-primary bg-secondary'; 
       case 3: return 'text-green-600 bg-green-100';
-      default: return 'text-gray-600 bg-gray-100';
+      default: return 'text-muted-foreground bg-muted';
     }
   };
 
@@ -87,18 +87,18 @@ const StageHeader = ({ stage, data, icon: Icon }: { stage: number; data: StageDa
       <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${getStageColor(stage)}`}>
         <Icon className="w-8 h-8" />
       </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{data.title}</h3>
-      <p className="text-gray-600 mb-4">{data.description}</p>
+      <h3 className="text-xl font-bold text-foreground mb-2">{data.title}</h3>
+      <p className="text-muted-foreground mb-4">{data.description}</p>
       <div className="flex justify-center items-center gap-4">
         <div className="bg-white px-4 py-2 rounded-lg shadow-sm border">
-          <span className="text-2xl font-bold text-gray-900">{data.total}</span>
-          <p className="text-sm text-gray-600">Faculties</p>
+          <span className="text-2xl font-bold text-foreground">{data.total}</span>
+          <p className="text-sm text-muted-foreground">Faculties</p>
         </div>
         <div className="bg-white px-4 py-2 rounded-lg shadow-sm border">
-          <span className="text-2xl font-bold text-gray-900">
+          <span className="text-2xl font-bold text-foreground">
             {data.faculties.reduce((sum, f) => sum + f.count, 0)}
           </span>
-          <p className="text-sm text-gray-600">Total Count</p>
+          <p className="text-sm text-muted-foreground">Total Count</p>
         </div>
       </div>
     </div>
@@ -110,7 +110,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
   if (!stageData || stageData.length < 3) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-sm border mb-8 flex justify-center items-center h-48">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -123,7 +123,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
   const stages = [
     {
       data: stageData[0],
-      color: 'bg-blue-500', // Stage 1 Color
+      color: 'bg-[#6d035c]/100', // Stage 1 Color
       width: '90%',
       totalCount: totalSubmissions,
       explanation: (
@@ -135,7 +135,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
     },
     {
       data: stageData[1],
-      color: 'bg-purple-500', // Stage 2 Color
+      color: 'bg-secondary0', // Stage 2 Color
       width: '85%',
       totalCount: totalAwards,
       explanation: (
@@ -163,7 +163,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border mb-8">
-      <h3 className="text-lg font-semibold text-gray-900 mb-8 text-center">Research Funding Funnel</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-8 text-center">Research Funding Funnel</h3>
       
       {/* Container for all stages */}
       <div className="flex flex-col space-y-8">
@@ -174,7 +174,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
               
               {/* Column 1: Stage Number */}
               <div className="text-center lg:text-right">
-              <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-800 lg:text-gray-600 uppercase tracking-wider">
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-foreground lg:text-muted-foreground uppercase tracking-wider">
                 Stage {index + 1}
               </h2>
               </div>
@@ -191,7 +191,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
               </div>
 
               {/* Column 3: Explanation Text */}
-              <div className="text-gray-600 text-sm leading-relaxed px-4 lg:px-0">
+              <div className="text-muted-foreground text-sm leading-relaxed px-4 lg:px-0">
               {stage.explanation}
               </div>
             </div>
@@ -199,7 +199,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
             {/* Chevron separator, hidden after the last stage */}
             {index < stages.length - 1 && (
               <div className="flex justify-center">
-                  <ChevronRight className="w-8 h-8 text-gray-300 rotate-90" />
+                  <ChevronRight className="w-8 h-8 text-muted-foreground rotate-90" />
               </div>
             )}
           </React.Fragment>
@@ -208,21 +208,21 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
       
       {/* Conversion Metrics (Your existing code for this section is fine) */}
       <div className="mt-8 pt-6 border-t grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-lg font-bold text-gray-900">
+        <div className="text-center p-3 bg-muted rounded-lg">
+          <div className="text-lg font-bold text-foreground">
             {stageData[1]?.faculties.length > 0 && stageData[0]?.faculties.length > 0
               ? Math.round((totalAwards / totalSubmissions) * 100)
               : 0}%
           </div>
-          <div className="text-sm text-gray-600">Stage 1 → 2 Conversion</div>
+          <div className="text-sm text-muted-foreground">Stage 1 → 2 Conversion</div>
         </div>
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-lg font-bold text-gray-900">
+        <div className="text-center p-3 bg-muted rounded-lg">
+          <div className="text-lg font-bold text-foreground">
             {stageData[2]?.faculties.length > 0 && stageData[1]?.faculties.length > 0
               ? Math.round((totalFullProposals / totalAwards) * 100)
               : 0}%
           </div>
-          <div className="text-sm text-gray-600">Stage 2 → 3 Conversion</div>
+          <div className="text-sm text-muted-foreground">Stage 2 → 3 Conversion</div>
         </div>
       </div>
     </div>
@@ -299,8 +299,8 @@ export default function ResearchFunnelDashboard() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -324,8 +324,8 @@ export default function ResearchFunnelDashboard() {
         <div className="mx-auto px-4 sm:px-6 md:px-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Research Funding Analytics</h1>
-            <p className="text-gray-600">Track proposal submissions, approvals, and full proposal outcomes across faculties</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Research Funding Analytics</h1>
+            <p className="text-muted-foreground">Track proposal submissions, approvals, and full proposal outcomes across faculties</p>
           </div>
 
           {error && (
@@ -336,7 +336,7 @@ export default function ResearchFunnelDashboard() {
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : (
             <>
@@ -344,24 +344,24 @@ export default function ResearchFunnelDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <FileCheck className="w-6 h-6 text-blue-600" />
+                    <div className="p-2 bg-[#6d035c]/10 rounded-lg">
+                      <FileCheck className="w-6 h-6 text-primary" />
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Total Submissions</p>
-                      <p className="text-2xl font-bold text-gray-900">{totalSubmissions}</p>
+                      <p className="text-sm font-medium text-muted-foreground">Total Submissions</p>
+                      <p className="text-2xl font-bold text-foreground">{totalSubmissions}</p>
                     </div>
                   </div>
                 </div>
                 
                 <div className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <CheckCircle2 className="w-6 h-6 text-purple-600" />
+                    <div className="p-2 bg-secondary rounded-lg">
+                      <CheckCircle2 className="w-6 h-6 text-primary" />
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Awards Approved</p>
-                      <p className="text-2xl font-bold text-gray-900">{totalAwards}</p>
+                      <p className="text-sm font-medium text-muted-foreground">Awards Approved</p>
+                      <p className="text-2xl font-bold text-foreground">{totalAwards}</p>
                     </div>
                   </div>
                 </div>
@@ -372,8 +372,8 @@ export default function ResearchFunnelDashboard() {
                       <Award className="w-6 h-6 text-green-600" />
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Full Proposals</p>
-                      <p className="text-2xl font-bold text-gray-900">{totalFullProposals}</p>
+                      <p className="text-sm font-medium text-muted-foreground">Full Proposals</p>
+                      <p className="text-2xl font-bold text-foreground">{totalFullProposals}</p>
                     </div>
                   </div>
                 </div>
@@ -384,8 +384,8 @@ export default function ResearchFunnelDashboard() {
                       <TrendingUp className="w-6 h-6 text-orange-600" />
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Success Rate</p>
-                      <p className="text-2xl font-bold text-gray-900">{successRate}%</p>
+                      <p className="text-sm font-medium text-muted-foreground">Success Rate</p>
+                      <p className="text-2xl font-bold text-foreground">{successRate}%</p>
                     </div>
                   </div>
                 </div>
@@ -403,8 +403,8 @@ export default function ResearchFunnelDashboard() {
                       onClick={() => setSelectedStage(stage)}
                       className={`px-4 py-2 rounded-md font-medium transition-all duration-200 ${
                         selectedStage === stage
-                          ? 'bg-gray-900 text-white shadow-sm'
-                          : 'text-gray-600 hover:bg-gray-100'
+                          ? 'bg-[#37012f] text-white shadow-sm'
+                          : 'text-muted-foreground hover:bg-muted'
                       }`}
                     >
                       Stage {stage}
@@ -440,35 +440,35 @@ export default function ResearchFunnelDashboard() {
 
                 {/* Stage-specific insights */}
                 <div className="mt-8 bg-white p-6 rounded-lg shadow-sm border">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h4 className="text-lg font-semibold text-foreground mb-4">
                     {selectedStage === 1 && "Initial Submissions Insights"}
                     {selectedStage === 2 && "Award Approval Insights"} 
                     {selectedStage === 3 && "Full Proposal Success Insights"}
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="flex items-center p-3 bg-gray-50 rounded-lg">
-                      <Building2 className="w-5 h-5 text-gray-500 mr-3" />
+                    <div className="flex items-center p-3 bg-muted rounded-lg">
+                      <Building2 className="w-5 h-5 text-muted-foreground mr-3" />
                       <div>
                         <p className="text-sm font-medium">Top Faculty</p>
-                        <p className="text-xs text-gray-600">{currentStageData.faculties[0]?.facultyName || 'N/A'}</p>
+                        <p className="text-xs text-muted-foreground">{currentStageData.faculties[0]?.facultyName || 'N/A'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center p-3 bg-gray-50 rounded-lg">
-                      <TrendingUp className="w-5 h-5 text-gray-500 mr-3" />
+                    <div className="flex items-center p-3 bg-muted rounded-lg">
+                      <TrendingUp className="w-5 h-5 text-muted-foreground mr-3" />
                       <div>
                         <p className="text-sm font-medium">Average per Faculty</p>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-muted-foreground">
                           {currentStageData.faculties.length > 0 
                             ? Math.round(currentStageData.faculties.reduce((sum, f) => sum + f.count, 0) / currentStageData.faculties.length)
                             : 0}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center p-3 bg-gray-50 rounded-lg">
-                      <Clock className="w-5 h-5 text-gray-500 mr-3" />
+                    <div className="flex items-center p-3 bg-muted rounded-lg">
+                      <Clock className="w-5 h-5 text-muted-foreground mr-3" />
                       <div>
                         <p className="text-sm font-medium">Active Faculties</p>
-                        <p className="text-xs text-gray-600">{currentStageData.total} participating</p>
+                        <p className="text-xs text-muted-foreground">{currentStageData.total} participating</p>
                       </div>
                     </div>
                   </div>
@@ -480,4 +480,4 @@ export default function ResearchFunnelDashboard() {
       </div>
     </AdminLayout>
   );
-}
+}

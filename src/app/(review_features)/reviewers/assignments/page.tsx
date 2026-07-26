@@ -101,31 +101,31 @@ const ReviewerAssignments: React.FC = () => {
     
     if (isOverdue) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#fef2f2] text-[#b91c1c]">
           <AlertTriangle className="w-3 h-3 mr-1" />
           Overdue
         </span>
       );
     }
-    
+
     switch (status) {
       case 'completed':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#f2faf3] text-[#1f5b34]">
             <CheckCircle className="w-3 h-3 mr-1" />
             Completed
           </span>
         );
       case 'in_progress':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#f3e7d0] text-[#4a0340]">
             <Clock className="w-3 h-3 mr-1" />
             In Progress
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#f4eef3] text-[#2b1229]">
             {status}
           </span>
         );
@@ -144,11 +144,11 @@ const ReviewerAssignments: React.FC = () => {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'overdue': return 'border-l-red-500 bg-red-50';
-      case 'high': return 'border-l-orange-500 bg-orange-50';
-      case 'medium': return 'border-l-yellow-500 bg-yellow-50';
-      case 'reconciliation': return 'border-l-purple-500 bg-purple-50';
-      default: return 'border-l-green-500 bg-green-50';
+      case 'overdue': return 'bg-[#fef2f2]';
+      case 'high': return 'bg-[#fef2f2]';
+      case 'medium': return 'bg-[#f3e7d0]';
+      case 'reconciliation': return 'bg-[#f3e7d0]';
+      default: return 'bg-[#f2faf3]';
     }
   };
 
@@ -172,10 +172,10 @@ const ReviewerAssignments: React.FC = () => {
   if (authLoading || loading) {
     return (
       <ReviewerLayout>
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+        <div className="min-h-screen bg-[#faf7fc] flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading assignments...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#6d035c] border-t-transparent mx-auto mb-4"></div>
+            <p className="text-[#6b5566]">Loading assignments...</p>
           </div>
         </div>
       </ReviewerLayout>
@@ -185,13 +185,13 @@ const ReviewerAssignments: React.FC = () => {
   if (error) {
     return (
       <ReviewerLayout>
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+        <div className="min-h-screen bg-[#faf7fc] flex items-center justify-center">
           <div className="text-center">
-            <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 mb-4">{error}</p>
+            <XCircle className="w-16 h-16 text-[#b91c1c] mx-auto mb-4" />
+            <p className="text-[#b91c1c] mb-4">{error}</p>
             <button
               onClick={fetchData}
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+              className="bg-[#6d035c] text-white px-4 py-2 rounded-full hover:bg-[#4a0340] transition-colors"
             >
               Retry
             </button>
@@ -203,17 +203,17 @@ const ReviewerAssignments: React.FC = () => {
 
   return (
     <ReviewerLayout>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 p-6">
+      <div className="min-h-screen bg-[#faf7fc] p-6">
         {/* Header */}
         <div className="max-w-7xl mx-auto mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Review Assignments</h1>
-              <p className="text-gray-600">Manage your proposal reviews and track progress</p>
+              <h1 className="font-serif text-3xl font-semibold tracking-tight text-[#2b1229] mb-2">Review Assignments</h1>
+              <p className="text-[#6b5566]">Manage your proposal reviews and track progress</p>
             </div>
             <button
               onClick={fetchData}
-              className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-white border border-[#e6d9e6] rounded-full shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] hover:bg-[#f3e7d0] transition-colors text-[#4a0340]"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
@@ -225,50 +225,50 @@ const ReviewerAssignments: React.FC = () => {
         {statistics && (
           <div className="max-w-7xl mx-auto mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Assigned</p>
-                    <p className="text-2xl font-bold text-gray-900">{statistics.totalAssigned}</p>
+                    <p className="text-sm font-medium text-[#6b5566]">Total Assigned</p>
+                    <p className="text-2xl font-bold text-[#2b1229]">{statistics.totalAssigned}</p>
                   </div>
-                  <div className="bg-blue-100 p-3 rounded-lg">
-                    <FileText className="w-6 h-6 text-blue-600" />
+                  <div className="bg-[#f4eef3] p-3 rounded-lg">
+                    <FileText className="w-6 h-6 text-[#6d035c]" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Completed</p>
-                    <p className="text-2xl font-bold text-green-600">{statistics.completed}</p>
+                    <p className="text-sm font-medium text-[#6b5566]">Completed</p>
+                    <p className="text-2xl font-bold text-[#1f5b34]">{statistics.completed}</p>
                   </div>
-                  <div className="bg-green-100 p-3 rounded-lg">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
+                  <div className="bg-[#f2faf3] p-3 rounded-lg">
+                    <CheckCircle className="w-6 h-6 text-[#1f5b34]" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Pending</p>
-                    <p className="text-2xl font-bold text-yellow-600">{statistics.pending}</p>
+                    <p className="text-sm font-medium text-[#6b5566]">Pending</p>
+                    <p className="text-2xl font-bold text-[#b8860b]">{statistics.pending}</p>
                   </div>
-                  <div className="bg-yellow-100 p-3 rounded-lg">
-                    <Clock className="w-6 h-6 text-yellow-600" />
+                  <div className="bg-[#f3e7d0] p-3 rounded-lg">
+                    <Clock className="w-6 h-6 text-[#b8860b]" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Overdue</p>
-                    <p className="text-2xl font-bold text-red-600">{statistics.overdue}</p>
+                    <p className="text-sm font-medium text-[#6b5566]">Overdue</p>
+                    <p className="text-2xl font-bold text-[#b91c1c]">{statistics.overdue}</p>
                   </div>
-                  <div className="bg-red-100 p-3 rounded-lg">
-                    <AlertTriangle className="w-6 h-6 text-red-600" />
+                  <div className="bg-[#fef2f2] p-3 rounded-lg">
+                    <AlertTriangle className="w-6 h-6 text-[#b91c1c]" />
                   </div>
                 </div>
               </div>
@@ -278,10 +278,10 @@ const ReviewerAssignments: React.FC = () => {
 
         {/* Filters and Search */}
         <div className="max-w-7xl mx-auto mb-6">
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <Filter className="w-5 h-5 text-gray-500" />
+                <Filter className="w-5 h-5 text-[#6b5566]" />
                 <div className="flex space-x-2">
                   {['all', 'pending', 'overdue', 'reconciliation'].map((filterOption) => (
                     <button
@@ -289,8 +289,8 @@ const ReviewerAssignments: React.FC = () => {
                       onClick={() => setFilter(filterOption as "all" | "pending" | "overdue" | "reconciliation")}
                       className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                         filter === filterOption
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-[#6d035c] text-white'
+                          : 'bg-[#f4eef3] text-[#4a0340] hover:bg-[#f3e7d0]'
                       }`}
                     >
                       {filterOption.charAt(0).toUpperCase() + filterOption.slice(1)}
@@ -299,13 +299,13 @@ const ReviewerAssignments: React.FC = () => {
                 </div>
               </div>
               <div className="relative">
-                <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <Search className="w-5 h-5 text-[#a48fa0] absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Search proposals..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="pl-10 pr-4 py-2 border border-[#e0d3e0] rounded-lg focus:ring-2 focus:ring-[#6d035c]/20 focus:border-[#6d035c] focus:outline-none"
                 />
               </div>
             </div>
@@ -315,12 +315,12 @@ const ReviewerAssignments: React.FC = () => {
         {/* Assignments List */}
         <div className="max-w-7xl mx-auto">
           {filteredAssignments.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-md p-12 text-center">
-              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No assignments found</h3>
-              <p className="text-gray-500">
-                {searchTerm || filter !== 'all' 
-                  ? 'Try adjusting your search or filter criteria' 
+            <div className="bg-white rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] p-12 text-center">
+              <FileText className="w-16 h-16 text-[#a48fa0] mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-[#2b1229] mb-2">No assignments found</h3>
+              <p className="text-[#6b5566]">
+                {searchTerm || filter !== 'all'
+                  ? 'Try adjusting your search or filter criteria'
                   : 'You have no review assignments at the moment'}
               </p>
             </div>
@@ -333,17 +333,17 @@ const ReviewerAssignments: React.FC = () => {
                 return (
                   <div
                     key={assignment._id}
-                    className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-l-4 ${getPriorityColor(priority)}`}
+                    className={`rounded-2xl border border-[#e6d9e6] shadow-[0_20px_60px_-40px_rgba(109,3,92,0.5)] hover:shadow-[0_24px_64px_-36px_rgba(109,3,92,0.55)] transition-all duration-200 ${getPriorityColor(priority)}`}
                   >
                     <div className="p-6">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex-1">
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                              <h3 className="text-lg font-semibold text-[#2b1229] mb-1">
                                 {assignment.proposal.projectTitle}
                               </h3>
-                              <div className="flex items-center space-x-4 text-sm text-gray-600">
+                              <div className="flex items-center space-x-4 text-sm text-[#6b5566]">
                                 <div className="flex items-center">
                                   <Calendar className="w-4 h-4 mr-1" />
                                   {new Date(assignment.proposal.createdAt).toLocaleDateString()}
@@ -352,7 +352,7 @@ const ReviewerAssignments: React.FC = () => {
                             </div>
                             <div className="flex items-center space-x-2">
                               {assignment.reviewType === 'reconciliation' && (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#f3e7d0] text-[#4a0340]">
                                   <Award className="w-3 h-3 mr-1" />
                                   Reconciliation
                                 </span>
@@ -362,26 +362,26 @@ const ReviewerAssignments: React.FC = () => {
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div className="flex items-center text-sm text-gray-600">
-                              <Clock className="w-4 h-4 mr-2 text-gray-400" />
+                            <div className="flex items-center text-sm text-[#6b5566]">
+                              <Clock className="w-4 h-4 mr-2 text-[#a48fa0]" />
                               <span>
                                 Due: {new Date(assignment.dueDate).toLocaleDateString()}
                                 {daysUntilDue >= 0 ? (
-                                  <span className="ml-1 text-green-600">({daysUntilDue} days left)</span>
+                                  <span className="ml-1 text-[#1f5b34]">({daysUntilDue} days left)</span>
                                 ) : (
-                                  <span className="ml-1 text-red-600">({Math.abs(daysUntilDue)} days overdue)</span>
+                                  <span className="ml-1 text-[#b91c1c]">({Math.abs(daysUntilDue)} days overdue)</span>
                                 )}
                               </span>
                             </div>
-                            
+
                             {assignment.proposal.estimatedBudget && (
-                              <div className="flex items-center text-sm text-gray-600">
-                                <DollarSign className="w-4 h-4 mr-2 text-gray-400" />
+                              <div className="flex items-center text-sm text-[#6b5566]">
+                                <DollarSign className="w-4 h-4 mr-2 text-[#a48fa0]" />
                                 <span>₦{assignment.proposal.estimatedBudget.toLocaleString()}</span>
                               </div>
                             )}
 
-                            <div className="flex items-center text-sm text-gray-600">
+                            <div className="flex items-center text-sm text-[#6b5566]">
                               <span className="capitalize">
                                 {assignment.proposal.submitterType.replace('_', ' ')} Proposal
                               </span>
@@ -390,12 +390,12 @@ const ReviewerAssignments: React.FC = () => {
 
                           {assignment.totalScore && (
                             <div className="mb-4">
-                              <div className="flex items-center text-sm text-gray-600">
-                                <TrendingUp className="w-4 h-4 mr-2 text-gray-400" />
+                              <div className="flex items-center text-sm text-[#6b5566]">
+                                <TrendingUp className="w-4 h-4 mr-2 text-[#a48fa0]" />
                                 <span>Score: {assignment.totalScore}/100</span>
-                                <div className="ml-3 w-24 bg-gray-200 rounded-full h-2">
+                                <div className="ml-3 w-24 bg-[#e6d9e6] rounded-full h-2">
                                   <div
-                                    className="bg-purple-600 rounded-full h-2"
+                                    className="bg-[#6d035c] rounded-full h-2"
                                     style={{ width: `${assignment.totalScore}%` }}
                                   ></div>
                                 </div>
@@ -407,14 +407,14 @@ const ReviewerAssignments: React.FC = () => {
                         <div className="mt-4 lg:mt-0 lg:ml-6 flex flex-col sm:flex-row lg:flex-col gap-2">
                           <Link
                             href={`/reviewers/assignments/${assignment._id}`}
-                            className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center px-4 py-2 bg-[#6d035c] text-white rounded-full hover:bg-[#4a0340] transition-colors text-sm font-medium"
                           >
                             <Eye className="w-4 h-4 mr-2" />
                             {assignment.status === 'in_progress' ? 'Continue Review' : assignment.status === 'completed' ? 'View Review' : 'Start Review'}
                           </Link>
-                          
+
                           {assignment.status === 'completed' && assignment.completedAt && (
-                            <span className="text-xs text-gray-500 text-center lg:text-left">
+                            <span className="text-xs text-[#6b5566] text-center lg:text-left">
                               Completed {new Date(assignment.completedAt).toLocaleDateString()}
                             </span>
                           )}

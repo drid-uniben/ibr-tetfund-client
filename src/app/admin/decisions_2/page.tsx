@@ -35,8 +35,8 @@ interface Faculty {
 export default function FullProposalDecisionsPanelWrapper() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     }>
       <FullProposalDecisionsPanel />
@@ -350,7 +350,7 @@ const handleEditFundingAmount = async () => {
       case 'submitted':
         return 'bg-yellow-200 text-yellow-800';
       default:
-        return 'bg-gray-200 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
@@ -364,8 +364,8 @@ const handleEditFundingAmount = async () => {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -374,7 +374,7 @@ const handleEditFundingAmount = async () => {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </AdminLayout>
     );
@@ -411,9 +411,9 @@ const handleEditFundingAmount = async () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow border">
             <div className="flex items-center">
-              <FileText className="h-5 w-5 text-blue-500 mr-2" />
+              <FileText className="h-5 w-5 text-primary mr-2" />
               <div>
-                <p className="text-xs text-gray-500">Total Full Proposals</p>
+                <p className="text-xs text-muted-foreground">Total Full Proposals</p>
                 <p className="text-lg font-semibold">{statistics.totalFullProposals}</p>
               </div>
             </div>
@@ -423,7 +423,7 @@ const handleEditFundingAmount = async () => {
             <div className="flex items-center">
               <TrendingUp className="h-5 w-5 text-yellow-500 mr-2" />
               <div>
-                <p className="text-xs text-gray-500">Pending Review</p>
+                <p className="text-xs text-muted-foreground">Pending Review</p>
                 <p className="text-lg font-semibold">{statistics.pendingDecisions}</p>
               </div>
             </div>
@@ -433,7 +433,7 @@ const handleEditFundingAmount = async () => {
             <div className="flex items-center">
               <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
               <div>
-                <p className="text-xs text-gray-500">Approved</p>
+                <p className="text-xs text-muted-foreground">Approved</p>
                 <p className="text-lg font-semibold">{statistics.approved}</p>
               </div>
             </div>
@@ -443,7 +443,7 @@ const handleEditFundingAmount = async () => {
             <div className="flex items-center">
               <XCircle className="h-5 w-5 text-red-500 mr-2" />
               <div>
-                <p className="text-xs text-gray-500">Rejected</p>
+                <p className="text-xs text-muted-foreground">Rejected</p>
                 <p className="text-lg font-semibold">{statistics.rejected}</p>
               </div>
             </div>
@@ -451,9 +451,9 @@ const handleEditFundingAmount = async () => {
 
           <div className="bg-white p-4 rounded-lg shadow border">
             <div className="flex items-center">
-              <TrendingUp className="h-5 w-5 text-purple-500 mr-2" />
+              <TrendingUp className="h-5 w-5 text-primary mr-2" />
               <div>
-                <p className="text-xs text-gray-500">Approved Budget</p>
+                <p className="text-xs text-muted-foreground">Approved Budget</p>
                 <p className="text-lg font-semibold">
                   ₦{statistics.approvedBudget?.toLocaleString() ?? '0'}
                 </p>
@@ -466,18 +466,18 @@ const handleEditFundingAmount = async () => {
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Search</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Search</label>
               <input
                 type="text"
                 placeholder="Search full proposals..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Faculty</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Faculty</label>
               <Select value={facultyFilter} onValueChange={setFacultyFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Faculties" />
@@ -494,7 +494,7 @@ const handleEditFundingAmount = async () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Sort By</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Sort By</label>
               <Select value={sortBy} onValueChange={handleSortChange}>
                 <SelectTrigger>
                   <SelectValue />
@@ -509,7 +509,7 @@ const handleEditFundingAmount = async () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Filter</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Filter</label>
               <Select value={filterBy} onValueChange={(value: 'all' | 'submitted' | 'approved' | 'rejected') => setFilterBy(value)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -527,31 +527,31 @@ const handleEditFundingAmount = async () => {
 
         {/* Full Proposals Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-border">
+            <thead className="bg-muted">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Full Proposal Details
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Score
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Funding Amount
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-border">
               {filteredFullProposals.map((fullProposal) => (
                 <tr 
                   key={fullProposal._id} 
-                  className={`hover:bg-gray-50 ${
+                  className={`hover:bg-muted ${
                     fullProposal.status === 'submitted' 
                       ? 'bg-orange-50' 
                       : ''
@@ -559,10 +559,10 @@ const handleEditFundingAmount = async () => {
                 >
                   <td className="px-6 py-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-900 mb-1">
+                      <div className="text-sm font-medium text-foreground mb-1">
                         {fullProposal.originalProposal?.projectTitle}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-muted-foreground">
                         {fullProposal.submitter?.name} • {fullProposal.faculty?.title}
                       </div>
                     </div>
@@ -570,7 +570,7 @@ const handleEditFundingAmount = async () => {
                   <td className="px-6 py-4">
                     {typeof fullProposal.score === 'number' ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-16 h-1.5 bg-gray-200 rounded-full">
+                        <div className="w-16 h-1.5 bg-muted rounded-full">
                           <div
                             className={`
                               h-full rounded-full
@@ -597,11 +597,11 @@ const handleEditFundingAmount = async () => {
                         </span>
                       </div>
                     ) : (
-                      <span className="text-gray-400">--</span>
+                      <span className="text-muted-foreground">--</span>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                         ₦{fullProposal.award?.fundingAmount?.toLocaleString()}
                       </div>
                   </td>
@@ -640,7 +640,7 @@ const handleEditFundingAmount = async () => {
                               setOpenMenuId(null);
                             }}
                           >
-                            <TrendingUp className="h-4 w-4 mr-2 text-blue-600" /> Assign Score
+                            <TrendingUp className="h-4 w-4 mr-2 text-primary" /> Assign Score
                           </DropdownMenuItem>
                         )}
                         {fullProposal.score && fullProposal.status === 'submitted' && (
@@ -654,7 +654,7 @@ const handleEditFundingAmount = async () => {
                                 setOpenMenuId(null);
                               }}
                             >
-                              <TrendingUp className="h-4 w-4 mr-2 text-blue-600" /> Edit Score
+                              <TrendingUp className="h-4 w-4 mr-2 text-primary" /> Edit Score
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onSelect={e => {
@@ -749,14 +749,14 @@ const handleEditFundingAmount = async () => {
                 </div>
               )}
 
-              <div className="bg-gray-50 p-3 rounded-md">
-                <div className="text-sm text-gray-600">
+              <div className="bg-muted p-3 rounded-md">
+                <div className="text-sm text-muted-foreground">
                   <strong>Submitted:</strong> {selectedFullProposal && formatDate(selectedFullProposal.submittedAt)}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   <strong>Deadline:</strong> {selectedFullProposal && formatDate(selectedFullProposal.deadline)}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   <strong>Funding Amount:</strong> ₦{selectedFullProposal?.award?.fundingAmount?.toLocaleString()}
                 </div>
               </div>
@@ -805,7 +805,7 @@ const handleEditFundingAmount = async () => {
                   step="0.01"
                   value={scoreValue}
                   onChange={(e) => setScoreValue(parseInt(e.target.value) || 1)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary"
                 />
               </div>
             </div>
@@ -821,7 +821,7 @@ const handleEditFundingAmount = async () => {
               <Button 
                 onClick={handleAssignScore}
                 disabled={isSubmitting || scoreValue < 1 || scoreValue > 100}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary/90"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -852,7 +852,7 @@ const handleEditFundingAmount = async () => {
                   step="0.01"
                   value={editScoreValue}
                   onChange={(e) => setEditScoreValue(parseFloat(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary"
                 />
               </div>
             </div>
@@ -867,7 +867,7 @@ const handleEditFundingAmount = async () => {
               <Button 
                 onClick={handleEditScore}
                 disabled={isSubmitting || editScoreValue < 0 || editScoreValue > 100}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary/90"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -910,7 +910,7 @@ const handleEditFundingAmount = async () => {
                     <Button
                         onClick={handleEditFundingAmount}
                         disabled={isSubmitting || editFundingAmount <= 0}
-                        className="bg-blue-600 hover:bg-blue-700"
+                        className="bg-primary hover:bg-primary/90"
                     >
                         {isSubmitting ? (
                             <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -923,7 +923,7 @@ const handleEditFundingAmount = async () => {
         
         {totalPages > 1 && (
           <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-muted-foreground">
               Showing {((currentPage - 1) * limit) + 1} to {Math.min(currentPage * limit, totalCount)} of {totalCount} results
             </div>
             <div className="flex items-center gap-2">
@@ -935,7 +935,7 @@ const handleEditFundingAmount = async () => {
               >
                 Previous
               </Button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
               </span>
               <Button

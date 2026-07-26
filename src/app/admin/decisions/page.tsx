@@ -37,8 +37,8 @@ interface Faculty {
 export default function DecisionsPanelWrapper() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     }>
       <DecisionsPanel />
@@ -320,14 +320,14 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       case 'pending':
         return 'bg-yellow-200 text-yellow-800';
       default:
-        return 'bg-gray-200 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -336,7 +336,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
     return (
       <AdminLayout>
         <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </AdminLayout>
     );
@@ -370,7 +370,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
           <Button
             onClick={exportDecisionsReport}
             variant="outline"
-            className="border-purple-200 text-purple-700 hover:bg-purple-50"
+            className="border-[#e9c96b] text-primary hover:bg-secondary"
           >
             Export Report
           </Button>
@@ -380,9 +380,9 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-4 mb-6">
     <div className="bg-white p-4 rounded-lg shadow border">
       <div className="flex items-center">
-        <Users className="h-5 w-5 text-blue-500 mr-2" />
+        <Users className="h-5 w-5 text-primary mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Total Proposals</p>
+          <p className="text-xs text-muted-foreground">Total Proposals</p>
           <p className="text-lg font-semibold">{statistics.totalProposals}</p>
         </div>
       </div>
@@ -392,7 +392,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       <div className="flex items-center">
         <TrendingUp className="h-5 w-5 text-yellow-500 mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Pending</p>
+          <p className="text-xs text-muted-foreground">Pending</p>
           <p className="text-lg font-semibold">{statistics.pendingDecisions}</p>
         </div>
       </div>
@@ -402,7 +402,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       <div className="flex items-center">
         <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Approved</p>
+          <p className="text-xs text-muted-foreground">Approved</p>
           <p className="text-lg font-semibold">{statistics.approved}</p>
         </div>
       </div>
@@ -412,7 +412,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       <div className="flex items-center">
         <XCircle className="h-5 w-5 text-red-500 mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Rejected</p>
+          <p className="text-xs text-muted-foreground">Rejected</p>
           <p className="text-lg font-semibold">{statistics.rejected}</p>
         </div>
       </div>
@@ -420,9 +420,9 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
 
     <div className="bg-white p-4 rounded-lg shadow border">
       <div className="flex items-center">
-        <Award className="h-5 w-5 text-purple-500 mr-2" />
+        <Award className="h-5 w-5 text-primary mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Avg Score</p>
+          <p className="text-xs text-muted-foreground">Avg Score</p>
           <p className="text-lg font-semibold">{statistics.averageScore}%</p>
         </div>
       </div>
@@ -430,9 +430,9 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
 
     <div className="bg-white p-4 rounded-lg shadow border">
       <div className="flex items-center">
-        <ArrowUpRight className="h-5 w-5 text-indigo-500 mr-2" />
+        <ArrowUpRight className="h-5 w-5 text-primary mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Above {approvalThreshold}%</p>
+          <p className="text-xs text-muted-foreground">Above {approvalThreshold}%</p>
           <p className="text-lg font-semibold">{statistics.proposalsAboveThreshold}</p>
         </div>
       </div>
@@ -443,7 +443,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       <div className="flex items-center">
         <TrendingUp className="h-5 w-5 text-orange-500 mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Potential Budget</p>
+          <p className="text-xs text-muted-foreground">Potential Budget</p>
           <p className="text-sm font-semibold">
             ₦{(statistics.totalBudgetAboveThreshold / 1000000).toFixed(1)}M
           </p>
@@ -456,7 +456,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       <div className="flex items-center">
         <CheckCircle className="h-5 w-5 text-emerald-500 mr-2" />
         <div>
-          <p className="text-xs text-gray-500">Approved Budget</p>
+          <p className="text-xs text-muted-foreground">Approved Budget</p>
           <p className="text-sm font-semibold">
             ₦{(statistics.approvedBudget / 1000000).toFixed(1)}M
           </p>
@@ -469,18 +469,18 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Search</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Search</label>
               <input
                 type="text"
                 placeholder="Search proposals..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Faculty</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Faculty</label>
               <Select value={facultyFilter} onValueChange={setFacultyFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Faculties" />
@@ -497,7 +497,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Sort By</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Sort By</label>
               <Select value={sortBy} onValueChange={handleSortChange}>
                 <SelectTrigger>
                   <SelectValue />
@@ -510,7 +510,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Filter</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Filter</label>
               <Select value={filterBy} onValueChange={(value: 'all' | 'pending' | 'approved' | 'rejected') => setFilterBy(value)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -525,7 +525,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">
+              <label className="block text-xs font-medium text-muted-foreground mb-1">
                 Approval Threshold: {approvalThreshold}%
               </label>
               <div className="px-2">
@@ -543,41 +543,41 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
 
         {/* Proposals Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-border">
+            <thead className="bg-muted">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Proposal Details
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Scores
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Final Score
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-border">
               {filteredProposals.map((proposal) => (
                 <tr 
                   key={proposal._id} 
-                  className={`hover:bg-gray-50 ${(proposal.finalScore || 0) >= approvalThreshold ? 'bg-green-50' : ''}`}
+                  className={`hover:bg-muted ${(proposal.finalScore || 0) >= approvalThreshold ? 'bg-green-50' : ''}`}
                 >
                   <td className="px-6 py-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-900 mb-1">
+                      <div className="text-sm font-medium text-foreground mb-1">
                         {proposal.projectTitle}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-muted-foreground">
                         {proposal.submitter?.name} • {proposal.faculty?.title}
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-muted-foreground">
                         Estimated Budget: <Banknote className="inline h-4 w-4 text-green-300 mr-1" />
                         {proposal.estimatedBudget?.toLocaleString()}
                       </div>
@@ -587,10 +587,10 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
                     <div className="space-y-1">
                       {proposal.aiScore && (
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-500 w-8">AI:</span>
-                          <div className="w-16 h-1.5 bg-gray-200 rounded-full">
+                          <span className="text-xs text-muted-foreground w-8">AI:</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full">
                             <div 
-                              className="h-full bg-purple-600 rounded-full"
+                              className="h-full bg-primary rounded-full"
                               style={{ width: `${proposal.aiScore}%` }}
                             />
                           </div>
@@ -599,10 +599,10 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
                       )}
                       {proposal.humanScore && (
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-500 w-8">Human:</span>
-                          <div className="w-16 h-1.5 bg-gray-200 rounded-full">
+                          <span className="text-xs text-muted-foreground w-8">Human:</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full">
                             <div 
-                              className="h-full bg-blue-500 rounded-full"
+                              className="h-full bg-[#6d035c]/100 rounded-full"
                               style={{ width: `${proposal.humanScore}%` }}
                             />
                           </div>
@@ -611,8 +611,8 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
                       )}
                       {proposal.reconciliationScore && (
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-500 w-8">Rec:</span>
-                          <div className="w-16 h-1.5 bg-gray-200 rounded-full">
+                          <span className="text-xs text-muted-foreground w-8">Rec:</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full">
                             <div 
                               className="h-full bg-green-500 rounded-full"
                               style={{ width: `${proposal.reconciliationScore}%` }}
@@ -737,8 +737,8 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
                 </div>
               )}
 
-              <div className="bg-gray-50 p-3 rounded-md">
-                <div className="text-sm text-gray-600">
+              <div className="bg-muted p-3 rounded-md">
+                <div className="text-sm text-muted-foreground">
                   <strong>Final Score:</strong> {selectedProposal?.finalScore}%
                 </div>
               </div>
@@ -768,7 +768,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
         
         {totalPages > 1 && (
   <div className="mt-6 flex items-center justify-between">
-    <div className="text-sm text-gray-700">
+    <div className="text-sm text-muted-foreground">
       Showing {((currentPage - 1) * limit) + 1} to {Math.min(currentPage * limit, totalCount)} of {totalCount} results
     </div>
     <div className="flex items-center gap-2">
@@ -780,7 +780,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
       >
         Previous
       </Button>
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-muted-foreground">
         Page {currentPage} of {totalPages}
       </span>
       <Button

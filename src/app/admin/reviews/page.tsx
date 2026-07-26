@@ -195,7 +195,7 @@ export default function ProposalReviewsPage() {
     switch (status) {
       case 'under_review':
         return (
-          <Badge className={`${baseClasses} bg-blue-100 text-blue-800 border-blue-200`}>
+          <Badge className={`${baseClasses} bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20`}>
             <Clock size={12} />
             Under Review
           </Badge>
@@ -209,14 +209,14 @@ export default function ProposalReviewsPage() {
         );
       case 'reconciliation':
         return (
-          <Badge className={`${baseClasses} bg-purple-100 text-purple-800 border-purple-200`}>
+          <Badge className={`${baseClasses} bg-secondary text-secondary-foreground border-[#e9c96b]`}>
             <RefreshCw size={12} />
             Reconciliation
           </Badge>
         );
       default:
         return (
-          <Badge className={`${baseClasses} bg-gray-100 text-gray-800 border-gray-200`}>
+          <Badge className={`${baseClasses} bg-muted text-muted-foreground border-border`}>
             {status}
           </Badge>
         );
@@ -234,8 +234,8 @@ export default function ProposalReviewsPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -246,10 +246,10 @@ export default function ProposalReviewsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground">
               {showDiscrepancyOnly ? 'Discrepancy Proposals' : 'Proposal Reviews'}
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-muted-foreground mt-1">
               {showDiscrepancyOnly 
                 ? 'Proposals flagged for discrepancy requiring reconciliation'
                 : 'Monitor and manage proposal review progress'
@@ -276,10 +276,10 @@ export default function ProposalReviewsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Reviews</p>
-                    <p className="text-2xl font-bold text-gray-900">{statistics.totalWithReviews}</p>
+                    <p className="text-sm font-medium text-muted-foreground">Total Reviews</p>
+                    <p className="text-2xl font-bold text-foreground">{statistics.totalWithReviews}</p>
                   </div>
-                  <FileText className="h-8 w-8 text-purple-600" />
+                  <FileText className="h-8 w-8 text-primary" />
                 </div>
               </CardContent>
             </Card>
@@ -288,10 +288,10 @@ export default function ProposalReviewsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Under Review</p>
-                    <p className="text-2xl font-bold text-blue-600">{statistics.underReview}</p>
+                    <p className="text-sm font-medium text-muted-foreground">Under Review</p>
+                    <p className="text-2xl font-bold text-primary">{statistics.underReview}</p>
                   </div>
-                  <Clock className="h-8 w-8 text-blue-600" />
+                  <Clock className="h-8 w-8 text-primary" />
                 </div>
               </CardContent>
             </Card>
@@ -300,7 +300,7 @@ export default function ProposalReviewsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Completed</p>
+                    <p className="text-sm font-medium text-muted-foreground">Completed</p>
                     <p className="text-2xl font-bold text-green-600">{statistics.reviewed}</p>
                   </div>
                   <CheckCircle className="h-8 w-8 text-green-600" />
@@ -312,10 +312,10 @@ export default function ProposalReviewsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Reconciliation</p>
-                    <p className="text-2xl font-bold text-purple-600">{statistics.inReconciliation}</p>
+                    <p className="text-sm font-medium text-muted-foreground">Reconciliation</p>
+                    <p className="text-2xl font-bold text-primary">{statistics.inReconciliation}</p>
                   </div>
-                  <RefreshCw className="h-8 w-8 text-purple-600" />
+                  <RefreshCw className="h-8 w-8 text-primary" />
                 </div>
               </CardContent>
             </Card>
@@ -324,7 +324,7 @@ export default function ProposalReviewsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Discrepancies</p>
+                    <p className="text-sm font-medium text-muted-foreground">Discrepancies</p>
                     <p className="text-2xl font-bold text-orange-600">{statistics.withDiscrepancy}</p>
                   </div>
                   <AlertTriangle className="h-8 w-8 text-orange-600" />
@@ -339,11 +339,11 @@ export default function ProposalReviewsPage() {
           <div className="flex flex-wrap gap-4 items-center">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
                 <input
                   type="text"
                   placeholder="Search proposals, submitters, or faculty..."
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -406,8 +406,8 @@ export default function ProposalReviewsPage() {
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-            <span className="ml-2 text-gray-600">Loading proposals...</span>
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <span className="ml-2 text-muted-foreground">Loading proposals...</span>
           </div>
         )}
 
@@ -422,61 +422,61 @@ export default function ProposalReviewsPage() {
         {!isLoading && !error && (
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-border">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Proposal
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Submitter
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Faculty/Department
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Review Progress
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Updated
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-border">
                   {filteredProposals.map((proposal) => (
-                    <tr key={proposal._id} className="hover:bg-gray-50">
+                    <tr key={proposal._id} className="hover:bg-muted">
                       <td className="px-6 py-4">
                         <div>
-                          <div className="text-sm font-medium text-gray-900 max-w-xs truncate">
+                          <div className="text-sm font-medium text-foreground max-w-xs truncate">
                             {proposal.projectTitle || 'Untitled Proposal'}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {proposal.submitterType === 'staff' ? 'Staff' : 'Master Student'}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-foreground">
                             {proposal.submitter.name}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {proposal.submitter.academicTitle}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-foreground">
                             {proposal.faculty?.title || 'N/A'}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {proposal.department?.title || 'N/A'}
                           </div>
                         </div>
@@ -485,14 +485,14 @@ export default function ProposalReviewsPage() {
                         <div className="flex items-center">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <Users size={14} className="text-gray-400" />
-                              <span className="text-sm text-gray-600">
+                              <Users size={14} className="text-muted-foreground" />
+                              <span className="text-sm text-muted-foreground">
                                 {proposal.completedReviews}/{proposal.totalReviews} completed
                               </span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="w-full bg-muted rounded-full h-2">
                               <div 
-                                className="bg-purple-600 h-2 rounded-full transition-all"
+                                className="bg-primary h-2 rounded-full transition-all"
                                 style={{ 
                                   width: `${proposal.totalReviews > 0 ? (proposal.completedReviews / proposal.totalReviews) * 100 : 0}%` 
                                 }}
@@ -504,7 +504,7 @@ export default function ProposalReviewsPage() {
                       <td className="px-6 py-4">
                         {getStatusBadge(proposal.currentStatus, proposal.hasDiscrepancy)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
+                      <td className="px-6 py-4 text-sm text-muted-foreground">
                         {new Date(proposal.updatedAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4">
@@ -512,7 +512,7 @@ export default function ProposalReviewsPage() {
                           onClick={() => handleViewDetails(proposal._id)}
                           size="sm"
                           variant="outline"
-                          className="border-purple-200 text-purple-700 hover:bg-purple-50"
+                          className="border-[#e9c96b] text-primary hover:bg-secondary"
                         >
                           <Eye size={14} className="mr-1" />
                           View Details
@@ -526,9 +526,9 @@ export default function ProposalReviewsPage() {
 
             {filteredProposals.length === 0 && !isLoading && (
               <div className="text-center py-12">
-                <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No proposals found</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-2 text-sm font-medium text-foreground">No proposals found</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   {showDiscrepancyOnly 
                     ? 'No proposals with discrepancies found.'
                     : 'No proposals match your current filters.'}
@@ -541,7 +541,7 @@ export default function ProposalReviewsPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-muted-foreground">
               Showing {((currentPage - 1) * limit) + 1} to {Math.min(currentPage * limit, totalCount)} of {totalCount} results
             </div>
             <div className="flex items-center gap-2">
@@ -553,7 +553,7 @@ export default function ProposalReviewsPage() {
               >
                 Previous
               </Button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
               </span>
               <Button

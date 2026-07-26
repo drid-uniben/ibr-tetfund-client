@@ -95,7 +95,7 @@ export default function ProposalDetailPage() {
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'submitted':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[#6d035c]/10 text-primary';
       case 'under_review':
         return 'bg-yellow-100 text-yellow-800';
       case 'approved':
@@ -105,7 +105,7 @@ export default function ProposalDetailPage() {
       case 'revision_requested':
         return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
@@ -123,8 +123,8 @@ export default function ProposalDetailPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -136,7 +136,7 @@ export default function ProposalDetailPage() {
           {/* Back link */}
           <div className="mb-6">
             <Button
-              className="inline-flex items-center text-sm font-medium text-purple-600 hover:bg-gray-300 bg-transparent"
+              className="inline-flex items-center text-sm font-medium text-primary hover:bg-muted bg-transparent"
               onClick={(e) => {
                 console.log(e);
                 router.back()
@@ -148,7 +148,7 @@ export default function ProposalDetailPage() {
 
           {/* Title */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">
+            <h1 className="text-2xl font-semibold text-foreground">
               {isLoading ? 'Loading proposal...' : proposal?.projectTitle || 'Proposal Details'}
             </h1>
           </div>
@@ -161,20 +161,20 @@ export default function ProposalDetailPage() {
           
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : proposal ? (
             <div className="bg-white shadow overflow-hidden rounded-lg">
               {/* Header Section */}
-              <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
+              <div className="px-4 py-5 sm:px-6 bg-muted border-b border-border">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                   <div>
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    <h3 className="text-lg leading-6 font-medium text-foreground">
                       {proposal.submitterType === 'staff' 
                         ? 'Staff Research Proposal' 
                         : 'Master Student Proposal'}
                     </h3>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                    <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
                       Submitted on {formatDate(proposal.createdAt)}
                     </p>
                   </div>
@@ -190,38 +190,38 @@ export default function ProposalDetailPage() {
               <div className="px-4 py-5 sm:p-6">
                 {/* Submitter Information */}
                 <div className="mb-8">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">Submitter Information</h4>
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="text-lg font-medium text-foreground mb-4">Submitter Information</h4>
+                  <div className="bg-muted rounded-lg p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex items-start">
-                        <User className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
+                        <User className="h-5 w-5 text-muted-foreground mr-2 mt-0.5" />
                         <div>
                           <p className="text-sm font-medium">{proposal.submitter.name}</p>
                           {proposal.submitter.academicTitle && (
-                            <p className="text-xs text-gray-500">{proposal.submitter.academicTitle}</p>
+                            <p className="text-xs text-muted-foreground">{proposal.submitter.academicTitle}</p>
                           )}
                         </div>
                       </div>
                       
                       <div className="flex items-start">
-                        <Mail className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
+                        <Mail className="h-5 w-5 text-muted-foreground mr-2 mt-0.5" />
                         <div>
                           <p className="text-sm font-medium">{proposal.submitter.email}</p>
                           {proposal.submitter.alternativeEmail && (
-                            <p className="text-xs text-gray-500">{proposal.submitter.alternativeEmail}</p>
+                            <p className="text-xs text-muted-foreground">{proposal.submitter.alternativeEmail}</p>
                           )}
                         </div>
                       </div>
                       
                       {proposal.submitter.phoneNumber && (
                         <div className="flex items-center">
-                          <Phone className="h-5 w-5 text-gray-400 mr-2" />
+                          <Phone className="h-5 w-5 text-muted-foreground mr-2" />
                           <p className="text-sm">{proposal.submitter.phoneNumber}</p>
                         </div>
                       )}
                       
                       <div className="flex items-center">
-                        <Clock className="h-5 w-5 text-gray-400 mr-2" />
+                        <Clock className="h-5 w-5 text-muted-foreground mr-2" />
                         <p className="text-sm">{
                           proposal.submitter.userType === 'staff' ? 'Staff Member' : 'Master\'s Student'
                         }</p>
@@ -229,14 +229,14 @@ export default function ProposalDetailPage() {
                       
                       {proposal.submitter.faculty && (
                         <div className="flex items-center">
-                          <Building className="h-5 w-5 text-gray-400 mr-2" />
+                          <Building className="h-5 w-5 text-muted-foreground mr-2" />
                           <p className="text-sm">{proposal.submitter.faculty}</p>
                         </div>
                       )}
 
                       {proposal.submitter.department && (
                         <div className="flex items-center">
-                          <BookOpen className="h-5 w-5 text-gray-400 mr-2" />
+                          <BookOpen className="h-5 w-5 text-muted-foreground mr-2" />
                           <p className="text-sm">{proposal.submitter.department}</p>
                         </div>
                       )}
@@ -249,52 +249,52 @@ export default function ProposalDetailPage() {
                   <>
                     {/* Project Details */}
                     <div className="mb-8">
-                      <h4 className="text-lg font-medium text-gray-900 mb-4">Project Details</h4>
+                      <h4 className="text-lg font-medium text-foreground mb-4">Project Details</h4>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Project Title</h5>
-                        <p className="text-sm bg-gray-50 p-3 rounded-md">{proposal.projectTitle}</p>
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Project Title</h5>
+                        <p className="text-sm bg-muted p-3 rounded-md">{proposal.projectTitle}</p>
                       </div>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Problem Statement</h5>
-                        <div className="text-sm bg-gray-50 p-3 rounded-md whitespace-pre-line">
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Problem Statement</h5>
+                        <div className="text-sm bg-muted p-3 rounded-md whitespace-pre-line">
                           {proposal.problemStatement}
                         </div>
                       </div>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Research Objectives</h5>
-                        <div className="text-sm bg-gray-50 p-3 rounded-md whitespace-pre-line">
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Research Objectives</h5>
+                        <div className="text-sm bg-muted p-3 rounded-md whitespace-pre-line">
                           {proposal.objectives}
                         </div>
                       </div>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Methodology</h5>
-                        <div className="text-sm bg-gray-50 p-3 rounded-md whitespace-pre-line">
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Methodology</h5>
+                        <div className="text-sm bg-muted p-3 rounded-md whitespace-pre-line">
                           {proposal.methodology}
                         </div>
                       </div>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Expected Outcomes</h5>
-                        <div className="text-sm bg-gray-50 p-3 rounded-md whitespace-pre-line">
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Expected Outcomes</h5>
+                        <div className="text-sm bg-muted p-3 rounded-md whitespace-pre-line">
                           {proposal.expectedOutcomes}
                         </div>
                       </div>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Work Plan</h5>
-                        <div className="text-sm bg-gray-50 p-3 rounded-md whitespace-pre-line">
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Work Plan</h5>
+                        <div className="text-sm bg-muted p-3 rounded-md whitespace-pre-line">
                           {proposal.workPlan}
                         </div>
                       </div>
                       
                       <div className="mb-6">
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">Estimated Budget</h5>
-                        <div className="flex items-center text-sm bg-gray-50 p-3 rounded-md">
-                          <Banknote className="h-4 w-4 text-gray-400 mr-1" />
+                        <h5 className="text-sm font-medium text-muted-foreground mb-2">Estimated Budget</h5>
+                        <div className="flex items-center text-sm bg-muted p-3 rounded-md">
+                          <Banknote className="h-4 w-4 text-muted-foreground mr-1" />
                           {proposal.estimatedBudget?.toLocaleString()} NGN
                         </div>
                       </div>
@@ -303,32 +303,32 @@ export default function ProposalDetailPage() {
                     {/* Co-Investigators */}
                     {proposal.coInvestigators && proposal.coInvestigators.length > 0 && (
                       <div className="mb-8">
-                        <h4 className="text-lg font-medium text-gray-900 mb-4">Co-Investigators</h4>
-                        <div className="bg-gray-50 rounded-md overflow-hidden">
-                          <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-100">
+                        <h4 className="text-lg font-medium text-foreground mb-4">Co-Investigators</h4>
+                        <div className="bg-muted rounded-md overflow-hidden">
+                          <table className="min-w-full divide-y divide-border">
+                            <thead className="bg-muted">
                               <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                   Name
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                   Department
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                   Faculty
                                 </th>
                               </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white divide-y divide-border">
                               {proposal.coInvestigators.map((investigator, index) => (
                                 <tr key={index}>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                                     {investigator.name}
                                   </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                                     {investigator.department || '-'}
                                   </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                                     {investigator.faculty || '-'}
                                   </td>
                                 </tr>
@@ -342,15 +342,15 @@ export default function ProposalDetailPage() {
                     {/* Attached Files */}
                     {proposal.cvFile && (
                       <div className="mb-8">
-                        <h4 className="text-lg font-medium text-gray-900 mb-4">Attached Documents</h4>
-                        <div className="bg-gray-50 p-4 rounded-md">
+                        <h4 className="text-lg font-medium text-foreground mb-4">Attached Documents</h4>
+                        <div className="bg-muted p-4 rounded-md">
                           <div className="flex items-center">
-                            <FileText className="h-5 w-5 text-gray-400 mr-2" />
+                            <FileText className="h-5 w-5 text-muted-foreground mr-2" />
                             <a 
                               href={proposal.cvFile}
                               target="_blank"
                               rel="noopener noreferrer" 
-                              className="text-sm font-medium text-purple-600 hover:text-purple-800"
+                              className="text-sm font-medium text-primary hover:text-primary"
                             >
                               View CV Document
                             </a>
@@ -367,16 +367,16 @@ export default function ProposalDetailPage() {
                     {/* Attached Files */}
                     {proposal.docFile && (
                       <div className="mb-8">
-                        <h4 className="text-lg font-medium text-gray-900 mb-4">Attached Documents</h4>
-                        <div className="bg-gray-50 p-4 rounded-md flex flex-col gap-3">
-                          <p className="text-sm text-gray-600">Master&apos;s student proposals are submitted as a comprehensive document.</p>
+                        <h4 className="text-lg font-medium text-foreground mb-4">Attached Documents</h4>
+                        <div className="bg-muted p-4 rounded-md flex flex-col gap-3">
+                          <p className="text-sm text-muted-foreground">Master&apos;s student proposals are submitted as a comprehensive document.</p>
                           <div className="flex items-center">
-                            <FileText className="h-5 w-5 text-gray-400 mr-2" />
+                            <FileText className="h-5 w-5 text-muted-foreground mr-2" />
                             <a 
                               href={proposal.docFile}
                               target="_blank"
                               rel="noopener noreferrer" 
-                              className="text-sm font-medium text-purple-600 hover:text-purple-800"
+                              className="text-sm font-medium text-primary hover:text-primary"
                             >
                               View Proposal Document
                             </a>
@@ -389,20 +389,20 @@ export default function ProposalDetailPage() {
                 
                 {/* Timeline Information */}
                 <div className="mb-8">
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">Submission Timeline</h4>
-                  <div className="bg-gray-50 p-4 rounded-md">
+                  <h4 className="text-lg font-medium text-foreground mb-4">Submission Timeline</h4>
+                  <div className="bg-muted p-4 rounded-md">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex items-center">
-                        <Calendar className="h-5 w-5 text-gray-400 mr-2" />
+                        <Calendar className="h-5 w-5 text-muted-foreground mr-2" />
                         <div>
-                          <p className="text-xs text-gray-500">Submitted on</p>
+                          <p className="text-xs text-muted-foreground">Submitted on</p>
                           <p className="text-sm font-medium">{formatDate(proposal.createdAt)}</p>
                         </div>
                       </div>
                       <div className="flex items-center">
-                        <Clock className="h-5 w-5 text-gray-400 mr-2" />
+                        <Clock className="h-5 w-5 text-muted-foreground mr-2" />
                         <div>
-                          <p className="text-xs text-gray-500">Last Updated</p>
+                          <p className="text-xs text-muted-foreground">Last Updated</p>
                           <p className="text-sm font-medium">{formatDate(proposal.updatedAt)}</p>
                         </div>
                       </div>
@@ -413,13 +413,13 @@ export default function ProposalDetailPage() {
             </div>
           ) : (
             <div className="bg-white shadow overflow-hidden rounded-lg p-6 text-center">
-              <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">Proposal not found</h3>
-              <p className="mt-1 text-gray-500">The proposal you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground">Proposal not found</h3>
+              <p className="mt-1 text-muted-foreground">The proposal you&apos;re looking for doesn&apos;t exist or has been removed.</p>
               <div className="mt-6">
                 <Link
                   href="/admin/proposals"
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
                 >
                   Return to Proposals
                 </Link>
@@ -430,4 +430,4 @@ export default function ProposalDetailPage() {
       </div>
     </AdminLayout>
   );
-}
+}

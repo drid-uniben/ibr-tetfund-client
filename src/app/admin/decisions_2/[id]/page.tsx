@@ -126,7 +126,7 @@ export default function FullProposalDetailPage() {
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'submitted':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-[#6d035c]/10 text-[#4a0340] border-[#6d035c]/20';
       case 'under_review':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'approved':
@@ -134,7 +134,7 @@ export default function FullProposalDetailPage() {
       case 'rejected':
         return 'bg-red-100 text-red-800 border-red-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -174,7 +174,7 @@ export default function FullProposalDetailPage() {
             href={part}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-purple-600 hover:underline"
+            className="text-primary hover:underline"
           >
             {part}
           </a>
@@ -186,8 +186,8 @@ export default function FullProposalDetailPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -199,7 +199,7 @@ export default function FullProposalDetailPage() {
           {/* Back link */}
           <div className="mb-6">
             <Button
-              className="inline-flex items-center text-sm font-medium text-purple-600 hover:bg-gray-300 bg-transparent"
+              className="inline-flex items-center text-sm font-medium text-primary hover:bg-muted bg-transparent"
               onClick={() => router.back()}
             >
               <ArrowLeft className="h-4 w-4 mr-1" /> Back to Full Proposals
@@ -208,7 +208,7 @@ export default function FullProposalDetailPage() {
 
           {/* Title */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">
+            <h1 className="text-2xl font-semibold text-foreground">
               {isLoading ? 'Loading full proposal...' : fullProposal?.proposal.projectTitle || 'Full Proposal Details'}
             </h1>
           </div>
@@ -221,19 +221,19 @@ export default function FullProposalDetailPage() {
           
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-800" />
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : fullProposal ? (
             <div className="space-y-6">
               {/* Status and Funding Overview */}
               <div className="bg-white shadow overflow-hidden rounded-lg">
-                <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
+                <div className="px-4 py-5 sm:px-6 bg-muted border-b border-border">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      <h3 className="text-lg leading-6 font-medium text-foreground">
                         Full Proposal Status
                       </h3>
-                      <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                      <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
                         Submitted on {formatDate(fullProposal.submittedAt)}
                       </p>
                     </div>
@@ -259,22 +259,22 @@ export default function FullProposalDetailPage() {
                       </div>
                     </div>
                     
-                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div className="bg-[#6d035c]/10 p-4 rounded-lg border border-[#6d035c]/20">
                       <div className="flex items-center">
-                        <FileText className="h-6 w-6 text-blue-600 mr-2" />
+                        <FileText className="h-6 w-6 text-primary mr-2" />
                         <div>
-                          <p className="text-sm font-medium text-blue-800">Original Budget</p>
-                          <p className="text-xl font-bold text-blue-900">{formatCurrency(fullProposal.proposal.estimatedBudget)}</p>
+                          <p className="text-sm font-medium text-primary">Original Budget</p>
+                          <p className="text-xl font-bold text-primary">{formatCurrency(fullProposal.proposal.estimatedBudget)}</p>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <div className="bg-secondary p-4 rounded-lg border border-[#e9c96b]">
                       <div className="flex items-center">
-                        <Calendar className="h-6 w-6 text-purple-600 mr-2" />
+                        <Calendar className="h-6 w-6 text-primary mr-2" />
                         <div>
-                          <p className="text-sm font-medium text-purple-800">Award Approved</p>
-                          <p className="text-sm font-bold text-purple-900">{formatDate(fullProposal.award.approvedAt)}</p>
+                          <p className="text-sm font-medium text-primary">Award Approved</p>
+                          <p className="text-sm font-bold text-primary">{formatDate(fullProposal.award.approvedAt)}</p>
                         </div>
                       </div>
                     </div>
@@ -299,39 +299,39 @@ export default function FullProposalDetailPage() {
 
               {/* Researcher Information */}
               <div className="bg-white shadow overflow-hidden rounded-lg">
-                <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Researcher Information</h3>
+                <div className="px-4 py-5 sm:px-6 bg-muted border-b border-border">
+                  <h3 className="text-lg leading-6 font-medium text-foreground">Researcher Information</h3>
                 </div>
                 <div className="px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="flex items-start">
-                        <User className="h-5 w-5 text-gray-400 mr-3 mt-0.5" />
+                        <User className="h-5 w-5 text-muted-foreground mr-3 mt-0.5" />
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.name}</p>
+                          <p className="text-sm font-medium text-foreground">{fullProposal.submitter.name}</p>
                           {fullProposal.submitter.academicTitle && (
-                            <p className="text-xs text-gray-500">{fullProposal.submitter.academicTitle}</p>
+                            <p className="text-xs text-muted-foreground">{fullProposal.submitter.academicTitle}</p>
                           )}
-                          <p className="text-xs text-gray-500 capitalize">
+                          <p className="text-xs text-muted-foreground capitalize">
                             {fullProposal.submitter.userType.replace('_', ' ')}
                           </p>
                         </div>
                       </div>
                       
                       <div className="flex items-start">
-                        <Mail className="h-5 w-5 text-gray-400 mr-3 mt-0.5" />
+                        <Mail className="h-5 w-5 text-muted-foreground mr-3 mt-0.5" />
                         <div>
-                          <p className="text-sm text-gray-900">{fullProposal.submitter.email}</p>
+                          <p className="text-sm text-foreground">{fullProposal.submitter.email}</p>
                           {fullProposal.submitter.alternativeEmail && (
-                            <p className="text-xs text-gray-500">{fullProposal.submitter.alternativeEmail}</p>
+                            <p className="text-xs text-muted-foreground">{fullProposal.submitter.alternativeEmail}</p>
                           )}
                         </div>
                       </div>
                       
                       {fullProposal.submitter.phoneNumber && (
                         <div className="flex items-center">
-                          <Phone className="h-5 w-5 text-gray-400 mr-3" />
-                          <p className="text-sm text-gray-900">{fullProposal.submitter.phoneNumber}</p>
+                          <Phone className="h-5 w-5 text-muted-foreground mr-3" />
+                          <p className="text-sm text-foreground">{fullProposal.submitter.phoneNumber}</p>
                         </div>
                       )}
                     </div>
@@ -339,18 +339,18 @@ export default function FullProposalDetailPage() {
                     <div className="space-y-4">
                       {fullProposal.submitter.faculty && (
                         <div className="flex items-center">
-                          <Building className="h-5 w-5 text-gray-400 mr-3" />
+                          <Building className="h-5 w-5 text-muted-foreground mr-3" />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.faculty}</p>
+                            <p className="text-sm font-medium text-foreground">{fullProposal.submitter.faculty}</p>
                           </div>
                         </div>
                       )}
 
                       {fullProposal.submitter.department && (
                         <div className="flex items-center">
-                          <BookOpen className="h-5 w-5 text-gray-400 mr-3" />
+                          <BookOpen className="h-5 w-5 text-muted-foreground mr-3" />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">{fullProposal.submitter.department}</p>
+                            <p className="text-sm font-medium text-foreground">{fullProposal.submitter.department}</p>
                           </div>
                         </div>
                       )}
@@ -361,27 +361,27 @@ export default function FullProposalDetailPage() {
 
               {/* Project Information */}
               <div className="bg-white shadow overflow-hidden rounded-lg">
-                <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Project Information</h3>
+                <div className="px-4 py-5 sm:px-6 bg-muted border-b border-border">
+                  <h3 className="text-lg leading-6 font-medium text-foreground">Project Information</h3>
                 </div>
                 <div className="px-4 py-5 sm:p-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Project Title</label>
-                      <p className="mt-1 text-sm text-gray-900">{fullProposal.proposal.projectTitle}</p>
+                      <label className="text-sm font-medium text-muted-foreground">Project Title</label>
+                      <p className="mt-1 text-sm text-foreground">{fullProposal.proposal.projectTitle}</p>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-gray-500">Submitter Type</label>
-                        <p className="mt-1 text-sm text-gray-900 capitalize">
+                        <label className="text-sm font-medium text-muted-foreground">Submitter Type</label>
+                        <p className="mt-1 text-sm text-foreground capitalize">
                           {fullProposal.proposal.submitterType.replace('_', ' ')}
                         </p>
                       </div>
                       
                       <div>
-                        <label className="text-sm font-medium text-gray-500">Original Estimated Budget</label>
-                        <p className="mt-1 text-sm text-gray-900">{formatCurrency(fullProposal.proposal.estimatedBudget)}</p>
+                        <label className="text-sm font-medium text-muted-foreground">Original Estimated Budget</label>
+                        <p className="mt-1 text-sm text-foreground">{formatCurrency(fullProposal.proposal.estimatedBudget)}</p>
                       </div>
                     </div>
                   </div>
@@ -390,19 +390,19 @@ export default function FullProposalDetailPage() {
 
               {/* Document and Timeline */}
               <div className="bg-white shadow overflow-hidden rounded-lg">
-                <div className="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Full Proposal Document</h3>
+                <div className="px-4 py-5 sm:px-6 bg-muted border-b border-border">
+                  <h3 className="text-lg leading-6 font-medium text-foreground">Full Proposal Document</h3>
                 </div>
                 <div className="px-4 py-5 sm:p-6">
                   <div className="space-y-6">
                     {/* Document Section */}
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-muted p-4 rounded-lg">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <FileText className="h-6 w-6 text-gray-500 mr-3" />
+                          <FileText className="h-6 w-6 text-muted-foreground mr-3" />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">Full Proposal Document</p>
-                            <p className="text-xs text-gray-500">Complete research proposal with detailed methodology</p>
+                            <p className="text-sm font-medium text-foreground">Full Proposal Document</p>
+                            <p className="text-xs text-muted-foreground">Complete research proposal with detailed methodology</p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -410,13 +410,13 @@ export default function FullProposalDetailPage() {
                           href={fullProposal.docFile}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                          className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         >
                           View
                         </a>
                         <Button
                           onClick={() => window.open(fullProposal.docFile, '_blank')}
-                          className="bg-purple-600 hover:bg-purple-700 text-white"
+                          className="bg-primary hover:bg-primary/90 text-white"
                         >
                           <Download className="h-4 w-4 mr-2" />
                           Download
@@ -427,21 +427,21 @@ export default function FullProposalDetailPage() {
 
                     {/* Timeline */}
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-4">Submission Timeline</h4>
+                      <h4 className="text-sm font-medium text-foreground mb-4">Submission Timeline</h4>
                       <div className="space-y-3">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-900">Award Approved</p>
-                            <p className="text-xs text-gray-500">{formatDate(fullProposal.award.approvedAt)}</p>
+                            <p className="text-sm font-medium text-foreground">Award Approved</p>
+                            <p className="text-xs text-muted-foreground">{formatDate(fullProposal.award.approvedAt)}</p>
                           </div>
                         </div>
 
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <div className="flex-shrink-0 w-2 h-2 bg-[#6d035c]/100 rounded-full"></div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-900">Full Proposal Submitted</p>
-                            <p className="text-xs text-gray-500">{formatDate(fullProposal.submittedAt)}</p>
+                            <p className="text-sm font-medium text-foreground">Full Proposal Submitted</p>
+                            <p className="text-xs text-muted-foreground">{formatDate(fullProposal.submittedAt)}</p>
                           </div>
                         </div>
 
@@ -451,10 +451,10 @@ export default function FullProposalDetailPage() {
                               fullProposal.status === 'approved' ? 'bg-green-500' : 'bg-red-500'
                             }`}></div>
                             <div className="ml-4">
-                              <p className="text-sm font-medium text-gray-900">
+                              <p className="text-sm font-medium text-foreground">
                                 Full Proposal {fullProposal.status === 'approved' ? 'Approved' : 'Decision Made'}
                               </p>
-                              <p className="text-xs text-gray-500">{formatDate(fullProposal.reviewedAt)}</p>
+                              <p className="text-xs text-muted-foreground">{formatDate(fullProposal.reviewedAt)}</p>
                             </div>
                           </div>
                         )}
@@ -464,8 +464,8 @@ export default function FullProposalDetailPage() {
                             isDeadlinePassed(fullProposal.deadline) ? 'bg-red-500' : 'bg-yellow-500'
                           }`}></div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-900">Submission Deadline</p>
-                            <p className="text-xs text-gray-500">{formatDate(fullProposal.deadline)}</p>
+                            <p className="text-sm font-medium text-foreground">Submission Deadline</p>
+                            <p className="text-xs text-muted-foreground">{formatDate(fullProposal.deadline)}</p>
                           </div>
                         </div>
                       </div>
@@ -475,8 +475,8 @@ export default function FullProposalDetailPage() {
                     {fullProposal.reviewComments && (
                       <div>
                         <h4 className="text-sm font-medium text-black mb-2">Review Comments</h4>
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-sm text-gray-900 whitespace-pre-wrap">{linkify(fullProposal.reviewComments)}</p>
+                        <div className="bg-muted p-3 rounded-lg">
+                          <p className="text-sm text-foreground whitespace-pre-wrap">{linkify(fullProposal.reviewComments)}</p>
                         </div>
                       </div>
                     )}
@@ -489,7 +489,7 @@ export default function FullProposalDetailPage() {
                             <FileText className="h-6 w-6 text-green-600 mr-3" />
                             <div>
                               <p className="text-sm font-medium text-green-900">Final Submission Document</p>
-                              <p className="text-xs text-gray-500">The final submitted proposal document.</p>
+                              <p className="text-xs text-muted-foreground">The final submitted proposal document.</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -518,13 +518,13 @@ export default function FullProposalDetailPage() {
             </div>
           ) : (
             <div className="bg-white shadow overflow-hidden rounded-lg p-6 text-center">
-              <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">Full Proposal not found</h3>
-              <p className="mt-1 text-gray-500">The full proposal you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground">Full Proposal not found</h3>
+              <p className="mt-1 text-muted-foreground">The full proposal you&apos;re looking for doesn&apos;t exist or has been removed.</p>
               <div className="mt-6">
                 <Button
                   onClick={() => router.back()}
-                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                  className="bg-primary hover:bg-primary/90 text-white"
                 >
                   Go Back
                 </Button>
