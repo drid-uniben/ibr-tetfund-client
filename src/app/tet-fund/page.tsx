@@ -752,7 +752,7 @@ export default function TETFundForm() {
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Project Title *
+                      Project Title * <span className="text-gray-400 font-normal">(max 300 characters)</span>
                     </label>
                     <input
                       type="text"
@@ -760,8 +760,11 @@ export default function TETFundForm() {
                       value={formData.projectTitle}
                       onChange={handleInputChange}
                       required
+                      minLength={5}
+                      maxLength={300}
                       className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
                     />
+                    <p className="mt-1 text-xs text-gray-400">{formData.projectTitle.length}/300</p>
                   </div>
 
                   <div>
