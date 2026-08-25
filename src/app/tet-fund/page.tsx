@@ -629,17 +629,19 @@ export default function TETFundForm() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Department *
+                      Department {departments.length > 0 && '*'}
                     </label>
                     <select
                       name="department"
                       value={formData.department}
                       onChange={handleInputChange}
-                      required
+                      required={departments.length > 0}
                       className="mt-1 block w-full rounded-lg border border-[#e0d3e0] bg-white px-3 py-2.5 text-sm text-[#2b1229] shadow-sm transition-colors placeholder:text-[#a48fa0] focus:border-[#6d035c] focus:outline-none focus:ring-2 focus:ring-[#6d035c]/20"
-                      disabled={!formData.faculty || loading}
+                      disabled={!formData.faculty || loading || departments.length === 0}
                     >
-                      <option value="">Select a Department</option>
+                      <option value="">
+                        {departments.length === 0 ? 'Not applicable' : 'Select a Department'}
+                      </option>
                       {departments.map((department) => (
                         <option key={department.code} value={department.title}>
                           {department.title}
@@ -649,6 +651,11 @@ export default function TETFundForm() {
                     {!formData.faculty && !loading && (
                       <p className="mt-1 text-xs text-amber-600">
                         Please select a Faculty first
+                      </p>
+                    )}
+                    {formData.faculty && !loading && departments.length === 0 && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        This faculty/institute has no departments — you can leave this blank.
                       </p>
                     )}
                   </div>
