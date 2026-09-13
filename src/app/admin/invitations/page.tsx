@@ -181,8 +181,14 @@ function AdminInvitationsPage() {
     setSuccess("");
     setIsSubmitting(true);
 
+    const payload = {
+      ...reviewerForm,
+      academicTitle: reviewerForm.academicTitle || undefined,
+      alternativeEmail: reviewerForm.alternativeEmail || undefined,
+    };
+
     try {
-      await api.addReviewerProfile(reviewerForm);
+      await api.addReviewerProfile(payload);
       setSuccess(`Reviewer profile created for ${reviewerForm.email}`);
 
       // Reset form state
