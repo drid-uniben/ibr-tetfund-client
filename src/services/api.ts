@@ -499,6 +499,23 @@ export const assignReviewers = async (proposalId: string) => {
   }
 };
 
+// Assign a proposal directly to a bypass (solo) reviewer:
+// no AI review, no discrepancy check, single review -> decision page
+export const assignSoloReviewer = async (
+  proposalId: string,
+  reviewerId: string
+) => {
+  try {
+    const response = await api.post(`/admin/assign/${proposalId}/solo`, {
+      reviewerId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error assigning solo reviewer:", error);
+    throw error;
+  }
+};
+
 export const reassignRegularReview = async (
   proposalId: string,
   newReviewerId?: string

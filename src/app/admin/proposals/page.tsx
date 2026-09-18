@@ -6,7 +6,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import * as api from '@/services/api';
 import { getProposals, getFacultiesWithProposals, toggleProposalArchiveStatus, getEligibleReviewers, reassignRegularReview, reassignReconciliationReview } from '@/services/api';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { Loader2, FileText, Filter, ArrowUpDown, Eye, RefreshCw, MoreVertical, Archive, FolderOpen, User, Users, Search, CheckCircle, UserPlus } from 'lucide-react';
+import SoloAssignDialog from '@/components/admin/SoloAssignDialog';
+import { Loader2, FileText, Filter, ArrowUpDown, Eye, RefreshCw, MoreVertical, Archive, FolderOpen, User, Users, Search, CheckCircle, UserPlus, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,7 @@ interface EligibleReviewer {
   facultyTitle: string;
   totalReviewsCount: number;
   completionRate: number;
+  isSpecialReviewer?: boolean;
 }
 
 interface ProposalInfo {
@@ -93,6 +95,7 @@ const [searchTerm, setSearchTerm] = useState('');
 const [proposalInfo, setProposalInfo] = useState<ProposalInfo | null>(null);
 const [reassignLoading, setReassignLoading] = useState(false);
 const [reassignSuccess, setReassignSuccess] = useState(false);
+const [soloAssignProposalId, setSoloAssignProposalId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -626,6 +629,12 @@ const handleReassignSubmit = async () => {
           <UserPlus className="h-4 w-4 mr-2" /> Assign Reviewer
         </DropdownMenuItem>
       )}
+
+      {proposal.status === "submitted" && (
+        <DropdownMenuItem onSelect={() => setSoloAssignProposalId(proposal._id)}>
+          <ShieldCheck className="h-4 w-4 mr-2" /> Assign Solo Reviewer
+        </DropdownMenuItem>
+      )}
       
       {(() => {
         const { canReassign, isReconciliation } = canReassignReview(proposal);
@@ -861,7 +870,17 @@ const handleReassignSubmit = async () => {
                               </div>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground">{reviewer.name}</p>
+                              <p className="text-sm font-medium text-foreground flex items-center gap-2">
+                                {reviewer.name}
+                                {reviewer.isSpecialReviewer && (
+                                  <span
+                                    title="Sole reviewer: no AI review, no discrepancy check. Their review goes straight to the decision page."
+                                    className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800"
+                                  >
+                                    <ShieldCheck className="h-3 w-3" /> Solo reviewer
+                                  </span>
+                                )}
+                              </p>
                               <p className="text-sm text-muted-foreground">{reviewer.facultyTitle}</p>
                               <p className="text-xs text-muted-foreground">{reviewer.email}</p>
                             </div>
@@ -920,6 +939,12 @@ const handleReassignSubmit = async () => {
     </DialogContent>
   </Dialog>
 )}
+
+      <SoloAssignDialog
+        proposalId={soloAssignProposalId}
+        onClose={() => setSoloAssignProposalId(null)}
+        onAssigned={refreshData}
+      />
 
       <Toaster />
     </AdminLayout>
