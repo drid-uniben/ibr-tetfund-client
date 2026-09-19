@@ -55,11 +55,11 @@ interface AssignedReviewItem {
   reviewType: string;
   reviewer: string;
   scores: {
-    relevanceToNationalPriorities: number;
-    originalityAndInnovation: number;
-    clarityOfResearchProblem: number;
+    backgroundAndProblemStatement: number;
+    researchObjectives: number;
     methodology: number;
-    literatureReview: number;
+    expectedOutcomesAndImpact: number;
+    workPlanAndFeasibility: number;
     // Add other score properties if they exist in your data
   };
   status: string;

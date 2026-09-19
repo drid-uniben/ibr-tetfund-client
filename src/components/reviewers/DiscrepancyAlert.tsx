@@ -3,16 +3,14 @@
 import { AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface ScoreData {
-  relevanceToNationalPriorities: number;
-  originalityAndInnovation: number;
-  clarityOfResearchProblem: number;
+  backgroundAndProblemStatement: number;
+  researchObjectives: number;
   methodology: number;
-  literatureReview: number;
-  teamComposition: number;
-  feasibilityAndTimeline: number;
-  budgetJustification: number;
-  expectedOutcomes: number;
-  sustainabilityAndScalability: number;
+  expectedOutcomesAndImpact: number;
+  workPlanAndFeasibility: number;
+  estimatedBudget: number;
+  capacityOfLeadResearcherAndTeam: number;
+  relevanceAndOriginality: number;
 }
 
 interface DiscrepancyInfo {

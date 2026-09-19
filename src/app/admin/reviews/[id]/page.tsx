@@ -28,16 +28,14 @@ import { getProposalReviewDetailsById } from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface ReviewScore {
-  relevanceToNationalPriorities: number;
-  originalityAndInnovation: number;
-  clarityOfResearchProblem: number;
+  backgroundAndProblemStatement: number;
+  researchObjectives: number;
   methodology: number;
-  literatureReview: number;
-  teamComposition: number;
-  feasibilityAndTimeline: number;
-  budgetJustification: number;
-  expectedOutcomes: number;
-  sustainabilityAndScalability: number;
+  expectedOutcomesAndImpact: number;
+  workPlanAndFeasibility: number;
+  estimatedBudget: number;
+  capacityOfLeadResearcherAndTeam: number;
+  relevanceAndOriginality: number;
 }
 
 interface Review {
@@ -113,29 +111,25 @@ interface ProposalReviewDetails {
 }
 
 const criteriaLabels: { [key: string]: string } = {
-  relevanceToNationalPriorities: 'Relevance to National Priorities',
-  originalityAndInnovation: 'Originality and Innovation',
-  clarityOfResearchProblem: 'Clarity of Research Problem',
+  backgroundAndProblemStatement: 'Background and Problem Statement',
+  researchObjectives: 'Research Objectives',
   methodology: 'Methodology',
-  literatureReview: 'Literature Review',
-  teamComposition: 'Team Composition',
-  feasibilityAndTimeline: 'Feasibility and Timeline',
-  budgetJustification: 'Budget Justification',
-  expectedOutcomes: 'Expected Outcomes',
-  sustainabilityAndScalability: 'Sustainability and Scalability'
+  expectedOutcomesAndImpact: 'Expected Outcomes and Impact',
+  workPlanAndFeasibility: 'Work Plan and Feasibility',
+  estimatedBudget: 'Estimated Budget',
+  capacityOfLeadResearcherAndTeam: 'Capacity of Lead Researcher and Team',
+  relevanceAndOriginality: 'Relevance and Originality'
 };
 
 const criteriaMaxScores: { [key: string]: number } = {
-  relevanceToNationalPriorities: 10,
-  originalityAndInnovation: 15,
-  clarityOfResearchProblem: 10,
-  methodology: 15,
-  literatureReview: 10,
-  teamComposition: 10,
-  feasibilityAndTimeline: 10,
-  budgetJustification: 10,
-  expectedOutcomes: 5,
-  sustainabilityAndScalability: 5
+  backgroundAndProblemStatement: 15,
+  researchObjectives: 10,
+  methodology: 20,
+  expectedOutcomesAndImpact: 15,
+  workPlanAndFeasibility: 10,
+  estimatedBudget: 10,
+  capacityOfLeadResearcherAndTeam: 10,
+  relevanceAndOriginality: 10
 };
 
 export default function ProposalReviewDetailsPage() {
