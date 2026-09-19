@@ -631,7 +631,13 @@ const handleReassignSubmit = async () => {
       )}
 
       {proposal.status === "submitted" && (
-        <DropdownMenuItem onSelect={() => setSoloAssignProposalId(proposal._id)}>
+        <DropdownMenuItem
+          onSelect={() => {
+            // Open after the DropdownMenu has fully closed, otherwise Radix can leave the
+            // page unclickable (same reason handleArchiveClick uses a setTimeout).
+            setTimeout(() => setSoloAssignProposalId(proposal._id), 50);
+          }}
+        >
           <ShieldCheck className="h-4 w-4 mr-2" /> Assign Solo Reviewer
         </DropdownMenuItem>
       )}

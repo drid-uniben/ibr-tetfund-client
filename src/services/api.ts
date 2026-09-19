@@ -499,6 +499,20 @@ export const assignReviewers = async (proposalId: string) => {
   }
 };
 
+// Solo reviewers available for a proposal (not tied to the proposal's faculty).
+// Also returns `unavailable`: configured solo reviewers that can't be used and why.
+export const getSoloReviewers = async (proposalId: string) => {
+  try {
+    const response = await api.get(
+      `/admin/assign/${proposalId}/solo-reviewers`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching solo reviewers:", error);
+    throw error;
+  }
+};
+
 // Assign a proposal directly to a bypass (solo) reviewer:
 // no AI review, no discrepancy check, single review -> decision page
 export const assignSoloReviewer = async (
