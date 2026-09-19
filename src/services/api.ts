@@ -733,16 +733,14 @@ export const submitReview = async (
   reviewId: string,
   reviewData: {
     scores: {
-      relevanceToNationalPriorities: number; // 0-10
-      originalityAndInnovation: number; // 0-15
-      clarityOfResearchProblem: number; // 0-10
-      methodology: number; // 0-15
-      literatureReview: number; // 0-10
-      teamComposition: number; // 0-10
-      feasibilityAndTimeline: number; // 0-10
-      budgetJustification: number; // 0-10
-      expectedOutcomes: number; // 0-5
-      sustainabilityAndScalability: number; // 0-5
+      backgroundAndProblemStatement: number; // 0-15
+      researchObjectives: number; // 0-10
+      methodology: number; // 0-20
+      expectedOutcomesAndImpact: number; // 0-15
+      workPlanAndFeasibility: number; // 0-10
+      estimatedBudget: number; // 0-10
+      capacityOfLeadResearcherAndTeam: number; // 0-10
+      relevanceAndOriginality: number; // 0-10
     };
     comments: string;
   }
@@ -763,16 +761,14 @@ export const saveReviewProgress = async (
   reviewId: string,
   progressData: {
     scores?: {
-      relevanceToNationalPriorities?: number; // 0-10
-      originalityAndInnovation?: number; // 0-15
-      clarityOfResearchProblem?: number; // 0-10
-      methodology?: number; // 0-15
-      literatureReview?: number; // 0-10
-      teamComposition?: number; // 0-10
-      feasibilityAndTimeline?: number; // 0-10
-      budgetJustification?: number; // 0-10
-      expectedOutcomes?: number; // 0-5
-      sustainabilityAndScalability?: number; // 0-5
+      backgroundAndProblemStatement?: number; // 0-15
+      researchObjectives?: number; // 0-10
+      methodology?: number; // 0-20
+      expectedOutcomesAndImpact?: number; // 0-15
+      workPlanAndFeasibility?: number; // 0-10
+      estimatedBudget?: number; // 0-10
+      capacityOfLeadResearcherAndTeam?: number; // 0-10
+      relevanceAndOriginality?: number; // 0-10
     };
     comments?: string;
   }

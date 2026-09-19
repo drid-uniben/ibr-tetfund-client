@@ -18,16 +18,14 @@ interface ReviewCriteria {
 }
 
 interface ScoreData {
-  relevanceToNationalPriorities: number;
-  originalityAndInnovation: number;
-  clarityOfResearchProblem: number;
+  backgroundAndProblemStatement: number;
+  researchObjectives: number;
   methodology: number;
-  literatureReview: number;
-  teamComposition: number;
-  feasibilityAndTimeline: number;
-  budgetJustification: number;
-  expectedOutcomes: number;
-  sustainabilityAndScalability: number;
+  expectedOutcomesAndImpact: number;
+  workPlanAndFeasibility: number;
+  estimatedBudget: number;
+  capacityOfLeadResearcherAndTeam: number;
+  relevanceAndOriginality: number;
 }
 
 interface ProposalData {
@@ -117,65 +115,53 @@ const ProposalReviewForm: React.FC = () => {
 
   const [reviewCriteria, setReviewCriteria] = useState<ReviewCriteria[]>([
     {
-      id: 'relevanceToNationalPriorities',
-      name: 'Relevance to National/Institutional Priorities',
-      description: "Alignment with Nigeria's national development goals or UNIBEN research priorities",
-      maxScore: 10,
-    },
-    {
-      id: 'originalityAndInnovation',
-      name: 'Originality and Innovation',
-      description: 'Novelty of research idea; advancement of knowledge; creativity',
+      id: 'backgroundAndProblemStatement',
+      name: 'Background and Problem Statement',
+      description: 'Problem is clearly defined, evidence-based and identifies a genuine knowledge gap. Explains why the problem matters now. Concise and within the 200-word limit.',
       maxScore: 15,
     },
     {
-      id: 'clarityOfResearchProblem',
-      name: 'Clarity of Research Problem and Objectives',
-      description: 'Clearly defined problem statement and SMART objectives',
+      id: 'researchObjectives',
+      name: 'Research Objectives',
+      description: 'Specific, measurable and achievable within the grant period. Logically derived from the problem statement.',
       maxScore: 10,
     },
     {
       id: 'methodology',
       name: 'Methodology',
-      description: 'Appropriateness, rigor, and feasibility of the research design, tools, and approach',
+      description: 'Design, methods, sampling/data sources and analysis are appropriate to the objectives and clearly described within 250 words. Ethical and practical considerations acknowledged.',
+      maxScore: 20,
+    },
+    {
+      id: 'expectedOutcomesAndImpact',
+      name: 'Expected Outcomes and Impact',
+      description: 'Outputs (publications, prototypes, policy briefs, patents, etc.) are concrete. Impact on society, industry, policy or teaching is plausible and specific, not generic.',
       maxScore: 15,
     },
     {
-      id: 'literatureReview',
-      name: 'Literature Review and Theoretical Framework',
-      description: 'Sound grounding in existing literature; clear conceptual framework',
+      id: 'workPlanAndFeasibility',
+      name: 'Work Plan and Feasibility',
+      description: 'Main activities are realistically sequenced with milestones. Timeline is achievable with the proposed team and resources.',
       maxScore: 10,
     },
     {
-      id: 'teamComposition',
-      name: 'Team Composition and Expertise',
-      description: 'Appropriateness of team, interdisciplinary balance, qualifications',
+      id: 'estimatedBudget',
+      name: 'Estimated Budget',
+      description: 'Indicative figures are realistic and linked to activities; within the discipline cap; direct and indirect costs distinguished.',
       maxScore: 10,
     },
     {
-      id: 'feasibilityAndTimeline',
-      name: 'Feasibility and Timeline',
-      description: 'Realistic scope, milestones, and timeline within funding duration',
+      id: 'capacityOfLeadResearcherAndTeam',
+      name: 'Capacity of Lead Researcher and Team',
+      description: 'CV (max 2 pages) shows relevant expertise and publication record. Co-investigators bring complementary skills and could assume project leadership if required.',
       maxScore: 10,
     },
     {
-      id: 'budgetJustification',
-      name: 'Budget Justification and Cost-Effectiveness',
-      description: 'Clear and justified budget aligned with project goals',
+      id: 'relevanceAndOriginality',
+      name: 'Relevance and Originality',
+      description: 'Aligns with TETFund IBR objectives and national/institutional research priorities. Novel, or clearly adds to existing knowledge.',
       maxScore: 10,
     },
-    {
-      id: 'expectedOutcomes',
-      name: 'Expected Outcomes and Impact',
-      description: 'Potential contributions to policy, community, academia, industry',
-      maxScore: 5,
-    },
-    {
-      id: 'sustainabilityAndScalability',
-      name: 'Sustainability and Scalability',
-      description: 'Potential for continuation, replication, or scale-up beyond funding',
-      maxScore: 5,
-    }
   ]);
 
   const [reviewComments, setReviewComments] = useState<string>('');
@@ -300,16 +286,14 @@ const ProposalReviewForm: React.FC = () => {
       setSubmitting(true);
       
       const scores: ScoreData = {
-        relevanceToNationalPriorities: 0,
-        originalityAndInnovation: 0,
-        clarityOfResearchProblem: 0,
+        backgroundAndProblemStatement: 0,
+        researchObjectives: 0,
         methodology: 0,
-        literatureReview: 0,
-        teamComposition: 0,
-        feasibilityAndTimeline: 0,
-        budgetJustification: 0,
-        expectedOutcomes: 0,
-        sustainabilityAndScalability: 0,
+        expectedOutcomesAndImpact: 0,
+        workPlanAndFeasibility: 0,
+        estimatedBudget: 0,
+        capacityOfLeadResearcherAndTeam: 0,
+        relevanceAndOriginality: 0,
       };
 
       reviewCriteria.forEach(criteria => {
