@@ -709,7 +709,7 @@ const handleEditFundingAmount = async () => {
 
         {/* Decision Dialog */}
         <Dialog open={showDecisionDialog} onOpenChange={handleDialogClose}>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {decisionForm.status === 'approved' ? 'Approve Full Proposal' : 'Reject Full Proposal'}
@@ -729,6 +729,7 @@ const handleEditFundingAmount = async () => {
                   onChange={(e) => setDecisionForm(prev => ({ ...prev, reviewComments: e.target.value }))}
                   placeholder={`Provide detailed review comments for ${decisionForm.status === 'approved' ? 'approval' : 'rejection'}...`}
                   rows={4}
+                  className="max-h-[400px] overflow-y-auto"
                 />
               </div>
 
