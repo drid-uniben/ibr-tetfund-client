@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Upload, AlertCircle, CheckCircle, Send, Loader2, ArrowLeft } from 'lucide-react';
+import { Upload, AlertCircle, CheckCircle, Send, Loader2, ArrowLeft, Download } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from "@/components/header";
 import Link from 'next/link';
@@ -30,6 +30,8 @@ const formatDeadline = (iso?: string | null): string | null => {
     year: 'numeric',
   });
 };
+
+const BUDGET_TEMPLATE_URL = `${process.env.NEXT_PUBLIC_API_URL?.replace('/api/v2', '') ?? ''}/templates/TETFund_IBR_2026_Budget_Template.docx`;
 
 export default function SubmitFullProposalPage() {
   const router = useRouter();
@@ -352,10 +354,39 @@ export default function SubmitFullProposalPage() {
                       <li>Methodology (Include description of study area/site/subjects, data collection and data analysis)</li>
                       <li>Results (Expected outputs/Results)</li>
                       <li>Work Plan/Time Frame (Provide activity by activity in the form of a GANTT Chart)</li>
-                      <li>Budget (Provide a budget break-down by activity/line item)</li>
+                      <li>
+                        <span>Budget (Provide a budget break-down by activity/line item)</span>
+                        {' — '}
+                        <a
+                          href={BUDGET_TEMPLATE_URL}
+                          download="TETFund_IBR_2026_Budget_Template.docx"
+                          className="inline-flex items-center gap-1 text-[#6d035c] hover:text-[#4a0340] underline text-sm"
+                        >
+                          <Download className="w-3 h-3" />
+                          use the budget template
+                        </a>
+                      </li>
                       <li>References</li>
                     </ol>
                   </div>
+                </div>
+
+                {/* Budget Template Download Callout */}
+                <div className="mt-6 p-4 bg-[#f3e8f2] border border-[#d4b8d0] rounded-xl flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-[#4a0340] mb-1">📄 Budget Template Required</h3>
+                    <p className="text-sm text-[#6b5566]">
+                      Your budget must follow the official TETFund IBR 2026 Budget Template. Download it below and complete it before uploading your proposal document.
+                    </p>
+                  </div>
+                  <a
+                    href={BUDGET_TEMPLATE_URL}
+                    download="TETFund_IBR_2026_Budget_Template.docx"
+                    className="inline-flex items-center gap-2 bg-[#6d035c] hover:bg-[#4a0340] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap flex-shrink-0"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download Budget Template
+                  </a>
                 </div>
 
                 <div className="mt-8 p-4 bg-[#f3e7d0] border border-[#e9c96b]/60 rounded-xl">
@@ -383,12 +414,22 @@ export default function SubmitFullProposalPage() {
                 <p className="text-[#6b5566] mb-4">
                   Your document must include all required sections: principal researcher information, co-researchers, project title, executive summary, introduction, problem statement, objectives, literature review, methodology, expected results, work plan with GANTT chart, detailed budget breakdown, and references.
                 </p>
-                <button
-                  onClick={() => setShowFullGuidelines(true)}
-                  className="text-[#6d035c] hover:text-[#4a0340] underline"
-                >
-                  View detailed submission guidelines
-                </button>
+                <div className="flex flex-wrap items-center gap-4">
+                  <button
+                    onClick={() => setShowFullGuidelines(true)}
+                    className="text-[#6d035c] hover:text-[#4a0340] underline"
+                  >
+                    View detailed submission guidelines
+                  </button>
+                  <a
+                    href={BUDGET_TEMPLATE_URL}
+                    download="TETFund_IBR_2026_Budget_Template.docx"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[#4a0340] hover:text-[#6d035c] bg-[#f3e7d0] hover:bg-[#ecdbc5] px-3 py-1.5 rounded-full transition-colors"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Download Budget Template
+                  </a>
+                </div>
               </>
             )}
 
