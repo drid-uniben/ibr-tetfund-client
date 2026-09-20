@@ -19,16 +19,16 @@ interface FullProposalStatus {
   isApproved: boolean;
   hasSubmitted: boolean;
   isWithinDeadline: boolean;
-  deadline: string;
-  daysRemaining: number;
+  deadline: string | null;
+  daysRemaining: number | null;
 }
 
 interface FinalSubmissionStatus {
   canSubmit: boolean;
   hasSubmitted: boolean;
   isWithinDeadline: boolean;
-  deadline: string;
-  daysRemaining: number;
+  deadline: string | null;
+  daysRemaining: number | null;
   isApproved: boolean;
 }
 
@@ -340,12 +340,13 @@ const FullProposalSubmissionBanner = ({
     return null;
   }
 
-  const deadlineDate = new Date(deadline);
-  const formattedDeadline = deadlineDate.toLocaleDateString('en-GB', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const formattedDeadline = deadline
+    ? new Date(deadline).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    : null;
 
   if (hasSubmitted) {
     return (
@@ -374,7 +375,7 @@ const FullProposalSubmissionBanner = ({
           </div>
           <div>
             <h3 className="font-serif text-xl font-semibold text-[#2b1229]">Submission Deadline Passed</h3>
-            <p className="text-[#6b5566]">The deadline for full proposal submission was {formattedDeadline}</p>
+            <p className="text-[#6b5566]">The deadline for full proposal submission was {formattedDeadline ?? 'the submission deadline'}</p>
           </div>
         </div>
       </div>
@@ -396,14 +397,16 @@ const FullProposalSubmissionBanner = ({
       <div className="bg-white/10 ring-1 ring-white/20 rounded-xl p-4 backdrop-blur-sm mb-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-[#e7d3e4]">Submission Deadline:</span>
-          <span className="text-lg font-bold text-[#e9c96b]">{formattedDeadline}</span>
+          <span className="text-lg font-bold text-[#e9c96b]">{formattedDeadline ?? 'To be announced'}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-[#e7d3e4]">Days Remaining:</span>
-          <span className={`text-lg font-bold ${daysRemaining <= 7 ? 'text-red-300' : 'text-[#e9c96b]'}`}>
-            {daysRemaining} days
-          </span>
-        </div>
+        {daysRemaining !== null && (
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-[#e7d3e4]">Days Remaining:</span>
+            <span className={`text-lg font-bold ${daysRemaining <= 7 ? 'text-red-300' : 'text-[#e9c96b]'}`}>
+              {daysRemaining} days
+            </span>
+          </div>
+        )}
       </div>
 
       {canSubmit && (
@@ -430,12 +433,13 @@ const FinalSubmissionBanner = ({
 
   if (!finalSubmissionStatus.isApproved) return null;
 
-  const deadlineDate = new Date(deadline);
-  const formattedDeadline = deadlineDate.toLocaleDateString('en-GB', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const formattedDeadline = deadline
+    ? new Date(deadline).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    : null;
 
   if (hasSubmitted) {
     return (
@@ -469,7 +473,7 @@ const FinalSubmissionBanner = ({
           </div>
           <div>
             <h3 className="font-serif text-xl font-semibold text-[#2b1229]">Final Submission Deadline Passed</h3>
-            <p className="text-[#6b5566]">The deadline for final submission was {formattedDeadline}</p>
+            <p className="text-[#6b5566]">The deadline for final submission was {formattedDeadline ?? 'the submission deadline'}</p>
           </div>
         </div>
       </div>
@@ -491,14 +495,16 @@ const FinalSubmissionBanner = ({
       <div className="bg-white/10 ring-1 ring-white/20 rounded-xl p-4 backdrop-blur-sm mb-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-[#e7d3e4]">Final Submission Deadline:</span>
-          <span className="text-lg font-bold text-[#e9c96b]">{formattedDeadline}</span>
+          <span className="text-lg font-bold text-[#e9c96b]">{formattedDeadline ?? 'To be announced'}</span>
         </div>
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium text-[#e7d3e4]">Days Remaining:</span>
-          <span className={`text-lg font-bold ${daysRemaining <= 7 ? 'text-red-300' : 'text-[#e9c96b]'}`}>
-            {daysRemaining} days
-          </span>
-        </div>
+        {daysRemaining !== null && (
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium text-[#e7d3e4]">Days Remaining:</span>
+            <span className={`text-lg font-bold ${daysRemaining <= 7 ? 'text-red-300' : 'text-[#e9c96b]'}`}>
+              {daysRemaining} days
+            </span>
+          </div>
+        )}
         <div className="border-t border-white/20 pt-3">
           <p className="text-sm text-[#e7d3e4]">
             <strong>Important:</strong> You need to submit both online documents and physical documents at the DRID office as instructed in the review comments.
