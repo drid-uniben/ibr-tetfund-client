@@ -374,9 +374,9 @@ export default function SubmitFullProposalPage() {
                 {/* Budget Template Download Callout */}
                 <div className="mt-6 p-4 bg-[#f3e8f2] border border-[#d4b8d0] rounded-xl flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-[#4a0340] mb-1">📄 Budget Template Required</h3>
+                    <h3 className="font-semibold text-[#4a0340] mb-1">📄 Budget Template</h3>
                     <p className="text-sm text-[#6b5566]">
-                      Your budget must follow the official TETFund IBR 2026 Budget Template. Download it below and complete it before uploading your proposal document.
+                      Your budget must follow the official TETFund IBR 2026 Budget Template format. Download it below and use it as a reference when preparing your budget section.
                     </p>
                   </div>
                   <a
