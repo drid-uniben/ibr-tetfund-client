@@ -862,6 +862,8 @@ export interface ProposalDecision {
   aiScore?: number;
   humanScore?: number;
   reconciliationScore?: number;
+  isSoloReview?: boolean;
+  soloReviewComments?: string | null;
   createdAt: string;
   notificationCount?: number;
   submitter?: {

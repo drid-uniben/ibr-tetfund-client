@@ -207,7 +207,11 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
     setSelectedProposal(proposal);
     setDecisionForm({
       status: decision === 'rejected' ? 'rejected' : 'approved',
-      feedbackComments: '',
+      // Solo (bypass) reviewer proposals have only one human review and no
+      // AI/reconciliation comments to reconcile, so start the admin off with
+      // that reviewer's own comments instead of a blank box. Still fully
+      // editable - this is a starting point, not a lock-in.
+      feedbackComments: proposal.isSoloReview ? (proposal.soloReviewComments || '') : '',
       fundingAmount: decision === 'approved' ? proposal.estimatedBudget || 0 : 0,
       finalScore: proposal.finalScore || 0
     });
@@ -712,6 +716,11 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
                 <label className="block text-sm font-medium mb-2">
                   Feedback Comments *
                 </label>
+                {selectedProposal?.isSoloReview && (
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Prefilled from the reviewer&apos;s comments — feel free to edit before sending.
+                  </p>
+                )}
                 <Textarea
                   value={decisionForm.feedbackComments}
                   onChange={(e) => setDecisionForm(prev => ({ ...prev, feedbackComments: e.target.value }))}
