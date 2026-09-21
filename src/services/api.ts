@@ -1122,7 +1122,7 @@ export interface FullProposalDecision {
   reviewComments?: string;
   reviewedAt?: string;
   submittedAt: string;
-  deadline: string;
+  deadline: string | null;
   lastNotifiedAt?: string;
   notificationCount?: number;
   award?: {

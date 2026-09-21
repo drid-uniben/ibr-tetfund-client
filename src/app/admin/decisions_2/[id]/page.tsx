@@ -54,7 +54,7 @@ interface FullProposal {
   docFile: string;
   status: 'submitted' | 'under_review' | 'approved' | 'rejected';
   submittedAt: string;
-  deadline: string;
+  deadline: string | null;
   reviewedAt?: string;
   reviewComments?: string;
   createdAt: string;
@@ -103,7 +103,8 @@ export default function FullProposalDetailPage() {
     fetchFullProposal();
   }, [isAuthenticated, id]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return 'No deadline set';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -160,7 +161,8 @@ export default function FullProposalDetailPage() {
     return statusMap[status] || status;
   };
 
-  const isDeadlinePassed = (deadline: string) => {
+  const isDeadlinePassed = (deadline: string | null | undefined) => {
+    if (!deadline) return false;
     return new Date() > new Date(deadline);
   };
 
