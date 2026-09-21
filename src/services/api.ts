@@ -895,6 +895,8 @@ export const getProposalsForDecision = async (params?: {
   threshold?: number;
   sort?: string;
   order?: "asc" | "desc";
+  search?: string;
+  status?: "all" | "pending" | "approved" | "declined";
 }): Promise<{
   success: boolean;
   data: ProposalDecision[];
@@ -922,6 +924,9 @@ export const getProposalsForDecision = async (params?: {
     queryParams.append("threshold", params.threshold.toString());
   if (params?.sort) queryParams.append("sort", params.sort);
   if (params?.order) queryParams.append("order", params.order);
+  if (params?.search) queryParams.append("search", params.search);
+  if (params?.status && params.status !== "all")
+    queryParams.append("status", params.status);
 
   try {
     const response = await api.get("/admin/decisions/proposals-for-decision", {

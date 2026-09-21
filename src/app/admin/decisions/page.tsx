@@ -77,6 +77,7 @@ const limit = 10;
 
   // Add debounce ref
   const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const searchDebounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Statistics
   const [statistics, setStatistics] = useState({
@@ -90,35 +91,42 @@ const limit = 10;
     approvedBudget: 0,
   });
 
-  // Debounced data loading function
-  const debouncedLoadData = useCallback(async (threshold: number) => {
+  // Debounced data loading function - the single source of truth for
+  // fetching the current page. Search, status filter, faculty filter,
+  // sort and the approval threshold are all resolved server-side now,
+  // so this is the only place that calls the API for the table.
+  const debouncedLoadData = useCallback(async (threshold: number, search: string) => {
     try {
       setIsLoading(true);
       const [proposalsResponse, facultiesResponse] = await Promise.all([
-        getProposalsForDecision({ 
-          page: currentPage, 
+        getProposalsForDecision({
+          page: currentPage,
           limit,
           faculty: facultyFilter !== 'all' ? facultyFilter : undefined,
           threshold,
-          sort: sortBy, // Add sort parameter
-        order: 'desc' // Add order parameter
+          sort: sortBy,
+          order: 'desc',
+          search: search.trim() || undefined,
+          // The dropdown's 'rejected' option has never matched the
+          // Award model's actual enum value, which is 'declined' - map
+          // it here so the Rejected filter finally works.
+          status: filterBy !== 'all'
+            ? (filterBy === 'rejected' ? 'declined' : filterBy)
+            : undefined,
         }),
         getFacultiesWithProposals()
       ]);
 
-      console.log('Proposals loaded:', proposalsResponse.data);
-      console.log('Statistics received:', proposalsResponse.statistics);
-      
       setProposals(proposalsResponse.data);
       setFaculties(facultiesResponse);
       setTotalPages(proposalsResponse.totalPages || 1);
       setTotalCount(proposalsResponse.total || 0);
-      
+
       // Update statistics from backend response
       if (proposalsResponse.statistics) {
         setStatistics(proposalsResponse.statistics);
       }
-      
+
       setError(null);
     } catch (err) {
       console.error('Failed to load data:', err);
@@ -127,81 +135,74 @@ const limit = 10;
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, facultyFilter, limit, sortBy]);
+  }, [currentPage, facultyFilter, limit, sortBy, filterBy]);
 
-  
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/admin/login');
     }
   }, [authLoading, isAuthenticated, router]);
-  
+
   // Handle threshold change with debounce
   const handleThresholdChange = useCallback((value: number[]) => {
     const newThreshold = value[0];
     setApprovalThreshold(newThreshold);
-    
+
     // Clear existing timeout
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
-    
+
     // Set new timeout for 800ms delay
     debounceRef.current = setTimeout(() => {
-      debouncedLoadData(newThreshold);
+      debouncedLoadData(newThreshold, searchQuery);
     }, 800);
-  }, [debouncedLoadData]);
+  }, [debouncedLoadData, searchQuery]);
 
-  // Initial data load effect
+  // Handle search input with debounce - mirrors handleThresholdChange.
+  // Resets to page 1 since the previous page may no longer exist once
+  // the result set narrows.
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+
+    searchDebounceRef.current = setTimeout(() => {
+      setCurrentPage(1);
+      debouncedLoadData(approvalThreshold, value);
+    }, 400);
+  }, [debouncedLoadData, approvalThreshold]);
+
+  // Initial data load effect, and reload on any non-debounced control
+  // (page, faculty, sort, status filter). Search and threshold changes
+  // are handled by their own debounced handlers above, not here, so
+  // typing a search term doesn't fire a request per keystroke.
   useEffect(() => {
     if (isAuthenticated) {
-      debouncedLoadData(approvalThreshold);
+      debouncedLoadData(approvalThreshold, searchQuery);
     }
-  }, [isAuthenticated, currentPage, facultyFilter, sortBy, debouncedLoadData, approvalThreshold]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, currentPage, facultyFilter, sortBy, filterBy]);
 
-  // Cleanup timeout on unmount
+  // Reset to page 1 whenever faculty or status filter narrows the result
+  // set, so you don't land on an empty page that no longer exists.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [facultyFilter, filterBy]);
+
+  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    };
-  }, []);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true);
-        const [proposalsResponse, facultiesResponse] = await Promise.all([
-          getProposalsForDecision({ 
-  page: currentPage, 
-  limit,
-  faculty: facultyFilter !== 'all' ? facultyFilter : undefined 
-}),
-          getFacultiesWithProposals()
-        ]);
-
-        console.log('Proposals loaded:', proposalsResponse.data);
-        console.log('Faculties loaded:', facultiesResponse);
-        
-        setProposals(proposalsResponse.data);
-        setFaculties(facultiesResponse);
-        setTotalPages(proposalsResponse.totalPages || 1);
-setTotalCount(proposalsResponse.total || 0);  // Use total, not count
-      setError(null);
-      } catch (err) {
-        console.error('Failed to load data:', err);
-        setError('Failed to load proposals for review');
-        toast.error('Failed to load proposals for review');
-      } finally {
-        setIsLoading(false);
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
       }
     };
-
-    if (isAuthenticated) {
-      loadData();
-    }
-  }, [isAuthenticated, currentPage, facultyFilter]);
+  }, []);
 
   const handleDecisionClick = (proposal: ProposalDecision, decision: 'approved' | 'rejected') => {
     setSelectedProposal(proposal);
@@ -358,13 +359,9 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
     );
   }
 
-  const filteredProposals = proposals
-    .filter(p => filterBy === 'all' || p.award.status === filterBy)
-    .filter(p => facultyFilter === 'all' || p.faculty?._id === facultyFilter)
-    .filter(p => 
-      p.projectTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (p.submitter?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Search, status and faculty filtering now all happen server-side (see
+  // debouncedLoadData) against the full 127-proposal dataset, not just the
+  // current page - `proposals` is already the correctly filtered page.
 
   return (
     <AdminLayout>
@@ -479,7 +476,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
                 placeholder="Search proposals..."
                 className="w-full px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
               />
             </div>
 
@@ -568,7 +565,7 @@ setTotalCount(proposalsResponse.total || 0);  // Use total, not count
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-border">
-              {filteredProposals.map((proposal) => (
+              {proposals.map((proposal) => (
                 <tr 
                   key={proposal._id} 
                   className={`hover:bg-muted ${(proposal.finalScore || 0) >= approvalThreshold ? 'bg-green-50' : ''}`}
