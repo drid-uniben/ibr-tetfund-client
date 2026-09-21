@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Button } from "@/components/ui/button";
 import {
@@ -92,33 +92,38 @@ function FullProposalDecisionsPanel() {
   });
 
   // Data loading function
-  const loadData = useCallback(async () => {
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const loadData = useCallback(async (overrideSearch?: string) => {
     try {
       setIsLoading(true);
+      const activeSearch = overrideSearch !== undefined ? overrideSearch : searchQuery;
       const [fullProposalsResponse, facultiesResponse] = await Promise.all([
-        getFullProposalsForDecision({ 
-          page: currentPage, 
+        getFullProposalsForDecision({
+          page: currentPage,
           limit,
           faculty: facultyFilter !== 'all' ? facultyFilter : undefined,
           sort: sortBy,
-          order: 'desc'
+          order: 'desc',
+          search: activeSearch.trim() || undefined,
+          // Map the local 'rejected' option to the backend enum value 'declined'
+          status: filterBy !== 'all'
+            ? (filterBy === 'rejected' ? 'declined' : filterBy as 'submitted' | 'approved' | 'declined')
+            : undefined,
         }),
         getFacultiesWithProposals()
       ]);
 
-      console.log('Full Proposals loaded:', fullProposalsResponse);
-      console.log('Statistics received:', fullProposalsResponse.statistics);
-      
       setFullProposals(fullProposalsResponse.data);
       setFaculties(facultiesResponse);
       setTotalPages(fullProposalsResponse.totalPages || 1);
       setTotalCount(fullProposalsResponse.total || 0);
-      
+
       // Update statistics from backend response
       if (fullProposalsResponse.statistics) {
         setStatistics(fullProposalsResponse.statistics);
       }
-      
+
       setError(null);
     } catch (err) {
       console.error('Failed to load data:', err);
@@ -127,7 +132,7 @@ function FullProposalDecisionsPanel() {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, facultyFilter, limit, sortBy]);
+  }, [currentPage, facultyFilter, limit, sortBy, filterBy, searchQuery]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -135,12 +140,35 @@ function FullProposalDecisionsPanel() {
     }
   }, [authLoading, isAuthenticated, router]);
 
+  // Handle search input with debounce - resets to page 1
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setCurrentPage(1);
+      loadData(value);
+    }, 400);
+  }, [loadData]);
+
+  // Reset to page 1 when faculty or status filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [facultyFilter, filterBy]);
+
+  // Cleanup search debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, []);
+
   // Initial data load effect
   useEffect(() => {
     if (isAuthenticated) {
       loadData();
     }
-  }, [isAuthenticated, loadData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, currentPage, facultyFilter, sortBy, filterBy]);
 
   const handleDecisionClick = (fullProposal: FullProposalDecision, decision: 'approved' | 'rejected') => {
     setSelectedFullProposal(fullProposal);
@@ -393,13 +421,8 @@ const handleEditFundingAmount = async () => {
     );
   }
 
-  const filteredFullProposals = fullProposals
-    .filter(fp => filterBy === 'all' || fp.status === filterBy)
-    .filter(fp => facultyFilter === 'all' || fp.faculty?._id === facultyFilter)
-    .filter(fp => 
-      fp.originalProposal?.projectTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (fp.submitter?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Search, status and faculty filtering now all happen server-side (see loadData)
+  // against the full dataset, not just the current page.
 
   return (
     <AdminLayout>
@@ -473,7 +496,7 @@ const handleEditFundingAmount = async () => {
                 placeholder="Search full proposals..."
                 className="w-full px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
               />
             </div>
 
@@ -549,7 +572,7 @@ const handleEditFundingAmount = async () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-border">
-              {filteredFullProposals.map((fullProposal) => (
+              {fullProposals.map((fullProposal) => (
                 <tr 
                   key={fullProposal._id} 
                   className={`hover:bg-muted ${

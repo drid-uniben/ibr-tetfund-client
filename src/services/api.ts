@@ -1153,6 +1153,8 @@ export const getFullProposalsForDecision = async (params?: {
   faculty?: string;
   sort?: string;
   order?: "asc" | "desc";
+  search?: string;
+  status?: "all" | "submitted" | "approved" | "declined";
 }) => {
   try {
     const response = await api.get(
