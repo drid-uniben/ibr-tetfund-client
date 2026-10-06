@@ -31,18 +31,18 @@ const FacultyCard = ({ faculty, stage, maxCount }: { faculty: FacultyData; stage
   
   const getStageColor = (stage: number) => {
     switch(stage) {
-      case 1: return 'bg-[#6d035c]/100';
-      case 2: return 'bg-secondary0'; 
-      case 3: return 'bg-green-500';
-      default: return 'bg-muted0';
+      case 1: return 'bg-blue-600';
+      case 2: return 'bg-purple-600'; 
+      case 3: return 'bg-emerald-600';
+      default: return 'bg-muted';
     }
   };
 
   const getStageColorLight = (stage: number) => {
     switch(stage) {
-      case 1: return 'bg-[#6d035c]/10 border-[#6d035c]/20';
-      case 2: return 'bg-secondary border-[#e9c96b]';
-      case 3: return 'bg-green-50 border-green-200';
+      case 1: return 'bg-blue-50/50 border-blue-200';
+      case 2: return 'bg-purple-50/50 border-purple-200';
+      case 3: return 'bg-emerald-50/50 border-emerald-200';
       default: return 'bg-muted border-border';
     }
   };
@@ -75,9 +75,9 @@ const FacultyCard = ({ faculty, stage, maxCount }: { faculty: FacultyData; stage
 const StageHeader = ({ stage, data, icon: Icon }: { stage: number; data: StageData; icon: React.ComponentType<{ className?: string }> }) => {
   const getStageColor = (stage: number) => {
     switch(stage) {
-      case 1: return 'text-primary bg-[#6d035c]/10';
-      case 2: return 'text-primary bg-secondary'; 
-      case 3: return 'text-green-600 bg-green-100';
+      case 1: return 'text-blue-600 bg-blue-100';
+      case 2: return 'text-purple-600 bg-purple-100'; 
+      case 3: return 'text-emerald-600 bg-emerald-100';
       default: return 'text-muted-foreground bg-muted';
     }
   };
@@ -123,7 +123,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
   const stages = [
     {
       data: stageData[0],
-      color: 'bg-[#6d035c]/100', // Stage 1 Color
+      color: 'bg-blue-600', // Stage 1 Color
       width: '90%',
       totalCount: totalSubmissions,
       explanation: (
@@ -135,7 +135,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
     },
     {
       data: stageData[1],
-      color: 'bg-secondary0', // Stage 2 Color
+      color: 'bg-purple-600', // Stage 2 Color
       width: '85%',
       totalCount: totalAwards,
       explanation: (
@@ -147,7 +147,7 @@ const FunnelVisualization = ({ stageData }: { stageData: StageData[] }) => {
     },
     {
       data: stageData[2],
-      color: 'bg-green-500', // Stage 3 Color
+      color: 'bg-emerald-600', // Stage 3 Color
       width: '80%',
       totalCount: totalFullProposals,
       explanation: (
@@ -344,8 +344,8 @@ export default function ResearchFunnelDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center">
-                    <div className="p-2 bg-[#6d035c]/10 rounded-lg">
-                      <FileCheck className="w-6 h-6 text-primary" />
+                    <div className="p-2 bg-blue-50 rounded-lg">
+                      <FileCheck className="w-6 h-6 text-blue-600" />
                     </div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-muted-foreground">Total Submissions</p>
@@ -356,8 +356,8 @@ export default function ResearchFunnelDashboard() {
                 
                 <div className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center">
-                    <div className="p-2 bg-secondary rounded-lg">
-                      <CheckCircle2 className="w-6 h-6 text-primary" />
+                    <div className="p-2 bg-purple-50 rounded-lg">
+                      <CheckCircle2 className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-muted-foreground">Awards Approved</p>
@@ -368,8 +368,8 @@ export default function ResearchFunnelDashboard() {
 
                 <div className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <Award className="w-6 h-6 text-green-600" />
+                    <div className="p-2 bg-emerald-50 rounded-lg">
+                      <Award className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-muted-foreground">Full Proposals</p>
@@ -380,7 +380,7 @@ export default function ResearchFunnelDashboard() {
 
                 <div className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center">
-                    <div className="p-2 bg-orange-100 rounded-lg">
+                    <div className="p-2 bg-orange-50 rounded-lg">
                       <TrendingUp className="w-6 h-6 text-orange-600" />
                     </div>
                     <div className="ml-4">
@@ -403,7 +403,7 @@ export default function ResearchFunnelDashboard() {
                       onClick={() => setSelectedStage(stage)}
                       className={`px-4 py-2 rounded-md font-medium transition-all duration-200 ${
                         selectedStage === stage
-                          ? 'bg-[#37012f] text-white shadow-sm'
+                          ? 'bg-slate-900 text-white shadow-sm'
                           : 'text-muted-foreground hover:bg-muted'
                       }`}
                     >
