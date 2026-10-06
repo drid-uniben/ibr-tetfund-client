@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getFullProposalsForDecision, assignFullProposalScore, editFullProposalScore, editFullProposalFundingAmount, updateFullProposalStatus, notifyFullProposalApplicants, getFacultiesWithProposals, type FullProposalDecision } from '@/services/api';
 import { Loader2, MoreVertical, Eye, CheckCircle, XCircle, Bell, TrendingUp, FileText, Edit, FileDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from "sonner";
 import { Suspense } from "react";
@@ -32,8 +32,10 @@ interface FullProposalDecisionFormData {
 }
 
 interface Faculty {
-  _id: string;
+  _id?: string;
   title: string;
+  code?: string | null;
+  type?: string | null;
 }
 
 export default function FullProposalDecisionsPanelWrapper() {
@@ -48,19 +50,42 @@ export default function FullProposalDecisionsPanelWrapper() {
   );
 }
 
+const VALID_FULL_PROPOSAL_STATUSES = ['all', 'submitted', 'approved', 'rejected'] as const;
+type FullProposalStatus = (typeof VALID_FULL_PROPOSAL_STATUSES)[number];
+
+const VALID_FULL_PROPOSAL_SORTS = ['submittedAt', 'title', 'deadline', 'score'] as const;
+type FullProposalSort = (typeof VALID_FULL_PROPOSAL_SORTS)[number];
+
+function isFullProposalStatus(val: string | null): val is FullProposalStatus {
+  return val !== null && (VALID_FULL_PROPOSAL_STATUSES as readonly string[]).includes(val);
+}
+
+function isFullProposalSort(val: string | null): val is FullProposalSort {
+  return val !== null && (VALID_FULL_PROPOSAL_SORTS as readonly string[]).includes(val);
+}
+
 function FullProposalDecisionsPanel() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const initialSearch = searchParams.get('search') || '';
+  const initialFaculty = searchParams.get('faculty') || 'all';
+  const initialStatusParam = searchParams.get('status');
+  const initialStatus: FullProposalStatus = isFullProposalStatus(initialStatusParam) ? initialStatusParam : 'all';
+  const initialSortParam = searchParams.get('sort');
+  const initialSort: FullProposalSort = isFullProposalSort(initialSortParam) ? initialSortParam : 'score';
 
   const [fullProposals, setFullProposals] = useState<FullProposalDecision[]>([]);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
-  const [sortBy, setSortBy] = useState<'submittedAt' | 'title' | 'deadline' | 'score'>('score');
-  const [filterBy, setFilterBy] = useState<'all' | 'submitted' | 'approved' | 'rejected'>('all');
-  const [facultyFilter, setFacultyFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<FullProposalSort>(initialSort);
+  const [filterBy, setFilterBy] = useState<FullProposalStatus>(initialStatus);
+  const [facultyFilter, setFacultyFilter] = useState(initialFaculty);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [showScoreDialog, setShowScoreDialog] = useState(false);
@@ -69,7 +94,6 @@ function FullProposalDecisionsPanel() {
   const [editScoreValue, setEditScoreValue] = useState<number>(1);
   const [showEditFundingDialog, setShowEditFundingDialog] = useState(false);
   const [editFundingAmount, setEditFundingAmount] = useState<number>(0);
-
 
   const limit = 10;
   
@@ -95,6 +119,60 @@ function FullProposalDecisionsPanel() {
     nearingDeadline: 0,
     approvedBudget: 0,
   });
+
+  // Helper to sync state changes into URL query parameters
+  const updateUrl = useCallback((updates: {
+    page?: number;
+    search?: string;
+    faculty?: string;
+    status?: string;
+    sort?: string;
+  }) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (updates.page !== undefined) {
+      if (updates.page > 1) params.set('page', String(updates.page));
+      else params.delete('page');
+    }
+    if (updates.search !== undefined) {
+      if (updates.search.trim()) params.set('search', updates.search.trim());
+      else params.delete('search');
+    }
+    if (updates.faculty !== undefined) {
+      if (updates.faculty !== 'all') params.set('faculty', updates.faculty);
+      else params.delete('faculty');
+    }
+    if (updates.status !== undefined) {
+      if (updates.status !== 'all') params.set('status', updates.status);
+      else params.delete('status');
+    }
+    if (updates.sort !== undefined) {
+      if (updates.sort !== 'score') params.set('sort', updates.sort);
+      else params.delete('sort');
+    }
+
+    const qs = params.toString();
+    const newUrl = qs ? `?${qs}` : window.location.pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [router, searchParams]);
+
+  // Sync state when URL search params change (e.g. browser back/forward)
+  useEffect(() => {
+    const urlPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const urlSearch = searchParams.get('search') || '';
+    const urlFaculty = searchParams.get('faculty') || 'all';
+    const urlStatus = searchParams.get('status') || 'all';
+    const urlSort = searchParams.get('sort') || 'score';
+
+    setCurrentPage(prev => (prev !== urlPage ? urlPage : prev));
+    setSearchQuery(prev => (prev !== urlSearch ? urlSearch : prev));
+    setFacultyFilter(prev => (prev !== urlFaculty ? urlFaculty : prev));
+    if (isFullProposalStatus(urlStatus)) {
+      setFilterBy(prev => (prev !== urlStatus ? urlStatus : prev));
+    }
+    if (isFullProposalSort(urlSort)) {
+      setSortBy(prev => (prev !== urlSort ? urlSort : prev));
+    }
+  }, [searchParams]);
 
   // Data loading function
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -150,14 +228,16 @@ function FullProposalDecisionsPanel() {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(() => {
       setCurrentPage(1);
+      updateUrl({ search: value, page: 1 });
       loadData(value);
     }, 400);
-  }, [loadData]);
+  }, [loadData, updateUrl]);
 
-  // Reset to page 1 when faculty or status filter changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [facultyFilter, filterBy]);
+  const handlePageChange = (newPage: number) => {
+    const targetPage = Math.max(1, Math.min(newPage, totalPages));
+    setCurrentPage(targetPage);
+    updateUrl({ page: targetPage });
+  };
 
   // Cleanup search debounce on unmount
   useEffect(() => {
@@ -265,6 +345,8 @@ function FullProposalDecisionsPanel() {
 
   const handleSortChange = (value: 'submittedAt' | 'title' | 'deadline' | 'score') => {
     setSortBy(value);
+    setCurrentPage(1);
+    updateUrl({ sort: value, page: 1 });
   };
 
   const handleDialogClose = (open: boolean) => {
@@ -539,14 +621,21 @@ const handleEditFundingAmount = async () => {
 
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-1">Faculty</label>
-              <Select value={facultyFilter} onValueChange={setFacultyFilter}>
+              <Select
+                value={facultyFilter}
+                onValueChange={(value) => {
+                  setFacultyFilter(value);
+                  setCurrentPage(1);
+                  updateUrl({ faculty: value, page: 1 });
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="All Faculties" />
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px] overflow-y-auto">
                   <SelectItem value="all">All Faculties</SelectItem>
                   {faculties.map((faculty) => (
-                    <SelectItem key={faculty._id} value={faculty._id}>
+                    <SelectItem key={faculty.title} value={faculty.title}>
                       {faculty.title}
                     </SelectItem>
                   ))}
@@ -571,7 +660,14 @@ const handleEditFundingAmount = async () => {
 
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-1">Filter</label>
-              <Select value={filterBy} onValueChange={(value: 'all' | 'submitted' | 'approved' | 'rejected') => setFilterBy(value)}>
+              <Select
+                value={filterBy}
+                onValueChange={(value: 'all' | 'submitted' | 'approved' | 'rejected') => {
+                  setFilterBy(value);
+                  setCurrentPage(1);
+                  updateUrl({ status: value, page: 1 });
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -1039,7 +1135,7 @@ const handleEditFundingAmount = async () => {
             </div>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 variant="outline"
                 size="sm"
@@ -1050,7 +1146,7 @@ const handleEditFundingAmount = async () => {
                 Page {currentPage} of {totalPages}
               </span>
               <Button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 variant="outline"
                 size="sm"
