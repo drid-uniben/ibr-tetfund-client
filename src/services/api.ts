@@ -1124,7 +1124,11 @@ export interface FullProposalDecision {
   _id: string;
   status: "submitted" | "approved" | "rejected";
   score?: number;
-  reviewComments?: string;
+  reviewComments?: string; // released to the researcher
+  // Admin-only working review saved from the detail page
+  draftReviewComments?: string;
+  draftFundingAmount?: number;
+  draftReviewedAt?: string;
   reviewedAt?: string;
   submittedAt: string;
   deadline: string | null;
@@ -1154,7 +1158,7 @@ export const getFullProposalsForDecision = async (params?: {
   sort?: string;
   order?: "asc" | "desc";
   search?: string;
-  status?: "all" | "submitted" | "approved" | "declined";
+  status?: "all" | "submitted" | "approved" | "rejected";
 }) => {
   try {
     const response = await api.get(
@@ -1247,6 +1251,10 @@ export const updateFullProposalStatus = async (
   data: {
     status: "submitted" | "approved" | "rejected";
     reviewComments: string;
+    fundingAmount?: number;
+    // Only honoured for a rejection that already has a draft review:
+    // false keeps the comments admin-only (not emailed, not on the dashboard).
+    sendComments?: boolean;
   }
 ) => {
   try {
@@ -1264,6 +1272,29 @@ export const updateFullProposalStatus = async (
   }
 };
 
+export const saveFullProposalDraftReview = async (
+  fullProposalId: string,
+  data: {
+    score?: number;
+    reviewComments?: string;
+    fundingAmount?: number | null;
+  }
+) => {
+  try {
+    const response = await api.patch(
+      `/admin/decisions_2/full-proposal/${fullProposalId}/draft-review`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error saving draft review for full proposal ${fullProposalId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
 export const notifyFullProposalApplicants = async (fullProposalId: string) => {
   try {
     const response = await api.post(
@@ -1275,6 +1306,83 @@ export const notifyFullProposalApplicants = async (fullProposalId: string) => {
       `Error notifying applicants for full proposal ${fullProposalId}:`,
       error
     );
+    throw error;
+  }
+};
+
+export const FULL_PROPOSAL_EXPORT_FIELDS = [
+  { key: "title", label: "Project title" },
+  { key: "name", label: "Researcher name" },
+  { key: "faculty", label: "Faculty" },
+  { key: "department", label: "Department" },
+  { key: "score", label: "Score" },
+  { key: "status", label: "Decision status" },
+  { key: "comments", label: "Review comments" },
+  { key: "funding", label: "Funding amount" },
+  { key: "link", label: "Link to full proposal document" },
+] as const;
+
+export type FullProposalExportField =
+  (typeof FULL_PROPOSAL_EXPORT_FIELDS)[number]["key"];
+
+export interface FullProposalExportParams {
+  fields: FullProposalExportField[];
+  sort: "title" | "name" | "score" | "submittedAt" | "faculty" | "faculty_department";
+  thenBy: "title" | "name" | "score" | "submittedAt";
+  order: "asc" | "desc";
+  faculties: string[];
+  status: "all" | "submitted" | "approved" | "rejected";
+  includeUnreviewed: boolean;
+  requireScore: boolean;
+}
+
+// Downloads all matching reviewed full proposals as one Word document.
+export const exportFullProposalsDocx = async (
+  params: FullProposalExportParams
+): Promise<void> => {
+  try {
+    const response = await api.get("/admin/decisions_2/export-docx", {
+      responseType: "blob",
+      params: {
+        fields: params.fields.join(","),
+        sort: params.sort,
+        thenBy: params.thenBy,
+        order: params.order,
+        faculty: params.faculties.length ? params.faculties.join(",") : undefined,
+        status: params.status !== "all" ? params.status : undefined,
+        includeUnreviewed: params.includeUnreviewed ? "true" : undefined,
+        requireScore: params.requireScore ? "true" : undefined,
+      },
+    });
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    const disposition: string = response.headers?.["content-disposition"] || "";
+    const match = /filename="?([^";]+)"?/i.exec(disposition);
+    const filename =
+      match?.[1] || `full-proposal-review-${new Date().toISOString().slice(0, 10)}.docx`;
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    // With responseType "blob" the JSON error body arrives as a Blob.
+    if (axios.isAxiosError(error) && error.response?.data instanceof Blob) {
+      let message = "";
+      try {
+        message = JSON.parse(await error.response.data.text())?.message || "";
+      } catch {
+        /* not JSON; fall through to the generic error */
+      }
+      if (message) {
+        throw new Error(message);
+      }
+    }
+    console.error("Error exporting full proposals:", error);
     throw error;
   }
 };

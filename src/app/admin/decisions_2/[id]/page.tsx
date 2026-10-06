@@ -22,6 +22,7 @@ import {
   Banknote
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import FullProposalDraftReview from '@/components/admin/FullProposalDraftReview';
 
 interface Award {
   fundingAmount: number;
@@ -57,6 +58,10 @@ interface FullProposal {
   deadline: string | null;
   reviewedAt?: string;
   reviewComments?: string;
+  score?: number;
+  draftReviewComments?: string;
+  draftFundingAmount?: number;
+  draftReviewedAt?: string;
   createdAt: string;
   updatedAt: string;
   award: Award;
@@ -298,6 +303,31 @@ export default function FullProposalDetailPage() {
                   </div>
                 </div>
               )}
+
+              {/* Admin Review (draft score, comments and budget) */}
+              <FullProposalDraftReview
+                fullProposalId={fullProposal._id}
+                status={fullProposal.status}
+                score={fullProposal.score}
+                draftReviewComments={fullProposal.draftReviewComments}
+                draftFundingAmount={fullProposal.draftFundingAmount}
+                draftReviewedAt={fullProposal.draftReviewedAt}
+                estimatedBudget={fullProposal.proposal?.estimatedBudget}
+                firstStageAmount={fullProposal.award?.fundingAmount}
+                onSaved={(saved) =>
+                  setFullProposal((prev) =>
+                    prev
+                      ? {
+                          ...prev,
+                          score: saved.score ?? prev.score,
+                          draftReviewComments: saved.draftReviewComments,
+                          draftFundingAmount: saved.draftFundingAmount ?? undefined,
+                          draftReviewedAt: saved.draftReviewedAt
+                        }
+                      : prev
+                  )
+                }
+              />
 
               {/* Researcher Information */}
               <div className="bg-white shadow overflow-hidden rounded-lg">

@@ -14,17 +14,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getFullProposalsForDecision, assignFullProposalScore, editFullProposalScore, editFullProposalFundingAmount, updateFullProposalStatus, notifyFullProposalApplicants, getFacultiesWithProposals, type FullProposalDecision } from '@/services/api';
-import { Loader2, MoreVertical, Eye, CheckCircle, XCircle, Bell, TrendingUp, FileText, Edit } from 'lucide-react';
+import { Loader2, MoreVertical, Eye, CheckCircle, XCircle, Bell, TrendingUp, FileText, Edit, FileDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from "sonner";
 import { Suspense } from "react";
 import { Input } from '@/components/ui/input';
+import FullProposalExportDialog from '@/components/admin/FullProposalExportDialog';
 
 interface FullProposalDecisionFormData {
   status: 'submitted' | 'approved' | 'rejected';
   reviewComments: string;
   fundingAmount?: number;
+  // Only used when rejecting a proposal that already has a saved draft review.
+  // undefined/true = release the comments to the researcher (current behaviour).
+  sendComments?: boolean;
 }
 
 interface Faculty {
@@ -71,6 +75,7 @@ function FullProposalDecisionsPanel() {
   
   // Decision form state
   const [showDecisionDialog, setShowDecisionDialog] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const [selectedFullProposal, setSelectedFullProposal] = useState<FullProposalDecision | null>(null);
   const [decisionForm, setDecisionForm] = useState<FullProposalDecisionFormData>({
     status: 'approved',
@@ -106,9 +111,8 @@ function FullProposalDecisionsPanel() {
           sort: sortBy,
           order: 'desc',
           search: activeSearch.trim() || undefined,
-          // Map the local 'rejected' option to the backend enum value 'declined'
           status: filterBy !== 'all'
-            ? (filterBy === 'rejected' ? 'declined' : filterBy as 'submitted' | 'approved' | 'declined')
+            ? filterBy as 'submitted' | 'approved' | 'rejected'
             : undefined,
         }),
         getFacultiesWithProposals()
@@ -172,19 +176,34 @@ function FullProposalDecisionsPanel() {
 
   const handleDecisionClick = (fullProposal: FullProposalDecision, decision: 'approved' | 'rejected') => {
     setSelectedFullProposal(fullProposal);
+    // Prefill from the review saved on the detail page (all values stay editable)
     setDecisionForm({
       status: decision,
-      reviewComments: '',
-      fundingAmount: fullProposal.award?.fundingAmount || 0
+      reviewComments: fullProposal.draftReviewComments ?? '',
+      fundingAmount: fullProposal.draftFundingAmount ?? fullProposal.award?.fundingAmount ?? 0,
+      sendComments: true
     });
     setShowDecisionDialog(true);
   };
 
+  const hasDraftReview = (fp: FullProposalDecision | null) =>
+    Boolean(fp?.draftReviewComments?.trim());
+
   const handleDecisionSubmit = async () => {
     if (!selectedFullProposal) return;
     
-    if (!decisionForm.reviewComments.trim()) {
+    const withholdComments =
+      decisionForm.status === 'rejected' &&
+      hasDraftReview(selectedFullProposal) &&
+      decisionForm.sendComments === false;
+
+    if (!withholdComments && !decisionForm.reviewComments.trim()) {
       toast.error('Review comments are required');
+      return;
+    }
+
+    if (decisionForm.status === 'approved' && !(Number(decisionForm.fundingAmount) > 0)) {
+      toast.error('Funding amount must be a positive number');
       return;
     }
 
@@ -193,7 +212,10 @@ function FullProposalDecisionsPanel() {
       await updateFullProposalStatus(selectedFullProposal._id, {
         status: decisionForm.status,
         reviewComments: decisionForm.reviewComments,
-        ...(decisionForm.status === 'approved' && { fundingAmount: decisionForm.fundingAmount })
+        ...(decisionForm.status === 'approved' && { fundingAmount: decisionForm.fundingAmount }),
+        ...(decisionForm.status === 'rejected' && hasDraftReview(selectedFullProposal) && {
+          sendComments: !withholdComments
+        })
       });
       
       setFullProposals(prevFullProposals => 
@@ -202,7 +224,13 @@ function FullProposalDecisionsPanel() {
             return { 
               ...fp, 
               status: decisionForm.status,
-              reviewComments: decisionForm.reviewComments,
+              // Withheld comments never reach the researcher; keep them as the admin draft
+              reviewComments: withholdComments ? '' : decisionForm.reviewComments.trim(),
+              draftReviewComments: decisionForm.reviewComments.trim() || fp.draftReviewComments,
+              ...(decisionForm.status === 'approved' && {
+                draftFundingAmount: decisionForm.fundingAmount,
+                award: { ...fp.award, fundingAmount: decisionForm.fundingAmount }
+              }),
               reviewedAt: new Date().toISOString()
             };
           }
@@ -216,7 +244,7 @@ function FullProposalDecisionsPanel() {
         pendingDecisions: prev.pendingDecisions - (selectedFullProposal.status === 'submitted' ? 1 : 0),
         approved: prev.approved + (decisionForm.status === 'approved' ? 1 : 0),
         rejected: prev.rejected + (decisionForm.status === 'rejected' ? 1 : 0),
-        approvedBudget: prev.approvedBudget + (decisionForm.status === 'approved' ? selectedFullProposal.award?.fundingAmount || 0 : 0)
+        approvedBudget: prev.approvedBudget + (decisionForm.status === 'approved' ? decisionForm.fundingAmount || 0 : 0)
       }));
 
       toast.success(`Full proposal ${decisionForm.status} successfully`);
@@ -429,7 +457,16 @@ const handleEditFundingAmount = async () => {
       <div className="p-6 max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Full Proposal Decision Panel</h1>
+          <Button variant="outline" onClick={() => setShowExportDialog(true)}>
+            <FileDown className="h-4 w-4 mr-2" /> Export to Word
+          </Button>
         </div>
+
+        <FullProposalExportDialog
+          open={showExportDialog}
+          onOpenChange={setShowExportDialog}
+          faculties={faculties}
+        />
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
@@ -589,6 +626,11 @@ const handleEditFundingAmount = async () => {
                       <div className="text-xs text-muted-foreground">
                         {fullProposal.submitter?.name} • {fullProposal.faculty?.title}
                       </div>
+                      {fullProposal.status === 'submitted' && fullProposal.draftReviewComments?.trim() && (
+                        <span className="mt-1 inline-flex items-center rounded-full border border-[#6d035c]/20 bg-[#6d035c]/10 px-2 py-0.5 text-[10px] font-medium text-[#4a0340]">
+                          Review saved
+                        </span>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -744,9 +786,17 @@ const handleEditFundingAmount = async () => {
             </DialogHeader>
             
             <div className="space-y-4">
+              {hasDraftReview(selectedFullProposal) && (
+                <div className="bg-[#6d035c]/5 border border-[#6d035c]/20 p-3 rounded-md text-sm text-foreground">
+                  Prefilled from your saved review
+                  {typeof selectedFullProposal?.score === 'number' ? ` (score ${selectedFullProposal.score}/100)` : ''}.
+                  You can still edit everything below before submitting.
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Review Comments *
+                  Review Comments {decisionForm.status === 'rejected' && hasDraftReview(selectedFullProposal) && decisionForm.sendComments === false ? '' : '*'}
                 </label>
                 <Textarea
                   value={decisionForm.reviewComments}
@@ -756,6 +806,42 @@ const handleEditFundingAmount = async () => {
                   className="max-h-[400px] overflow-y-auto"
                 />
               </div>
+
+              {decisionForm.status === 'rejected' && hasDraftReview(selectedFullProposal) && (
+                <fieldset className="space-y-2 rounded-md border border-border p-3">
+                  <legend className="px-1 text-sm font-medium">Review comments for the researcher</legend>
+                  <label className="flex items-start gap-2 text-sm cursor-pointer">
+                    <input
+                      type="radio"
+                      name="send-comments"
+                      className="mt-1"
+                      checked={decisionForm.sendComments !== false}
+                      onChange={() => setDecisionForm(prev => ({ ...prev, sendComments: true }))}
+                    />
+                    <span>
+                      <span className="font-medium">Send comments to the researcher</span>
+                      <span className="block text-xs text-muted-foreground">
+                        Included in the notification email and shown on their dashboard.
+                      </span>
+                    </span>
+                  </label>
+                  <label className="flex items-start gap-2 text-sm cursor-pointer">
+                    <input
+                      type="radio"
+                      name="send-comments"
+                      className="mt-1"
+                      checked={decisionForm.sendComments === false}
+                      onChange={() => setDecisionForm(prev => ({ ...prev, sendComments: false }))}
+                    />
+                    <span>
+                      <span className="font-medium">Do not send comments</span>
+                      <span className="block text-xs text-muted-foreground">
+                        Kept for your records and the Word export only. The researcher will not see them.
+                      </span>
+                    </span>
+                  </label>
+                </fieldset>
+              )}
 
               {decisionForm.status === 'approved' && (
                 <div>
@@ -797,7 +883,7 @@ const handleEditFundingAmount = async () => {
               </Button>
               <Button 
                 onClick={handleDecisionSubmit}
-                disabled={isSubmitting || !decisionForm.reviewComments.trim()}
+                disabled={isSubmitting || (!(decisionForm.status === 'rejected' && hasDraftReview(selectedFullProposal) && decisionForm.sendComments === false) && !decisionForm.reviewComments.trim())}
                 className={decisionForm.status === 'approved' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
               >
                 {isSubmitting ? (
