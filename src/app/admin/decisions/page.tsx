@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getProposalsForDecision, updateProposalStatus, notifyApplicants, exportDecisionsReport, getFacultiesWithProposals, type ProposalDecision } from '@/services/api';
 import { Loader2, MoreVertical, Eye, CheckCircle, XCircle, Bell, TrendingUp, Users, Award, Banknote, ArrowUpRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from "sonner";
 import { Suspense } from "react";
@@ -30,8 +30,10 @@ interface DecisionFormData {
 }
 
 interface Faculty {
-  _id: string;
+  _id?: string;
   title: string;
+  code?: string | null;
+  type?: string | null;
 }
 
 export default function DecisionsPanelWrapper() {
@@ -45,23 +47,48 @@ export default function DecisionsPanelWrapper() {
     </Suspense>
   );
 
+const VALID_DECISION_STATUSES = ['all', 'pending', 'approved', 'rejected'] as const;
+type DecisionStatus = (typeof VALID_DECISION_STATUSES)[number];
+
+const VALID_DECISION_SORTS = ['score', 'title', 'field'] as const;
+type DecisionSort = (typeof VALID_DECISION_SORTS)[number];
+
+function isDecisionStatus(val: string | null): val is DecisionStatus {
+  return val !== null && (VALID_DECISION_STATUSES as readonly string[]).includes(val);
+}
+
+function isDecisionSort(val: string | null): val is DecisionSort {
+  return val !== null && (VALID_DECISION_SORTS as readonly string[]).includes(val);
+}
+
 function DecisionsPanel() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [approvalThreshold, setApprovalThreshold] = useState(70);
+  // Read initial state from URL query parameters
+  const initialPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const initialSearch = searchParams.get('search') || '';
+  const initialFaculty = searchParams.get('faculty') || 'all';
+  const initialStatusParam = searchParams.get('status');
+  const initialStatus: DecisionStatus = isDecisionStatus(initialStatusParam) ? initialStatusParam : 'all';
+  const initialSortParam = searchParams.get('sort');
+  const initialSort: DecisionSort = isDecisionSort(initialSortParam) ? initialSortParam : 'score';
+  const initialThreshold = parseInt(searchParams.get('threshold') || '70', 10) || 70;
+
+  const [approvalThreshold, setApprovalThreshold] = useState(initialThreshold);
   const [proposals, setProposals] = useState<ProposalDecision[]>([]);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
-  const [sortBy, setSortBy] = useState<'score' | 'title' | 'field'>('score');
-  const [filterBy, setFilterBy] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
-  const [facultyFilter, setFacultyFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<DecisionSort>(initialSort);
+  const [filterBy, setFilterBy] = useState<DecisionStatus>(initialStatus);
+  const [facultyFilter, setFacultyFilter] = useState(initialFaculty);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-const [totalPages, setTotalPages] = useState(1);
-const [totalCount, setTotalCount] = useState(0);
-const limit = 10;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const limit = 10;
   
   // Decision form state
   const [showDecisionDialog, setShowDecisionDialog] = useState(false);
@@ -90,6 +117,67 @@ const limit = 10;
     totalBudgetAboveThreshold: 0,
     approvedBudget: 0,
   });
+
+  // Helper to sync state changes into URL query parameters
+  const updateUrl = useCallback((updates: {
+    page?: number;
+    search?: string;
+    faculty?: string;
+    status?: string;
+    sort?: string;
+    threshold?: number;
+  }) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (updates.page !== undefined) {
+      if (updates.page > 1) params.set('page', String(updates.page));
+      else params.delete('page');
+    }
+    if (updates.search !== undefined) {
+      if (updates.search.trim()) params.set('search', updates.search.trim());
+      else params.delete('search');
+    }
+    if (updates.faculty !== undefined) {
+      if (updates.faculty !== 'all') params.set('faculty', updates.faculty);
+      else params.delete('faculty');
+    }
+    if (updates.status !== undefined) {
+      if (updates.status !== 'all') params.set('status', updates.status);
+      else params.delete('status');
+    }
+    if (updates.sort !== undefined) {
+      if (updates.sort !== 'score') params.set('sort', updates.sort);
+      else params.delete('sort');
+    }
+    if (updates.threshold !== undefined) {
+      if (updates.threshold !== 70) params.set('threshold', String(updates.threshold));
+      else params.delete('threshold');
+    }
+
+    const qs = params.toString();
+    const newUrl = qs ? `?${qs}` : window.location.pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [router, searchParams]);
+
+  // Sync state when URL search params change (e.g. browser back/forward)
+  useEffect(() => {
+    const urlPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const urlSearch = searchParams.get('search') || '';
+    const urlFaculty = searchParams.get('faculty') || 'all';
+    const urlStatus = searchParams.get('status') || 'all';
+    const urlSort = searchParams.get('sort') || 'score';
+    const urlThreshold = parseInt(searchParams.get('threshold') || '70', 10) || 70;
+
+    setCurrentPage(prev => (prev !== urlPage ? urlPage : prev));
+    setSearchQuery(prev => (prev !== urlSearch ? urlSearch : prev));
+    setFacultyFilter(prev => (prev !== urlFaculty ? urlFaculty : prev));
+    if (isDecisionStatus(urlStatus)) {
+      setFilterBy(prev => (prev !== urlStatus ? urlStatus : prev));
+    }
+    if (isDecisionSort(urlSort)) {
+      setSortBy(prev => (prev !== urlSort ? urlSort : prev));
+    }
+    setApprovalThreshold(prev => (prev !== urlThreshold ? urlThreshold : prev));
+  }, [searchParams]);
 
   // Debounced data loading function - the single source of truth for
   // fetching the current page. Search, status filter, faculty filter,
@@ -148,16 +236,15 @@ const limit = 10;
     const newThreshold = value[0];
     setApprovalThreshold(newThreshold);
 
-    // Clear existing timeout
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
-    // Set new timeout for 800ms delay
     debounceRef.current = setTimeout(() => {
+      updateUrl({ threshold: newThreshold });
       debouncedLoadData(newThreshold, searchQuery);
     }, 800);
-  }, [debouncedLoadData, searchQuery]);
+  }, [debouncedLoadData, searchQuery, updateUrl]);
 
   // Handle search input with debounce - mirrors handleThresholdChange.
   // Resets to page 1 since the previous page may no longer exist once
@@ -171,9 +258,10 @@ const limit = 10;
 
     searchDebounceRef.current = setTimeout(() => {
       setCurrentPage(1);
+      updateUrl({ search: value, page: 1 });
       debouncedLoadData(approvalThreshold, value);
     }, 400);
-  }, [debouncedLoadData, approvalThreshold]);
+  }, [debouncedLoadData, approvalThreshold, updateUrl]);
 
   // Initial data load effect, and reload on any non-debounced control
   // (page, faculty, sort, status filter). Search and threshold changes
@@ -186,11 +274,11 @@ const limit = 10;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, currentPage, facultyFilter, sortBy, filterBy]);
 
-  // Reset to page 1 whenever faculty or status filter narrows the result
-  // set, so you don't land on an empty page that no longer exists.
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [facultyFilter, filterBy]);
+  const handlePageChange = (newPage: number) => {
+    const targetPage = Math.max(1, Math.min(newPage, totalPages));
+    setCurrentPage(targetPage);
+    updateUrl({ page: targetPage });
+  };
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -264,8 +352,10 @@ const limit = 10;
   };
 
   const handleSortChange = (value: 'score' | 'title' | 'field') => {
-  setSortBy(value);
-};
+    setSortBy(value);
+    setCurrentPage(1);
+    updateUrl({ sort: value, page: 1 });
+  };
 
   const handleDialogClose = (open: boolean) => {
   if (!open) {
@@ -482,14 +572,21 @@ const limit = 10;
 
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-1">Faculty</label>
-              <Select value={facultyFilter} onValueChange={setFacultyFilter}>
+              <Select
+                value={facultyFilter}
+                onValueChange={(value) => {
+                  setFacultyFilter(value);
+                  setCurrentPage(1);
+                  updateUrl({ faculty: value, page: 1 });
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="All Faculties" />
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px] overflow-y-auto">
                   <SelectItem value="all">All Faculties</SelectItem>
                   {faculties.map((faculty) => (
-                    <SelectItem key={faculty._id} value={faculty._id}>
+                    <SelectItem key={faculty.title} value={faculty.title}>
                       {faculty.title}
                     </SelectItem>
                   ))}
@@ -512,7 +609,14 @@ const limit = 10;
 
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-1">Filter</label>
-              <Select value={filterBy} onValueChange={(value: 'all' | 'pending' | 'approved' | 'rejected') => setFilterBy(value)}>
+              <Select
+                value={filterBy}
+                onValueChange={(value: 'all' | 'pending' | 'approved' | 'rejected') => {
+                  setFilterBy(value);
+                  setCurrentPage(1);
+                  updateUrl({ status: value, page: 1 });
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -780,7 +884,7 @@ const limit = 10;
     </div>
     <div className="flex items-center gap-2">
       <Button
-        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         variant="outline"
         size="sm"
@@ -791,7 +895,7 @@ const limit = 10;
         Page {currentPage} of {totalPages}
       </span>
       <Button
-        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         variant="outline"
         size="sm"

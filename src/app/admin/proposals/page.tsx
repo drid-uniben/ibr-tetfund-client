@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import * as api from '@/services/api';
 import { getProposals, getFacultiesWithProposals, toggleProposalArchiveStatus, getEligibleReviewers, reassignRegularReview, reassignReconciliationReview } from '@/services/api';
@@ -41,26 +41,128 @@ interface PaginationData {
 }
 
 export default function AdminProposalsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex justify-center items-center bg-muted">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <AdminProposalsContent />
+    </Suspense>
+  );
+}
+
+function AdminProposalsContent() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const initialStatus = searchParams.get('status') || '';
+  const initialSubmitterType = searchParams.get('submitterType') || '';
+  const initialFaculty = searchParams.get('faculty') || '';
+  const initialSort = searchParams.get('sort') || 'createdAt';
+  const initialOrder = searchParams.get('order') || 'desc';
+  const initialIsArchived = searchParams.get('isArchived') === 'true';
+
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
   const [pagination, setPagination] = useState<PaginationData>({
     count: 0,
     totalPages: 1,
-    currentPage: 1
+    currentPage: initialPage,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0); // New state to trigger refresh
   const [filters, setFilters] = useState({
-    status: '',
-    submitterType: '',
-    faculty: '', // Add faculty filter
-    sort: 'createdAt',
-    order: 'desc',
-    isArchived: false, // Default to unarchived proposals
+    status: initialStatus,
+    submitterType: initialSubmitterType,
+    faculty: initialFaculty,
+    sort: initialSort,
+    order: initialOrder,
+    isArchived: initialIsArchived,
   });
-  const router = useRouter();
+
+  // Helper to sync state changes into URL query parameters
+  const updateUrl = useCallback((updates: {
+    page?: number;
+    status?: string;
+    submitterType?: string;
+    faculty?: string;
+    sort?: string;
+    order?: string;
+    isArchived?: boolean;
+  }) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (updates.page !== undefined) {
+      if (updates.page > 1) params.set('page', String(updates.page));
+      else params.delete('page');
+    }
+    if (updates.status !== undefined) {
+      if (updates.status) params.set('status', updates.status);
+      else params.delete('status');
+    }
+    if (updates.submitterType !== undefined) {
+      if (updates.submitterType) params.set('submitterType', updates.submitterType);
+      else params.delete('submitterType');
+    }
+    if (updates.faculty !== undefined) {
+      if (updates.faculty) params.set('faculty', updates.faculty);
+      else params.delete('faculty');
+    }
+    if (updates.sort !== undefined) {
+      if (updates.sort !== 'createdAt') params.set('sort', updates.sort);
+      else params.delete('sort');
+    }
+    if (updates.order !== undefined) {
+      if (updates.order !== 'desc') params.set('order', updates.order);
+      else params.delete('order');
+    }
+    if (updates.isArchived !== undefined) {
+      if (updates.isArchived) params.set('isArchived', 'true');
+      else params.delete('isArchived');
+    }
+
+    const qs = params.toString();
+    const newUrl = qs ? `?${qs}` : window.location.pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [router, searchParams]);
+
+  // Sync state when URL search params change (e.g. browser back/forward)
+  useEffect(() => {
+    const urlPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const urlStatus = searchParams.get('status') || '';
+    const urlSubmitterType = searchParams.get('submitterType') || '';
+    const urlFaculty = searchParams.get('faculty') || '';
+    const urlSort = searchParams.get('sort') || 'createdAt';
+    const urlOrder = searchParams.get('order') || 'desc';
+    const urlIsArchived = searchParams.get('isArchived') === 'true';
+
+    setPagination(prev => (prev.currentPage !== urlPage ? { ...prev, currentPage: urlPage } : prev));
+    setFilters(prev => {
+      if (
+        prev.status === urlStatus &&
+        prev.submitterType === urlSubmitterType &&
+        prev.faculty === urlFaculty &&
+        prev.sort === urlSort &&
+        prev.order === urlOrder &&
+        prev.isArchived === urlIsArchived
+      ) {
+        return prev;
+      }
+      return {
+        status: urlStatus,
+        submitterType: urlSubmitterType,
+        faculty: urlFaculty,
+        sort: urlSort,
+        order: urlOrder,
+        isArchived: urlIsArchived,
+      };
+    });
+  }, [searchParams]);
 
   // State for comment modal
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -169,27 +271,33 @@ const [soloAssignProposalId, setSoloAssignProposalId] = useState<string | null>(
 }, [isAuthenticated, pagination.currentPage, filters, refreshTrigger]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-  const { name, value, type } = e.target;
-  const checked = (e.target as HTMLInputElement).checked;
-  
-  setFilters(prev => ({ 
-    ...prev, 
-    [name]: type === 'checkbox' ? checked : value 
-  }));
-  setPagination(prev => ({ ...prev, currentPage: 1 })); // Reset to first page on filter change
-};
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    const newValue = type === 'checkbox' ? checked : value;
+    
+    setFilters(prev => ({ 
+      ...prev, 
+      [name]: newValue 
+    }));
+    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    updateUrl({ [name]: newValue, page: 1 });
+  };
 
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > pagination.totalPages) return;
     setPagination(prev => ({ ...prev, currentPage: newPage }));
+    updateUrl({ page: newPage });
   };
 
   const toggleSortOrder = (field: string) => {
+    const newOrder = filters.sort === field && filters.order === 'asc' ? 'desc' : 'asc';
     setFilters(prev => ({
       ...prev,
       sort: field,
-      order: prev.sort === field && prev.order === 'asc' ? 'desc' : 'asc'
+      order: newOrder
     }));
+    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    updateUrl({ sort: field, order: newOrder, page: 1 });
   };
 
   const refreshData = () => {

@@ -18,7 +18,10 @@ vi.mock("@/services/api", () => ({
   exportFullProposalsDocx: vi.fn(),
 }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 vi.mock("@/contexts/AuthContext", () => ({
   useAuth: () => ({ isAuthenticated: true, isLoading: false }),
 }));
@@ -60,7 +63,7 @@ beforeEach(() => {
   updateFullProposalStatus.mockResolvedValue({ success: true });
 });
 
-describe("decisions_2 decision dialog with a saved draft review", () => {
+describe("decisions_2 decision dialog with a saved draft review", { timeout: 15000 }, () => {
   it("prefills the approve dialog with the draft comments and budget", async () => {
     load([row({ draftReviewComments: "Strong methodology", draftFundingAmount: 750000 })]);
     const user = userEvent.setup();

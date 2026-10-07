@@ -30,7 +30,7 @@ import {
 interface FullProposalExportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  faculties: { _id: string; title: string }[];
+  faculties: { title: string; code?: string | null; type?: string | null; _id?: string }[];
 }
 
 type SortKey = FullProposalExportParams["sort"];
@@ -230,7 +230,7 @@ export default function FullProposalExportDialog({
                 </legend>
                 <div className="max-h-40 overflow-y-auto rounded-md border border-border p-2 space-y-1">
                   {faculties.map((faculty) => (
-                    <label key={faculty._id} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <label key={faculty._id || faculty.title} className="flex items-center gap-2 text-sm cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedFaculties.includes(faculty.title)}
