@@ -46,6 +46,7 @@ export default function DecisionsPanelWrapper() {
       <DecisionsPanel />
     </Suspense>
   );
+}
 
 const VALID_DECISION_STATUSES = ['all', 'pending', 'approved', 'rejected'] as const;
 type DecisionStatus = (typeof VALID_DECISION_STATUSES)[number];
@@ -908,5 +909,4 @@ function DecisionsPanel() {
       </div>
     </AdminLayout>
   );
-}
 }

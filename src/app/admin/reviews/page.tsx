@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Button } from "@/components/ui/button";
 import {
@@ -78,31 +78,106 @@ interface Params {
 }
 
 interface Faculty {
-  _id: string;
+  _id?: string;
   title: string;
+  code?: string | null;
+  type?: string | null;
 }
 
-export default function ProposalReviewsPage() {
+export default function ProposalReviewsPageWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex justify-center items-center bg-muted">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <ProposalReviewsPage />
+    </Suspense>
+  );
+}
+
+const VALID_REVIEW_STATUSES = ['all', 'under_review', 'reviewed', 'reconciliation'] as const;
+type ReviewStatusFilter = (typeof VALID_REVIEW_STATUSES)[number];
+
+const VALID_DISCREPANCY_FILTERS = ['all', 'true', 'false'] as const;
+type DiscrepancyFilter = (typeof VALID_DISCREPANCY_FILTERS)[number];
+
+function isReviewStatusFilter(val: string | null): val is ReviewStatusFilter {
+  return val !== null && (VALID_REVIEW_STATUSES as readonly string[]).includes(val);
+}
+
+function isDiscrepancyFilter(val: string | null): val is DiscrepancyFilter {
+  return val !== null && (VALID_DISCREPANCY_FILTERS as readonly string[]).includes(val);
+}
+
+function ProposalReviewsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const initialStatusParam = searchParams.get('status');
+  const initialStatus: ReviewStatusFilter = isReviewStatusFilter(initialStatusParam) ? initialStatusParam : 'all';
+  const initialFaculty = searchParams.get('faculty') || 'all';
+  const initialDiscrepancyParam = searchParams.get('discrepancy');
+  const initialDiscrepancy: DiscrepancyFilter = isDiscrepancyFilter(initialDiscrepancyParam) ? initialDiscrepancyParam : 'all';
+  const initialSearch = searchParams.get('search') || '';
+  const initialDiscrepancyOnly = searchParams.get('discrepancyOnly') === 'true';
 
   const [proposals, setProposals] = useState<ProposalReview[]>([]);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
   const [statistics, setStatistics] = useState<ReviewStatistics | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [facultyFilter, setFacultyFilter] = useState<string>('all');
-  const [discrepancyFilter, setDiscrepancyFilter] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showDiscrepancyOnly, setShowDiscrepancyOnly] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<ReviewStatusFilter>(initialStatus);
+  const [facultyFilter, setFacultyFilter] = useState<string>(initialFaculty);
+  const [discrepancyFilter, setDiscrepancyFilter] = useState<DiscrepancyFilter>(initialDiscrepancy);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [showDiscrepancyOnly, setShowDiscrepancyOnly] = useState(initialDiscrepancyOnly);
 
   const limit = 10;
+
+  const updateUrl = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, val]) => {
+      if (val === null || val === '' || val === 'all') {
+        params.delete(key);
+      } else {
+        params.set(key, val);
+      }
+    });
+    if (params.get('page') === '1') {
+      params.delete('page');
+    }
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [router, searchParams]);
+
+  useEffect(() => {
+    const urlPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const urlStatus = searchParams.get('status');
+    const urlFaculty = searchParams.get('faculty') || 'all';
+    const urlDiscrepancy = searchParams.get('discrepancy');
+    const urlSearch = searchParams.get('search') || '';
+    const urlDiscrepancyOnly = searchParams.get('discrepancyOnly') === 'true';
+
+    setCurrentPage(prev => (prev !== urlPage ? urlPage : prev));
+    setFacultyFilter(prev => (prev !== urlFaculty ? urlFaculty : prev));
+    setSearchQuery(prev => (prev !== urlSearch ? urlSearch : prev));
+    setShowDiscrepancyOnly(prev => (prev !== urlDiscrepancyOnly ? urlDiscrepancyOnly : prev));
+    if (isReviewStatusFilter(urlStatus)) {
+      setStatusFilter(prev => (prev !== urlStatus ? urlStatus : prev));
+    }
+    if (isDiscrepancyFilter(urlDiscrepancy)) {
+      setDiscrepancyFilter(prev => (prev !== urlDiscrepancy ? urlDiscrepancy : prev));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -177,6 +252,43 @@ export default function ProposalReviewsPage() {
 
   const handleViewDetails = (proposalId: string) => {
     router.push(`/admin/reviews/${proposalId}`);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    const targetPage = Math.max(1, Math.min(newPage, totalPages));
+    setCurrentPage(targetPage);
+    updateUrl({ page: String(targetPage) });
+  };
+
+  const handleStatusChange = (val: string) => {
+    const status = isReviewStatusFilter(val) ? val : 'all';
+    setStatusFilter(status);
+    setCurrentPage(1);
+    updateUrl({ status, page: '1' });
+  };
+
+  const handleFacultyChange = (val: string) => {
+    setFacultyFilter(val);
+    setCurrentPage(1);
+    updateUrl({ faculty: val, page: '1' });
+  };
+
+  const handleDiscrepancyChange = (val: string) => {
+    const discrepancy = isDiscrepancyFilter(val) ? val : 'all';
+    setDiscrepancyFilter(discrepancy);
+    setCurrentPage(1);
+    updateUrl({ discrepancy, page: '1' });
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    updateUrl({ search: val || null });
+  };
+
+  const handleToggleDiscrepancyOnly = (val: boolean) => {
+    setShowDiscrepancyOnly(val);
+    setCurrentPage(1);
+    updateUrl({ discrepancyOnly: val ? 'true' : null, page: '1' });
   };
 
   const getStatusBadge = (status: string, hasDiscrepancy: boolean) => {
@@ -257,7 +369,7 @@ export default function ProposalReviewsPage() {
             </p>
           </div>
           <Button
-            onClick={() => setShowDiscrepancyOnly(!showDiscrepancyOnly)}
+            onClick={() => handleToggleDiscrepancyOnly(!showDiscrepancyOnly)}
             variant={showDiscrepancyOnly ? "default" : "outline"}
             className={showDiscrepancyOnly 
               ? "bg-orange-600 hover:bg-orange-700" 
@@ -345,14 +457,14 @@ export default function ProposalReviewsPage() {
                   placeholder="Search proposals, submitters, or faculty..."
                   className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                 />
               </div>
             </div>
 
             {!showDiscrepancyOnly && (
               <>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <Select value={statusFilter} onValueChange={handleStatusChange}>
                   <SelectTrigger className="w-[160px]">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
@@ -364,21 +476,21 @@ export default function ProposalReviewsPage() {
                   </SelectContent>
                 </Select>
 
-                <Select value={facultyFilter} onValueChange={setFacultyFilter}>
+                <Select value={facultyFilter} onValueChange={handleFacultyChange}>
                   <SelectTrigger className="w-[160px]">
                     <SelectValue placeholder="Faculty" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Faculties</SelectItem>
-    {faculties.map((faculty) => (
-      <SelectItem key={faculty._id} value={faculty._id}>
-        {faculty.title}
-      </SelectItem>
-    ))}
+                    {faculties.map((faculty) => (
+                      <SelectItem key={faculty.title} value={faculty.title}>
+                        {faculty.title}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
 
-                <Select value={discrepancyFilter} onValueChange={setDiscrepancyFilter}>
+                <Select value={discrepancyFilter} onValueChange={handleDiscrepancyChange}>
                   <SelectTrigger className="w-[160px]">
                     <SelectValue placeholder="Discrepancy" />
                   </SelectTrigger>
@@ -546,7 +658,7 @@ export default function ProposalReviewsPage() {
             </div>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 variant="outline"
                 size="sm"
@@ -557,7 +669,7 @@ export default function ProposalReviewsPage() {
                 Page {currentPage} of {totalPages}
               </span>
               <Button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 variant="outline"
                 size="sm"
