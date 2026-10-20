@@ -36,6 +36,8 @@ interface FullProposalExportDialogProps {
 type SortKey = FullProposalExportParams["sort"];
 type ThenBy = FullProposalExportParams["thenBy"];
 type Order = FullProposalExportParams["order"];
+type Layout = NonNullable<FullProposalExportParams["layout"]>;
+type LinkStyle = NonNullable<FullProposalExportParams["linkStyle"]>;
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "title", label: "Project title" },
@@ -73,6 +75,8 @@ export default function FullProposalExportDialog({
   const [sort, setSort] = useState<SortKey>("title");
   const [thenBy, setThenBy] = useState<ThenBy>("title");
   const [order, setOrder] = useState<Order>("asc");
+  const [layout, setLayout] = useState<Layout>("cards");
+  const [linkStyle, setLinkStyle] = useState<LinkStyle>("url");
   const [selectedFaculties, setSelectedFaculties] = useState<string[]>([]);
   const [status, setStatus] = useState<FullProposalExportParams["status"]>("all");
   const [reviewedOnly, setReviewedOnly] = useState(true);
@@ -117,6 +121,8 @@ export default function FullProposalExportDialog({
         sort,
         thenBy,
         order,
+        layout,
+        linkStyle,
         faculties: selectedFaculties,
         status,
         includeUnreviewed: !reviewedOnly,
@@ -167,6 +173,56 @@ export default function FullProposalExportDialog({
               ))}
             </div>
           </fieldset>
+
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-medium">Layout</legend>
+            <div className="space-y-1">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="export-layout"
+                  checked={layout === "cards"}
+                  onChange={() => setLayout("cards")}
+                />
+                Cards (one block per proposal, portrait)
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="export-layout"
+                  checked={layout === "table"}
+                  onChange={() => setLayout("table")}
+                />
+                Table (one row per proposal, landscape)
+              </label>
+            </div>
+          </fieldset>
+
+          {fields.includes("link") && (
+            <fieldset className="space-y-2">
+              <legend className="text-sm font-medium">Link to full proposal document</legend>
+              <div className="space-y-1">
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="radio"
+                    name="export-link-style"
+                    checked={linkStyle === "url"}
+                    onChange={() => setLinkStyle("url")}
+                  />
+                  Full URL
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="radio"
+                    name="export-link-style"
+                    checked={linkStyle === "view"}
+                    onChange={() => setLinkStyle("view")}
+                  />
+                  Short &quot;View&quot; link
+                </label>
+              </div>
+            </fieldset>
+          )}
 
           <div className="space-y-3">
             <p className="text-sm font-medium">Order</p>

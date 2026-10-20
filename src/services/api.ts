@@ -1330,6 +1330,10 @@ export interface FullProposalExportParams {
   sort: "title" | "name" | "score" | "submittedAt" | "faculty" | "faculty_department";
   thenBy: "title" | "name" | "score" | "submittedAt";
   order: "asc" | "desc";
+  // cards = one block per proposal (default); table = landscape, one row per proposal
+  layout?: "cards" | "table";
+  // url = full link text (default); view = short clickable "View"
+  linkStyle?: "url" | "view";
   faculties: string[];
   status: "all" | "submitted" | "approved" | "rejected";
   includeUnreviewed: boolean;
@@ -1348,6 +1352,8 @@ export const exportFullProposalsDocx = async (
         sort: params.sort,
         thenBy: params.thenBy,
         order: params.order,
+        layout: params.layout,
+        linkStyle: params.linkStyle,
         faculty: params.faculties.length ? params.faculties.join(",") : undefined,
         status: params.status !== "all" ? params.status : undefined,
         includeUnreviewed: params.includeUnreviewed ? "true" : undefined,
