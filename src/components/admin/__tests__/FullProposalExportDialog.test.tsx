@@ -52,6 +52,8 @@ describe("FullProposalExportDialog", () => {
       status: "all",
       includeUnreviewed: false,
       requireScore: false,
+      layout: "cards",
+      linkStyle: "url",
     });
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
@@ -72,6 +74,30 @@ describe("FullProposalExportDialog", () => {
     expect(params.fields).toContain("title");
     expect(params.faculties).toEqual(["Arts"]);
     expect(params.includeUnreviewed).toBe(true);
+  });
+
+  it("exports as a table with a short View link when chosen", async () => {
+    exportFullProposalsDocx.mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    render(<FullProposalExportDialog open onOpenChange={vi.fn()} faculties={faculties} />);
+
+    await user.click(screen.getByLabelText(/table \(one row per proposal/i));
+    await user.click(screen.getByLabelText(/short "view" link/i));
+    await user.click(screen.getByRole("button", { name: /^export$/i }));
+
+    await waitFor(() => expect(exportFullProposalsDocx).toHaveBeenCalled());
+    expect(exportFullProposalsDocx.mock.calls[0][0]).toMatchObject({
+      layout: "table",
+      linkStyle: "view",
+    });
+  });
+
+  it("hides the link style choice when the link field is unticked", async () => {
+    const user = userEvent.setup();
+    render(<FullProposalExportDialog open onOpenChange={vi.fn()} faculties={faculties} />);
+    expect(screen.getByLabelText(/full url/i)).toBeInTheDocument();
+    await user.click(screen.getByLabelText("Link to full proposal document"));
+    expect(screen.queryByLabelText(/full url/i)).not.toBeInTheDocument();
   });
 
   it("disables export when no field is selected", async () => {
