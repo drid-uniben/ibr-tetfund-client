@@ -1149,6 +1149,9 @@ export interface FullProposalDecision {
   deadline: string | null;
   lastNotifiedAt?: string;
   notificationCount?: number;
+  // Final submission stage (only meaningful for approved proposals)
+  submitted?: boolean;
+  finalSubmittedAt?: string;
   award?: {
     fundingAmount?: number;
     status?: string;
@@ -1173,7 +1176,13 @@ export const getFullProposalsForDecision = async (params?: {
   sort?: string;
   order?: "asc" | "desc";
   search?: string;
-  status?: "all" | "submitted" | "approved" | "rejected";
+  status?:
+    | "all"
+    | "submitted"
+    | "approved"
+    | "rejected"
+    | "final_submitted"
+    | "final_pending";
 }) => {
   try {
     const response = await api.get(
