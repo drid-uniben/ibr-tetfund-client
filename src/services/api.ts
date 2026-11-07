@@ -38,66 +38,74 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Role-specific localStorage key for the access token, based on the current page.
+const accessTokenKeyForPath = (path: string): string => {
+  if (path.startsWith("/admin")) return "adminAccessToken";
+  if (path.startsWith("/reviewers")) return "reviewerAccessToken";
+  if (path.startsWith("/researchers")) return "researcherAccessToken";
+  return "accessToken";
+};
+
+// Network failures, rate limits and server errors say nothing about whether the
+// session is still valid, so they must not log the user out.
+const isTransientError = (err: unknown): boolean =>
+  axios.isAxiosError(err) &&
+  (!err.response || err.response.status === 429 || err.response.status >= 500);
+
+// One refresh at a time. Every request that gets a 401 while a refresh is already
+// running waits for that same promise, so a page that fires several requests on
+// load makes a single /auth/refresh-token call instead of one per request.
+let refreshPromise: Promise<string | undefined> | null = null;
+
+const refreshAccessToken = (): Promise<string | undefined> => {
+  if (!refreshPromise) {
+    refreshPromise = api
+      .post("/auth/refresh-token")
+      .then((res) => res.data.accessToken as string | undefined)
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+};
+
 // Response interceptor to handle token refresh
-// Fixed response interceptor in api.ts
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
 
-    // Check if this is a login endpoint - don't attempt refresh for login failures
+    const url: string = originalRequest.url ?? "";
+
+    // Login failures are real 401s, not an expired token.
     const isLoginEndpoint =
-      originalRequest.url?.includes("/auth/") &&
-      (originalRequest.url.includes("-login") ||
-        originalRequest.url.includes("/login"));
+      url.includes("/auth/") &&
+      (url.includes("-login") || url.includes("/login"));
 
-    // Only attempt token refresh for 401s that are NOT from login endpoints
+    // The refresh call goes through this same interceptor. If it could trigger a
+    // refresh itself, a failed refresh would start another refresh, endlessly.
+    const isRefreshEndpoint = url.includes("/auth/refresh-token");
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !isLoginEndpoint
+      !isLoginEndpoint &&
+      !isRefreshEndpoint
     ) {
       originalRequest._retry = true;
 
+      let accessToken: string | undefined;
       try {
-        // Try to refresh the token
-        const refreshResponse = await api.post("/auth/refresh-token");
-
-        if (refreshResponse.data.accessToken) {
-          // Save the new token based on the current path/role context
-          const currentPath = window.location.pathname;
-          if (currentPath.startsWith("/admin")) {
-            localStorage.setItem(
-              "adminAccessToken",
-              refreshResponse.data.accessToken
-            );
-          } else if (currentPath.startsWith("/reviewers")) {
-            localStorage.setItem(
-              "reviewerAccessToken",
-              refreshResponse.data.accessToken
-            );
-          } else if (currentPath.startsWith("/researchers")) {
-            localStorage.setItem(
-              "researcherAccessToken",
-              refreshResponse.data.accessToken
-            );
-          } else {
-            localStorage.setItem(
-              "accessToken",
-              refreshResponse.data.accessToken
-            );
-          }
-
-          // Update the original request with the new token
-          originalRequest.headers["Authorization"] =
-            `Bearer ${refreshResponse.data.accessToken}`;
-
-          // Retry the original request
-          return api(originalRequest);
+        accessToken = await refreshAccessToken();
+      } catch (refreshError) {
+        if (isTransientError(refreshError)) {
+          // Keep the session; let the caller see the original error.
+          return Promise.reject(error);
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (refreshError: any) {
-        // If refresh fails, redirect to login
+
         console.error("Token refresh failed:", refreshError);
         // Clear all potential tokens on refresh failure
         localStorage.removeItem("adminAccessToken");
@@ -108,7 +116,6 @@ api.interceptors.response.use(
 
         // Only redirect if we're in the browser
         if (typeof window !== "undefined") {
-          // Redirect based on the stored user role
           const currentPath = window.location.pathname;
           let redirectPath = "/admin/login"; // Default
 
@@ -120,12 +127,20 @@ api.interceptors.response.use(
 
           window.location.href = redirectPath;
         }
+        return Promise.reject(error);
       }
-    }
 
-    if (axios.isCancel(error)) {
-      // console.log('Request cancelled (expected)');
-      return Promise.reject(error); // Re-throw the error so calling code can handle it if needed
+      if (accessToken) {
+        // Save the new token based on the current path/role context
+        localStorage.setItem(
+          accessTokenKeyForPath(window.location.pathname),
+          accessToken
+        );
+
+        // Retry the original request with the new token
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+        return api(originalRequest);
+      }
     }
 
     return Promise.reject(error);
