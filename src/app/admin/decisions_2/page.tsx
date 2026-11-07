@@ -50,7 +50,7 @@ export default function FullProposalDecisionsPanelWrapper() {
   );
 }
 
-const VALID_FULL_PROPOSAL_STATUSES = ['all', 'submitted', 'approved', 'rejected'] as const;
+const VALID_FULL_PROPOSAL_STATUSES = ['all', 'submitted', 'approved', 'rejected', 'final_submitted', 'final_pending'] as const;
 type FullProposalStatus = (typeof VALID_FULL_PROPOSAL_STATUSES)[number];
 
 const VALID_FULL_PROPOSAL_SORTS = ['submittedAt', 'title', 'deadline', 'score'] as const;
@@ -190,7 +190,7 @@ function FullProposalDecisionsPanel() {
           order: 'desc',
           search: activeSearch.trim() || undefined,
           status: filterBy !== 'all'
-            ? filterBy as 'submitted' | 'approved' | 'rejected'
+            ? filterBy as Exclude<FullProposalStatus, 'all'>
             : undefined,
         }),
         getFacultiesWithProposals()
@@ -662,7 +662,7 @@ const handleEditFundingAmount = async () => {
               <label className="block text-xs font-medium text-muted-foreground mb-1">Filter</label>
               <Select
                 value={filterBy}
-                onValueChange={(value: 'all' | 'submitted' | 'approved' | 'rejected') => {
+                onValueChange={(value: FullProposalStatus) => {
                   setFilterBy(value);
                   setCurrentPage(1);
                   updateUrl({ status: value, page: 1 });
@@ -676,6 +676,8 @@ const handleEditFundingAmount = async () => {
                   <SelectItem value="submitted">Pending Review</SelectItem>
                   <SelectItem value="approved">Approved</SelectItem>
                   <SelectItem value="rejected">Rejected</SelectItem>
+                  <SelectItem value="final_submitted">Final Submitted</SelectItem>
+                  <SelectItem value="final_pending">Awaiting Final Submission</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -768,11 +770,21 @@ const handleEditFundingAmount = async () => {
                       </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeClass(fullProposal.status)}`}>
-                      {fullProposal.status === 'submitted' ? 'Pending Review' : 
-                       fullProposal.status === 'approved' ? 'Approved' : 
-                       fullProposal.status === 'rejected' ? 'Rejected' : 'Unknown'}
-                    </span>
+                    <div className="flex flex-col items-start gap-1">
+                      <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeClass(fullProposal.status)}`}>
+                        {fullProposal.status === 'submitted' ? 'Pending Review' : 
+                         fullProposal.status === 'approved' ? 'Approved' : 
+                         fullProposal.status === 'rejected' ? 'Rejected' : 'Unknown'}
+                      </span>
+                      {fullProposal.status === 'approved' && fullProposal.submitted && (
+                        <span
+                          className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                          title={fullProposal.finalSubmittedAt ? `Final documents submitted on ${new Date(fullProposal.finalSubmittedAt).toLocaleString()}` : 'Final documents submitted'}
+                        >
+                          Final Submitted
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <DropdownMenu
